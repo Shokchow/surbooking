@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.78.3';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.78.4';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -862,6 +862,32 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
 @media (max-width: 560px) { .chest-stage { height: 250px; } .chest { width: 170px; } .chest-beam { bottom: 96px; } .chest-sparks { bottom: 100px; } }
 .room-art { flex: none; width: 240px; aspect-ratio: 160 / 88; overflow: hidden; border-radius: 12px; border: 2px solid #1e2326; box-shadow: 0 2px 0 rgba(30, 35, 38, .18); }
 @media (max-width: 700px) { .room-head { flex-direction: column; align-items: stretch; } .room-art { width: 100%; } }
+/* Tuiles d'option (0.78.4) : les tickets du coffre, les soins et le retrait de la boutique, au format d'une carte et dans
+   la même rangée. Un billet ambre (la couleur des tickets), une grosse icône, une grosse valeur, le prix sur le talon. */
+.tile-hint { font-size: 16px; max-width: 70ch; }
+.tile-hint b { color: var(--accent-ink); }
+.tile { appearance: none; font: inherit; color: var(--paper-ink); width: 168px; min-height: 236px; padding: 0; position: relative; cursor: pointer;
+  display: flex; flex-direction: column; align-items: stretch; text-align: center; border-radius: 12px; border: 2.5px dashed #b07a00;
+  background: #fff4cf repeating-linear-gradient(135deg, transparent 0 9px, rgba(255, 200, 61, .18) 9px 11px);
+  box-shadow: 0 3px 0 rgba(30, 35, 38, .07), 0 10px 18px -12px rgba(30, 35, 38, .45); transition: transform .12s ease, box-shadow .12s ease; }
+.tile:hover:not(:disabled), .tile:focus-visible { transform: translateY(-3px); box-shadow: 0 0 0 3px var(--amber), 0 14px 22px -12px rgba(30, 35, 38, .45); }
+.tile:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.4); }
+.tile.on { box-shadow: 0 0 0 3px var(--accent); }
+.tile-top { display: block; padding: 7px 10px; border-radius: 9.5px 9.5px 0 0; background: var(--amber); color: #0f1e33; font-family: var(--font-display); font-weight: 700;
+  font-size: 15px; letter-spacing: .07em; text-transform: uppercase; line-height: 1.1; }
+.tile-ico { display: grid; place-items: center; margin: 14px auto 2px; width: 62px; height: 62px; border-radius: 50%; background: #ffffff; border: 2px solid #b07a00; color: #8a5a00; }
+.tile-ico svg { width: 38px; height: 38px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.tile-heal .tile-ico { color: var(--hp); border-color: var(--hp); }
+.tile-remove .tile-ico { color: #4c5559; border-color: #4c5559; }
+.tile-big { font-family: var(--font-pop); font-weight: 400; font-size: 40px; line-height: 1; color: #0f1e33; margin-top: 4px; }
+.tile-heal .tile-big { color: var(--hp); }
+.tile-remove .tile-big { font-size: 30px; padding-top: 6px; }
+.tile-sub { padding: 2px 10px 0; font-size: 14px; line-height: 1.25; color: #3d3000; font-weight: 600; flex: 1; }
+.tile-stub { display: block; margin-top: 8px; padding: 7px 8px 8px; border-top: 2px dashed #b07a00; font-family: var(--font-mono); font-size: 11.5px; font-weight: 700;
+  letter-spacing: .03em; color: #6b4600; }
+.remove-pick { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border: 2px solid var(--accent); border-radius: 12px; background: var(--accent-soft); scroll-margin-top: 80px; }
+.remove-pick h3 .mono { font-family: var(--font-mono); font-size: 13px; text-transform: none; letter-spacing: 0; }
+@media (prefers-reduced-motion: reduce) { .tile { transition: none; } .tile:hover:not(:disabled) { transform: none; } }
 .door-text { font-size: 14px; max-width: 34ch; }
 .clone-line { font-family: var(--font-mono); font-size: 12px; color: var(--poison); border: 1.5px dashed currentColor; border-radius: 8px; padding: 3px 8px; align-self: flex-start; }
 .clone-line.blocked { color: var(--gel); }
@@ -1099,6 +1125,7 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
   .bd.pax { display: none; }
   .bd .v { font-size: 20px; }
   .card { width: calc(50% - 6px); min-height: 224px; }
+  .tile { width: calc(50% - 6px); min-height: 224px; }
   .cname { font-size: 18px; }
   .card .cabin { font-size: 13.5px; }
   .card .cart .arch { font-size: 9px; padding: 3px 6px 3px 4px; }
@@ -5930,13 +5957,31 @@ window.SURBOOKING_ENGINE_FP = 'cbcbaf06859a';
               <button type="button" class="primary" data-act="vestbox" data-box="${b.id}" ${!pool.length || state.points < b.price ? 'disabled' : ''}>Ouvrir · ${b.price} points</button></span></span></li>`;
       }).join('')}</ul></section>`;
   }
-  // Ouverture : la caisse tremble, le couvercle saute, l'objet monte dans la lumière de sa rareté (une seule fois)
+  // Ouverture (0.78.4) : la même fenêtre que la caisse de fret des parties, posée au milieu de l'écran quel que soit
+  // l'endroit où l'on est dans le vestiaire (avant : un encadré tout en haut de la page, qu'on ne voyait pas sans remonter).
+  // La caisse tremble, le couvercle saute dans la lumière de la rareté, l'objet sort de la caisse ; Équiper ou Continuer.
+  const POP_LIGHT = { commun: '#eef3f8', rare: '#4d8bff', precieux: '#a27bff', legendaire: '#ffa04d' };
   function openingHTML(ctx) {
     const o = view.opening, it = o && BY_ID[o.id], b = o && BOX_BY[o.box];
     if (!it || !b) return '';
     const r = rarityOf(it), fresh = !o.shown;
     o.shown = true;
     const on = equippedId(it.slot) === it.id;
+    const art = ctx && ctx.chestArt;
+    if (art && art.lid) {
+      const sparks = Array.from({ length: 12 }, (_, k) => `<i style="--x:${((k * 37) % 100) - 50}px;--d:${(1150 + (k * 83) % 600)}ms;--h:${120 + (k * 29) % 90}px;--z:${4 + (k % 3) * 2}px"></i>`).join('');
+      const still = !fresh || !art.motion;
+      return `<div class="chest-pop bxp rt-${r.k === 'commun' ? 'blanche' : r.k}${still ? ' still' : ''}" style="--rt:${POP_LIGHT[r.k]}" role="dialog" aria-modal="true" aria-label="${esc(b.name)} : ${esc(it.name)}, ${esc(r.name.toLowerCase())}" data-act="vestboxclose">
+        <div class="chest-box">
+          <div class="chest-stage"><span class="chest-rays" aria-hidden="true"></span><span class="chest-beam" aria-hidden="true"></span>
+            <div class="chest b-${b.id}"><span class="chest-glow" aria-hidden="true"></span>${art.lid}<span class="chest-seam" aria-hidden="true"></span>${art.base}
+              <span class="chest-steam l" aria-hidden="true"><i></i><i></i><i></i></span><span class="chest-steam r" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <span class="chest-sparks" aria-hidden="true">${sparks}</span>
+            <span class="bxp-item sk-thumb">${thumb(it, ctx)}</span></div>
+          <p class="chest-cap"><span class="eyebrow">${esc(b.name)} · ${esc(r.name)}</span><b>${esc(it.name)}</b>${it.desc ? `<span class="chest-quip">${esc(it.desc)}</span>` : ''}</p>
+          <div class="actions bxp-actions">${on ? '<span class="chip spec">Équipé</span>' : '<button type="button" class="primary" data-act="vestboxequip">Équiper</button>'}<button type="button" class="ghost" data-act="vestboxclose">Continuer</button></div>
+        </div></div>`;
+    }
     return `<section class="panel bx-open rt-${r.k}${fresh ? ' fresh' : ''}" aria-live="polite">
       <div class="bx-stage"><span class="bx-rays" aria-hidden="true"></span><span class="bx-crate">${crateSVG(b.id)}</span><span class="bx-item sk-thumb">${thumb(it, ctx)}</span></div>
       <div class="bx-text"><span class="eyebrow">${esc(b.name)} · ${r.name}</span><h3>${esc(it.name)}</h3>${it.desc ? `<p class="muted">${esc(it.desc)}</p>` : ''}
@@ -5993,7 +6038,6 @@ window.SURBOOKING_ENGINE_FP = 'cbcbaf06859a';
         record({ t: 'box', box: b.id, id: got.id, price: b.price }); save();
         view.opening = { box: b.id, id: got.id };
         if (rarityOf(got).k === 'legendaire') ctx.say(LINES.boxLegend); else if (ctx.quip) ctx.quip('vestbox', LINES.box); else ctx.say(rnd(LINES.box));
-        try { window.scrollTo({ top: 0 }); } catch (e) { /* rien */ }
         break;
       }
       case 'vestboxclose': view.opening = null; break;
@@ -6198,6 +6242,28 @@ ${Object.keys(BACKS).map(k => `:root[data-cardback="${k}"], .cb-${k} { --sk-back
 @keyframes bxFlash { 0% { box-shadow: inset 0 0 0 0 #fff; } 30% { box-shadow: inset 0 0 0 200px rgba(255, 236, 180, .85); } 100% { box-shadow: inset 0 0 0 0 transparent; } }
 @keyframes bxWiggle { 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .bx-open *, .bx-open, .bx .bx-svg { animation: none !important; } .bx-open .bx-rays { opacity: .55; } }
+/* L'ouverture d'une caisse dans la fenêtre des parties (0.78.4) : l'objet sort de la caisse ; les boutons sous le titre.
+   Redessinée (après Équiper) ou sans animations : tout est déjà ouvert, rien ne rejoue. */
+.chest-pop.bxp { cursor: pointer; }
+.bxp .chest-stage { height: 320px; }
+.bxp-item { position: absolute; z-index: 6; left: 50%; top: 0; width: 132px; min-height: 132px; margin-left: -66px; border-radius: 16px; background: #ffffff;
+  box-shadow: 0 0 0 3px var(--rt), 0 0 34px color-mix(in srgb, var(--rt) 80%, transparent); animation: bxpRise .65s cubic-bezier(.2, .9, .3, 1.3) 1.15s both; }
+.bxp-item .avatar, .bxp-item .sk-av { width: 118px; }
+.bxp-item .sk-swatch { width: 84px; height: 84px; }
+.bxp-item .cardback { width: 80px; height: 112px; }
+.bxp-item .sk-mini { width: 76px; height: 106px; }
+.bxp .chest.b-commandant svg { filter: hue-rotate(185deg) saturate(.75) brightness(.72); }
+.bxp-actions { justify-content: center; animation: chCap .4s ease-out 1.5s both; }
+.bxp-actions .ghost { background: rgba(255, 255, 255, .92); }
+@keyframes bxpRise { from { opacity: 0; transform: translateY(150px) scale(.3); } 60% { opacity: 1; } to { opacity: 1; transform: none; } }
+.chest-pop.bxp.still, .chest-pop.bxp.still * { animation: none !important; }
+.chest-pop.bxp.still .chest-lid { transform: translateY(-34px) rotateX(64deg); }
+.chest-pop.bxp.still .chest-rays { opacity: .8; } .chest-pop.bxp.still .chest-beam { opacity: .85; } .chest-pop.bxp.still .chest-glow, .chest-pop.bxp.still .chest-seam { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .chest-pop.bxp, .chest-pop.bxp * { animation: none !important; }
+  .chest-pop.bxp .chest-lid { transform: translateY(-34px) rotateX(64deg); }
+  .chest-pop.bxp .chest-rays { opacity: .8; } .chest-pop.bxp .chest-beam { opacity: .85; } .chest-pop.bxp .chest-glow, .chest-pop.bxp .chest-seam { opacity: 1; }
+}
 @media (max-width: 560px) { .bx-open { grid-template-columns: 1fr; } .bx-stage { height: 180px; } }
 @media (max-width: 560px) {
   .sk-stage { grid-template-columns: 1fr; justify-items: center; }
@@ -12707,7 +12773,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
           if (ev.lowblow) flavor('lowblowPick', 34, foeLine('lowblowPick', duelFoeName()));
           else if (ev.green) flavor('pickGreen', 30, LINES.pickGreen);
           else if (ev.skippedGreen) flavor('skippedGreen', 35, LINES.skippedGreen);
-          else if (ev.pair) flavor('pair', 32, LINES.pair);
+          else if (ev.pair && pairDone(ev.id)) flavor('pair', 32, LINES.pair); // un troisième exemplaire ne fait pas de paire
           else flavor('pick', 20, null);
           break;
         case 'wheel': flavor('wheel', 50, ev.lap === 2 ? LINES.wheel2 : LINES.wheel); break;
@@ -13547,19 +13613,35 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   }
   // Un exemplaire de la même carte (fusionné et chargé de points, ou non) : la carte gagnée fusionnera avec lui
   const hasSame = (list, id) => list.some(x => (E.baseOf ? E.baseOf(x) : x) === (E.baseOf ? E.baseOf(id) : id));
+  // La carte fusionnera-t-elle ? Depuis le draft de 12 (0.78), les fusions attendent le choix des 8 cartes : deux
+  // exemplaires déjà pris forment une paire, et un troisième ne fusionnera avec rien (il disait pourtant « Fusion » tant
+  // qu'un exemplaire était là). On fusionne le deck tel qu'il sera, avec et sans la carte : elle fusionne si elle en
+  // déclenche une de plus (paires, cartes chargées de points et fusions en chaîne compris, comme le moteur).
+  function fusesIn(ids, id) {
+    const card = E.CARDS[id];
+    if (!card || !card.fuse) return false;
+    if (!E.autoFuseIds) return hasSame(ids, id);
+    return E.autoFuseIds(ids.concat([id])).length <= E.autoFuseIds(ids).length;
+  }
+  // La carte qu'on vient de prendre complète-t-elle une paire parmi les picks de ce draft (2, 4… exemplaires) ?
+  function pairDone(id) {
+    const picks = (run && run.draft && run.draft.picks && run.draft.picks[0]) || [];
+    const n = picks.filter(c => c.id === id).length;
+    return n >= 2 && n % 2 === 0;
+  }
   /* Badge d'une carte qu'on peut gagner hors du draft : spécialisation débloquée ou paire complétée */
   function gainBadge(id) { return pickBadge(run.inventory.map(c => c.id), id); }
   // Le badge d'une carte à prendre : la fusion (elle complète une paire) et le palier de famille qu'elle débloque, les deux
   // quand elle fait les deux (« Fusion · Débloque … » : la fusion d'abord, elle ne se coupe jamais)
   function pickBadge(ids, id) {
-    const card = E.CARDS[id], unlock = tierBadge(ids, id), fuse = !!(card.fuse && hasSame(ids, id));
+    const card = E.CARDS[id], unlock = tierBadge(ids, id), fuse = fusesIn(ids, id);
     if (fuse && unlock) return `Fusion · ${unlock}`;
     return unlock || (fuse ? `Fusion → ${E.CARDS[card.fuse].name}` : '');
   }
   // Au draft : deux bulles côte à côte quand la carte fait les deux, le palier de famille (jaune, « ▲ » + son nom : la place
   // manque pour « Débloque ») et « Fusion » (noire) ; seule, chacune garde son texte complet
   function pickBadges(ids, id) {
-    const card = E.CARDS[id], unlock = tierBadge(ids, id), fuse = !!(card.fuse && hasSame(ids, id)), into = card.fuse ? `Fusion → ${E.CARDS[card.fuse].name}` : '';
+    const card = E.CARDS[id], unlock = tierBadge(ids, id), fuse = fusesIn(ids, id), into = card.fuse ? `Fusion → ${E.CARDS[card.fuse].name}` : '';
     if (fuse && unlock) return { badge: `▲ ${unlock.replace(/^Débloque /, '')}`, badgeTitle: unlock, badgeCls: 'b-tier', badge2: 'Fusion', badge2Title: into };
     return { badge: unlock || (fuse ? into : ''), badgeCls: unlock ? 'b-tier' : fuse ? 'b-fuse' : '' };
   }
@@ -14082,6 +14164,24 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     return `<div class="cards">${groups.map(({ id, n }) => cardHTML(id, { act, data: `data-id="${id}"`, disabled: opts.disabled, badge: n > 1 ? '×' + n : '' })).join('')}</div>`;
   }
 
+  /* Tuiles d'option (0.78.4) : les tickets du coffre et les services de la boutique, au même format que les cartes et
+     dans la même rangée, pour qu'on les voie comme des choix (avant : un petit bouton sous les cartes, et les services
+     sous la ligne de flottaison). */
+  const TILE_ICONS = {
+    ticket: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 14h36v6a4 4 0 0 0 0 8v6H6v-6a4 4 0 0 0 0-8z"/><path d="M30 14v20" stroke-dasharray="3 3"/><path d="M14 22h10M14 27h7"/></svg>',
+    heal: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 40s-14-8.5-14-19a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 10.5-14 19-14 19z"/><path d="M24 20v10M19 25h10"/></svg>',
+    remove: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="18" height="25" rx="2.5"/><path d="M9 38c4-3 8-3 12 0s8 3 12 0 6-2 6-2"/><path d="M27 30l12-12M39 30 27 18"/></svg>',
+  };
+  function tileHTML(o) {
+    return `<button type="button" class="tile tile-${o.kind}${o.cls ? ' ' + o.cls : ''}" data-act="${o.act}"${o.disabled ? ' disabled' : ''}${o.label ? ` aria-label="${esc(o.label)}"` : ''}>
+      <span class="tile-top">${esc(o.band)}</span>
+      <span class="tile-ico">${TILE_ICONS[o.kind] || ''}</span>
+      <span class="tile-big">${esc(o.big)}</span>
+      <span class="tile-sub">${esc(o.sub)}</span>
+      <span class="tile-stub">${esc(o.foot)}</span>
+    </button>`;
+  }
+
   function renderEvent() {
     const ev = run.event, next = E.encountersOf(run)[run.encounter + 1];
     const info0 = EVENT_INFO[ev.kind || ev.type];
@@ -14089,16 +14189,23 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     let body = '';
     if (ev.type === 'shop') {
       const offers = ev.offers.map((o, i) => { const g = o.sold ? '' : gainBadge(o.id); return cardHTML(o.id, { act: 'buy', data: `data-i="${i}"`, disabled: o.sold || run.tickets < o.price, badge: o.sold ? 'Vendu' : `${o.price} tickets${g ? ' · ' + g : ''}` }); }).join('');
-      body = `<h3>Cartes en vente</h3><div class="cards">${offers}</div>
-        <h3>Services</h3>
-        <div class="fusion-row"><span><b>Se soigner</b> · +${E.SHOP_HEAL} PV</span><span class="muted">${E.PRICES.heal} tickets</span>
-          <button type="button" class="ghost" data-act="shopheal" ${ev.healUsed || run.tickets < E.PRICES.heal || run.hp >= E.maxHpOf(run) ? 'disabled' : ''}>${ev.healUsed ? 'Déjà utilisé' : 'Se soigner'}</button></div>
-        <div class="fusion-row"><span><b>Retirer une carte</b> de votre deck</span><span class="muted">${E.PRICES.remove} tickets, une seule fois</span></div>
-        ${ev.removeUsed ? '<p class="muted">Carte retirée.</p>' : invChoice('remove', null, { disabled: run.tickets < E.PRICES.remove })}`;
+      const short = n => `il manque ${n - run.tickets} ticket${n - run.tickets > 1 ? 's' : ''}`;
+      const full = run.hp >= E.maxHpOf(run), healPrice = E.PRICES.heal, remPrice = E.PRICES.remove;
+      const healTile = tileHTML({ kind: 'heal', act: 'shopheal', band: 'Service', big: `+${E.SHOP_HEAL} PV`, sub: 'Se soigner',
+        foot: ev.healUsed ? 'Déjà utilisé' : full ? 'PV au maximum' : run.tickets < healPrice ? short(healPrice) : `${healPrice} tickets`,
+        disabled: ev.healUsed || full || run.tickets < healPrice, label: `Se soigner de ${E.SHOP_HEAL} PV pour ${healPrice} tickets` });
+      const remTile = tileHTML({ kind: 'remove', act: 'removeopen', band: 'Service', big: 'Retirer', sub: 'une carte de votre deck', cls: ui.removeOpen && !ev.removeUsed ? 'on' : '',
+        foot: ev.removeUsed ? 'Carte retirée' : run.tickets < remPrice ? short(remPrice) : `${remPrice} tickets · une fois`,
+        disabled: ev.removeUsed || run.tickets < remPrice, label: `Retirer une carte de votre deck pour ${remPrice} tickets` });
+      body = `<p class="tile-hint">Vos <b>${run.tickets} tickets</b> se dépensent ici : une carte, des soins, ou une carte en moins dans votre deck.</p>
+        <div class="cards shop-cards">${offers}${healTile}${remTile}</div>
+        ${ui.removeOpen && !ev.removeUsed ? `<div class="remove-pick" id="remove-pick"><h3>Quelle carte retirer ? <span class="muted mono">${remPrice} tickets</span></h3>
+          ${invChoice('remove', null, { disabled: run.tickets < remPrice })}
+          <div class="actions"><button type="button" class="ghost" data-act="removecancel">Annuler</button></div></div>` : ''}`;
     } else if (ev.type === 'chest') {
+      const best = chestBest(ev);
       body = ev.done ? '<p class="muted">Caisse vidée.</p>'
-        : `<p>Choisissez une carte, ou prenez les tickets.</p><div class="cards chest-cards">${ev.cards.map((id, i) => { const best = chestBest(ev); return cardHTML(id, { act: 'chestpick', data: `data-i="${i}"`, badge: gainBadge(id), cls: best !== 'blanche' && best !== 'base' && E.CARDS[id].rarity === best ? 'chest-best' : '' }); }).join('')}</div>
-           <div class="actions"><button type="button" class="ghost" data-act="chesttickets">Prendre ${ev.tickets} tickets</button></div>`;
+        : `<p class="tile-hint">Une seule chose à emporter : <b>une des trois cartes, ou ${ev.tickets} tickets</b> pour la boutique.</p><div class="cards chest-cards">${ev.cards.map((id, i) => cardHTML(id, { act: 'chestpick', data: `data-i="${i}"`, badge: gainBadge(id), cls: best !== 'blanche' && best !== 'base' && E.CARDS[id].rarity === best ? 'chest-best' : '' })).join('')}${tileHTML({ kind: 'ticket', act: 'chesttickets', band: 'Ou bien', big: `+${ev.tickets}`, sub: 'tickets, plutôt qu’une carte', foot: `vous en aurez ${run.tickets + ev.tickets}`, label: `Prendre ${ev.tickets} tickets plutôt qu’une carte` })}</div>`;
     } else if (ev.type === 'gift') {
       body = `<p>${info.text}</p>` + (ev.done ? '<p class="muted">C’est fait.</p>'
         : ev.kind === 'locker' ? `<div class="cards">${ev.cards.map((id, i) => cardHTML(id, { act: 'giftpick', data: `data-i="${i}"`, badge: gainBadge(id) })).join('')}</div>`
@@ -14347,7 +14454,9 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const VIEWS = { file: () => (LIVE ? LIVE.renderFile(run) : ''), classe: renderClassPick, finaleDraft: renderFinaleDraft, finalePrep: renderFinalePrep, champion: renderChampion, title: renderTitle, draft: renderDraft, keep: renderKeep, inventory: renderInventory, combat: renderCombat, interlude: renderInterlude, event: renderEvent, end: renderEnd, defeat: renderDefeat };
 
   // Le vestiaire d'ÉDEN (shop.js) : boutique de skins et portefeuille de points de run
-  const shopCtx = { E, say: t => say(t), quip: (k, v) => quip(k, v), log: (t, k) => log(t, k), cardHTML: (id, o) => cardHTML(id, o) };
+  const shopCtx = { E, say: t => say(t), quip: (k, v) => quip(k, v), log: (t, k) => log(t, k), cardHTML: (id, o) => cardHTML(id, o),
+    // la caisse de fret des parties (couvercle, corps), pour l'ouverture d'une caisse du vestiaire dans la même fenêtre (0.78.4)
+    get chestArt() { return { lid: CHEST_LID, base: CHEST_BASE, motion: canAnimate() }; } };
   const shopLine = () => window.Shop ? window.Shop.endLine(E, run) : '';
   // Le tableau des départs : vol, destination, statut, tour, passager
   function boardHTML() {
@@ -15487,14 +15596,16 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       case 'door': E.chooseDoor(run, +el.dataset.i); processEvents(); toTop(); if (run.event && run.event.type === 'chest') setTimeout(() => openChestFx(run.event), 0); break; // la caisse s'ouvre, après le rendu
       case 'buy': E.eventAction(run, 'buy', +el.dataset.i); processEvents(); break;
       case 'shopheal': E.eventAction(run, 'heal'); processEvents(); break;
-      case 'remove': E.eventAction(run, 'remove', el.dataset.id); processEvents(); break;
+      case 'removeopen': ui.removeOpen = !ui.removeOpen; if (ui.removeOpen) setTimeout(() => { const r = document.getElementById('remove-pick'); if (r && r.scrollIntoView) r.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: 'start' }); }, 30); break;
+      case 'removecancel': ui.removeOpen = false; break;
+      case 'remove': E.eventAction(run, 'remove', el.dataset.id); ui.removeOpen = false; processEvents(); break;
       case 'chestpick': E.eventAction(run, 'pick', +el.dataset.i); processEvents(); break;
       case 'chesttickets': E.eventAction(run, 'tickets'); processEvents(); break;
       case 'gift': E.eventAction(run, 'take'); processEvents(); break;
       case 'giftpick': E.eventAction(run, 'take', +el.dataset.i); processEvents(); break;
       case 'deal': E.eventAction(run, 'deal', el.dataset.id != null ? el.dataset.id : (el.dataset.i != null ? +el.dataset.i : null)); processEvents(); break;
       case 'refuse': E.eventAction(run, 'refuse'); processEvents(); break;
-      case 'continue': ui.log = []; ui.targeting = null; E.nextEncounter(run); processEvents(); toTop(); break;
+      case 'continue': ui.log = []; ui.targeting = null; ui.removeOpen = false; E.nextEncounter(run); processEvents(); toTop(); break;
       case 'endturn': ui.targeting = null;
         if (LIVE && LIVE.inDuel(run)) { LIVE.duelEnd(run); endFx = null; ui.seqTurn = false; break; } // duel en direct : l'arbitre d'abord
         E.endTurn(run); processEvents(); break;
@@ -15544,6 +15655,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       ev.preventDefault(); list[j].focus(); return;
     }
     if (ev.key === 'Escape' && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap passe l'animation
+    if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
     if (ev.key === 'Escape' && !pause.open && run == null && menuTab()) { ev.preventDefault(); setMenuTab('', true); return; } // un panneau du menu : retour aux boutons
     if (ev.key === 'Escape' && pause.open) { ev.preventDefault(); closePause(); return; }
     if (ev.key === 'Escape' && ui.drawer) { setDrawer(false); const b = screenEl.querySelector('.cb-journal-btn'); if (b) b.focus({ preventScroll: true }); return; }
