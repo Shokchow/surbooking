@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.83.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.83.1';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -387,6 +387,7 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .foe.targetable .fig::after { content: ""; position: absolute; inset: -6px -10px 0; border-radius: 50% 50% 14px 14px; border: 3px dashed var(--accent); pointer-events: none; }
 .foe.targetable:hover .fig { transform: translateY(-4px); }
 .fig { position: relative; display: flex; align-items: flex-end; justify-content: center; transition: transform .15s ease; }
+.stage .fig { transform-origin: 50% 100%; } /* 0.83 : la respiration (ui.js, breathe) part des pieds */
 /* Tous les personnages ont les pieds sur la même ligne : la scène a trois rangées (personnages, plaques, main) et chaque
    colonne de personnage en épouse les deux premières (subgrid) ; la plaque la plus haute ne soulève plus personne. */
 .stand { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -419,9 +420,9 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .foe-svg.sb-art { stroke: none; }
 .foe-art.toxic .foe-svg.sb-art { filter: drop-shadow(0 0 3px rgba(198, 255, 94, .6)); }
 .foe-art.machine .foe-svg.sb-art { filter: drop-shadow(0 0 3px rgba(95, 211, 243, .55)); }
-.sb-art .sb-halo { animation: sbHalo 2.8s ease-in-out infinite; }
+.sb-art .sb-halo { animation: sbHalo 2.8s ease-in-out infinite; animation-delay: var(--clk, 0s); }
 .sb-art .sb-cyan .sb-halo { animation-duration: 1.9s; }
-.sb-art .sb-flicker { animation: sbFlicker 2.6s steps(1, end) infinite; }
+.sb-art .sb-flicker { animation: sbFlicker 2.6s steps(1, end) infinite; animation-delay: var(--clk, 0s); }
 @keyframes sbHalo { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @keyframes sbFlicker { 0%, 100% { opacity: .55; } 38% { opacity: .12; } 44% { opacity: .7; } 72% { opacity: .3; } }
 .foe.cryo .sb-art .sb-halo, .foe.frozen .sb-art .sb-halo { animation: none; opacity: .25; }
@@ -440,8 +441,9 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .m-name { font-family: var(--font-display); font-weight: 700; font-size: 19px; text-transform: uppercase; line-height: 1; min-width: 0; overflow-wrap: anywhere; }
 .m-species { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 .hp-line { display: flex; justify-content: space-between; gap: 6px; font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
-.bar { height: 10px; border-radius: 5px; background: #e3e6e2; border: 1px solid var(--line); overflow: hidden; }
-.bar > span { display: block; height: 100%; background: #e2552a; border-radius: 5px; transition: width .3s ease; }
+.bar { position: relative; height: 10px; border-radius: 5px; background: #e3e6e2; border: 1px solid var(--line); overflow: hidden; }
+.bar > span { position: relative; z-index: 1; display: block; height: 100%; background: #e2552a; border-radius: 5px; transition: width .3s ease; }
+.bar > .hp-trail { position: absolute; top: 0; bottom: 0; z-index: 0; background: #ffb199; transform-origin: 0 50%; pointer-events: none; } /* 0.83 : la part perdue, qui fond */
 .fighter .bar > span { background: var(--ok); }
 .fighter .hp-big { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .fighter .hp-line { font-size: 12px; align-items: baseline; }
@@ -565,9 +567,21 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
 @keyframes hitShake { 15% { transform: translateX(-7px); } 35% { transform: translateX(7px); } 55% { transform: translateX(-4px); } 75% { transform: translateX(3px); } 100% { transform: none; } }
 @keyframes hitBlink { 0%, 100% { filter: none; } 50% { filter: brightness(2.4) saturate(.2); } }
 .floats { position: absolute; left: 50%; top: 26%; z-index: 4; width: 0; height: 0; pointer-events: none; }
-.float { position: absolute; left: calc((var(--k, 0) - 1) * 22px); top: calc(var(--k, 0) * 18px); transform: translateX(-50%); font-family: var(--font-pop); font-size: 30px; line-height: 1; white-space: nowrap;
+.float { position: absolute; left: calc((var(--k, 0) - 1) * 22px); top: calc(var(--k, 0) * 18px); transform: translateX(-50%); font-family: var(--font-pop); font-size: calc(30px * var(--s, 1)); line-height: 1; white-space: nowrap;
   color: #e0262b; text-shadow: 2px 2px 0 #1e2326, -1px -1px 0 #ffffff; animation: floatUp 1.15s ease-out calc(var(--k, 0) * .12s) both; }
 .float.blk { color: #6fb2ff; } .float.heal { color: #2fb879; }
+/* 0.83 : les gros coups (20 et plus) ont un contour plus épais ; le bouclier qui se fend quand l'armure absorbe tout */
+.float.big, .seq-float.big { text-shadow: 3px 3px 0 #1e2326, -2px -2px 0 #ffffff, 0 0 12px rgba(224, 38, 43, .55); }
+.floats .crack { position: absolute; left: 0; top: 34px; width: 80px; height: 80px; transform: translateX(-50%); animation: crackBox .76s both; }
+.crack svg, .shield-crack svg { width: 100%; height: 100%; overflow: visible; }
+.crack .l, .crack .r, .shield-crack .l, .shield-crack .r { transform-box: fill-box; transform-origin: 50% 100%; }
+.crack .l { animation: crackL .76s ease-in both; } .crack .r { animation: crackR .76s ease-in both; } .crack .z { animation: crackZ .76s both; }
+.fight .fighter.me .crack, .fight .fighter.me .crack * { animation-delay: var(--hit-d, 0s); }
+.fight .foe .crack, .fight .foe .crack * { animation-delay: var(--lunge-d, 0s); }
+@keyframes crackBox { 0% { opacity: 0; transform: translateX(-50%) scale(.5); } 25% { opacity: 1; transform: translateX(-50%) scale(1.08); } 50% { opacity: 1; transform: translateX(-50%) scale(1); } 100% { opacity: 0; transform: translateX(-50%) scale(1); } }
+@keyframes crackL { 0%, 50% { transform: none; } 100% { transform: translate(-14px, 6px) rotate(-14deg); } }
+@keyframes crackR { 0%, 50% { transform: none; } 100% { transform: translate(14px, 6px) rotate(14deg); } }
+@keyframes crackZ { 0%, 38% { opacity: 0; } 45% { opacity: 1; } 60%, 100% { opacity: 0; } }
 @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.7); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.15); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -46px) scale(1); } }
 .shield .armor { animation: shieldPulse .7s ease-out; }
 .shield .fig::after { content: ""; position: absolute; inset: 4% -8% -4%; border-radius: 50%; border: 3px solid #6fb2ff; box-shadow: 0 0 18px rgba(111, 178, 255, .7), inset 0 0 18px rgba(111, 178, 255, .4);
@@ -579,7 +593,7 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
   background: linear-gradient(160deg, rgba(220, 245, 255, .45), rgba(160, 220, 240, .12) 60%); border: 2px solid rgba(220, 245, 255, .7); }
 .foe.frost-in .fig::after { animation: frostIn .6s ease-out; }
 @keyframes frostIn { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: none; } }
-.foe.irradiated .foe-svg, .foe.irradiated .fig > .avatar { animation: radPulse 1.8s ease-in-out infinite; }
+.foe.irradiated .foe-svg, .foe.irradiated .fig > .avatar { animation: radPulse 1.8s ease-in-out infinite; animation-delay: var(--clk, 0s); }
 @keyframes radPulse { 0%, 100% { filter: drop-shadow(0 0 4px rgba(198, 255, 94, .5)); } 50% { filter: drop-shadow(0 0 14px rgba(198, 255, 94, 1)) drop-shadow(0 0 24px rgba(198, 255, 94, .45)); } }
 .rad-hit .fig { animation: radFlash .6s ease-out; }
 @keyframes radFlash { 30% { filter: drop-shadow(0 0 18px rgba(198, 255, 94, 1)) brightness(1.5); } 100% { filter: none; } }
@@ -712,7 +726,7 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
 /* La furie : il gonfle et rougit, de la vapeur sort ; la marque de colère reste au-dessus de sa tête */
 .rage { position: absolute; left: 4%; top: -4%; width: clamp(22px, 26%, 40px); aspect-ratio: 1; pointer-events: none; z-index: 2; }
 .rage-mark { display: block; width: 100%; height: 100%; fill: none; stroke: #e0262b; stroke-width: 3.2; stroke-linecap: round; filter: drop-shadow(0 0 1.5px #ffffff) drop-shadow(0 0 1px #ffffff); }
-.foe.furious .rage-mark { animation: ragePulse 1.6s ease-in-out infinite; }
+.foe.furious .rage-mark { animation: ragePulse 1.6s ease-in-out infinite; animation-delay: var(--clk, 0s); }
 @keyframes ragePulse { 0%, 100% { scale: 1; } 50% { scale: 1.18; } }
 .rage .steam { position: absolute; left: 30%; top: 30%; width: 50%; aspect-ratio: 1; border-radius: 50%; background: #e4e8e3; box-shadow: 0 0 0 2px #a9b1ac, inset -3px -3px 0 #d2d8d2; opacity: 0; }
 .foe.enrage-in .rage-mark { animation: ragePop .45s cubic-bezier(.2, 1.8, .4, 1) both, ragePulse 1.6s ease-in-out .45s infinite; }
@@ -810,7 +824,7 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
 .seq-fx.orb { filter: drop-shadow(0 0 10px rgba(198, 255, 94, .95)); }
 .seq-card { z-index: 61; filter: drop-shadow(0 10px 18px rgba(30, 35, 38, .35)); }
 .seq-card .card:disabled { opacity: 1; cursor: default; }
-.seq-float { position: fixed; z-index: 62; pointer-events: none; opacity: 0; font-family: var(--font-pop); font-size: 30px; line-height: 1; white-space: nowrap;
+.seq-float { position: fixed; z-index: 62; pointer-events: none; opacity: 0; font-family: var(--font-pop); font-size: calc(30px * var(--s, 1)); line-height: 1; white-space: nowrap;
   color: #e0262b; text-shadow: 2px 2px 0 #1e2326, -1px -1px 0 #ffffff; }
 .seq-float.blk { color: #6fb2ff; } .seq-float.heal { color: #2fb879; } .seq-float.rad { color: #c6ff5e; }
 .seq-float.status { color: #ffd23f; font-size: 22px; }
@@ -1062,7 +1076,7 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
 }
 @keyframes vegsway { from { transform: rotate(-.7deg); } to { transform: rotate(.7deg); } }
 /* Le néon à moitié mort de la coursive : un tube grésille de temps en temps */
-.backdrop .neon-ok { animation: neon 7s steps(1, end) infinite; }
+.backdrop .neon-ok { animation: neon 7s steps(1, end) infinite; animation-delay: var(--clk, 0s); }
 @keyframes neon { 0% { opacity: 1; } 71% { opacity: .35; } 72% { opacity: 1; } 74% { opacity: .55; } 75% { opacity: 1; } }
 
 /* Lisibilité (27/10) : tailles minimales relevées, petites capitales moins espacées, gris plus foncés */
@@ -1128,7 +1142,7 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
   .dh-orb { width: 24px; height: 24px; font-size: 15px; }
   .intent .ic svg { width: 15px; height: 15px; }
   .foes[data-n="5"] .intent .ic, .foes[data-n="6"] .intent .ic, .foes[data-n="7"] .intent .ic { display: none; }
-  .float, .seq-float { font-size: 22px; } .seq-float.status { font-size: 17px; }
+  .float, .seq-float { font-size: calc(22px * var(--s, 1)); } .seq-float.status { font-size: 17px; } .floats .crack { width: 56px; height: 56px; }
   body.in-combat header.eden { transform: translateY(58px); padding: 0 10px; }
   .handbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "left right" "hand hand"; }
   .hb-left { grid-area: left; flex-direction: row; align-items: center; } .hb-right { grid-area: right; flex-direction: row; align-items: center; justify-content: flex-end; }
@@ -1191,7 +1205,7 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .float, .fly-card, .ghost-card, .ghost-intent, .seq-fx, .seq-float { display: none !important; }
+  .float, .fly-card, .ghost-card, .ghost-intent, .seq-fx, .seq-float, .floats .crack, .hp-trail { display: none !important; }
   .foe.trapfall .fig > svg, .foe.trapfall .fig > .avatar, .rage .steam, .confetti, .ko-back, .ko-arm, .ko-whoosh, .ko-puff, .ko-stars, .ko-sparks, .ko-smoke { visibility: hidden; }
   .foe.ko .fig > .avatar { rotate: 84deg; translate: 22% 2%; } .ko-stamp { opacity: 1; }
   .fighter.victory .avatar .av-arm-l { transform: rotate(146deg); } .fighter.victory .avatar .av-arm-r { transform: rotate(-146deg); }
@@ -13545,11 +13559,11 @@ body.rp-on { overflow: hidden; }
     const F = flash.fx, byPlayer = ui.lastAct === 'card' || ui.lastAct === 'target';
     const fl = (t, kind, txt) => t.floats.push({ kind, txt });
     switch (ev.type) {
-      case 'hitMonster': { const f = fxFoe(ev.i); f.cls.add('hit'); if (ev.dmg > 0) fl(f, 'dmg', `−${ev.dmg}`); else if (ev.absorbed > 0) fl(f, 'blk', `−${ev.absorbed}`); if (byPlayer && !ui.cardFx) F.me.cls.add('lunge'); break; }
+      case 'hitMonster': { const f = fxFoe(ev.i); f.cls.add('hit'); if (ev.dmg > 0) fl(f, 'dmg', `−${ev.dmg}`); else if (ev.absorbed > 0) { fl(f, 'blk', 'Bloqué'); fl(f, 'crack', ''); } if (byPlayer && !ui.cardFx) F.me.cls.add('lunge'); break; }
       case 'jealousHit': case 'detonate': { const f = fxFoe(ev.i); f.cls.add('hit'); if (ev.type === 'detonate') f.cls.add('rad-hit'); if (ev.dmg > 0) fl(f, 'dmg', `−${ev.dmg}`); break; }
       case 'poisonTick': { const f = fxFoe(ev.i); f.cls.add('rad-hit'); if (ev.dmg > 0) fl(f, 'dmg', `−${ev.dmg}`); break; }
       case 'barbed': if (ev.onPlayer) { F.me.cls.add('hit'); fl(F.me, 'dmg', `−${ev.dmg}`); } else if (ev.i != null) { const f = fxFoe(ev.i); f.cls.add('hit'); fl(f, 'dmg', `−${ev.dmg}`); } break;
-      case 'hitPlayer': { if (ev.dmg > 0) { F.me.cls.add('hit'); fl(F.me, 'dmg', `−${ev.dmg}`); } else if (ev.absorbed > 0) fl(F.me, 'blk', `−${ev.absorbed}`); const k = foeIdx(ev.by); if (k >= 0) fxFoe(k).cls.add('lunge'); break; }
+      case 'hitPlayer': { if (ev.dmg > 0) { F.me.cls.add('hit'); fl(F.me, 'dmg', `−${ev.dmg}`); } else if (ev.absorbed > 0) { fl(F.me, 'blk', 'Bloqué'); fl(F.me, 'crack', ''); } const k = foeIdx(ev.by); if (k >= 0) fxFoe(k).cls.add('lunge'); break; }
       case 'playerPoison': F.me.cls.add('rad-hit'); fl(F.me, 'dmg', `−${ev.dmg}`); break;
       case 'selfHurt': fl(F.me, 'dmg', `−${ev.dmg}`); break;
       case 'playerJealous': F.me.cls.add('hit'); fl(F.me, 'dmg', `−${ev.dmg}`); break;
@@ -14872,7 +14886,11 @@ body.rp-on { overflow: hidden; }
   // Victoire : quelques confettis autour du postulant, bras levés
   const CONFETTI_HTML = '<span class="confetti" aria-hidden="true">' + [0, 1, 2, 3, 4, 5, 6, 7].map(k => `<i style="--k:${k}"></i>`).join('') + '</span>';
   const armorBadge = o => o.block > 0 ? `<span class="armor" data-tip="${esc(`Armure ${o.block} : absorbe les dégâts avant les PV. ${o.blockLock ? 'Elle ne tombe plus jusqu’à la fin du combat.' : o.keepBlock ? 'Elle est conservée au prochain tour.' : run && run.combat && o === run.combat.player ? 'Elle tombe au début de votre prochain tour.' : 'Elle tombe au début de son prochain tour.'}`)}">${icon('blk')}<b>${o.block}</b></span>` : '';
-  const floatsHTML = t => t && t.floats.length ? `<span class="floats" aria-hidden="true">${t.floats.slice(0, 4).map((f, k) => `<span class="float ${f.kind}" style="--k:${k}">${esc(f.txt)}</span>`).join('')}</span>` : '';
+  // La taille d'un chiffre de dégâts suit le coup (0.83) : 3 dégâts en petit, 30 et plus en très grand
+  const dmgScale = n => (n > 0 ? Math.max(0.8, Math.min(1.75, 0.72 + n / 28)) : 1);
+  const floatN = f => (f.kind === 'dmg' || f.kind === 'rad' ? +((String(f.txt).match(/\d+/) || [0])[0]) : 0);
+  const floatsHTML = t => t && t.floats.length ? `<span class="floats" aria-hidden="true">${t.floats.slice(0, 4).map((f, k) => f.kind === 'crack' ? `<span class="crack">${SVG_CRACK}</span>`
+    : `<span class="float ${f.kind}${floatN(f) >= 20 ? ' big' : ''}" style="--k:${k};--s:${dmgScale(floatN(f)).toFixed(2)}">${esc(f.txt)}</span>`).join('')}</span>` : '';
 
   // Revoir un duel (replay.js, 0.81) : l'écran de combat d'un instant du duel, rendu sans toucher à la partie en cours
   // (la partie, le journal et la sélection sont remis en place tout de suite après)
@@ -15616,10 +15634,28 @@ body.rp-on { overflow: hidden; }
     if (cockpit && ui.cockpit.drawn && screenEl.querySelector('.cockpit')) return; // la scène du cockpit aussi
     document.body.classList.toggle('in-combat', (phase === 'combat' || outro) && !shop);
     document.body.dataset.veg = String(!run ? 1 : run.finale ? 2 : Math.min(3, E.floorOf(run) || 1)); // la végétation des mutations monte avec l'étage
+    screenEl.style.setProperty('--clk', `${(-performance.now() / 1000).toFixed(2)}s`); // les boucles CSS reprennent où elles en étaient (0.83)
     screenEl.innerHTML = shop ? window.Shop.render(shopCtx) : outro ? renderCombat() : cockpit ? renderCockpit() : ST && ui.intro && run ? renderIntro() : storyTop() + VIEWS[phase]();
     if (outro) ui.outro.drawn = true;
     if (cockpit && !ui.cockpit.drawn) { ui.cockpit.drawn = true; startCockpit(); }
     layoutBackdrop();
+    breathe();
+  }
+  // Au repos, personnages et monstres respirent (0.83) : une lente montée, décalée d'une figure à l'autre, calée sur
+  // l'horloge de la page pour ne pas repartir de zéro à chaque rendu ; plus vite en furie ou à bout de souffle.
+  // Ni les gelés, ni les tétanisés, ni ceux qui sont partis (cryo, patrouille, avalé, battu).
+  function breathe() {
+    if (!canAnimate() || !run || !run.combat) return;
+    const lowMe = run.hp < 0.3 * E.maxHpOf(run);
+    screenEl.querySelectorAll('.stage .fighter, .stage .foe').forEach((el, k) => {
+      if (el.matches('.cryo, .away, .frozen, .swallowed, .ko, .ko-robot, .ko-me, .trapfall')) return;
+      const fig = el.querySelector(':scope > .stand > .fig'); if (!fig) return;
+      const m = el.classList.contains('foe') ? run.combat.monsters.find(x => String(x.i) === el.dataset.i) : null;
+      if (m && m.stunned) return;
+      const fast = el.classList.contains('furious') || (!m && lowMe), period = fast ? 1500 : 3200, amp = fast ? 1.035 : 1.02;
+      const a = fig.animate([{ scale: '1 1' }, { scale: `${(2 - amp).toFixed(3)} ${amp}`, offset: .5 }, { scale: '1 1' }], { duration: period, iterations: Infinity, easing: 'ease-in-out' });
+      a.startTime = -(k * 731); // la même phase d'un rendu à l'autre, décalée d'une figure à l'autre
+    });
   }
 
   /* ---------- victoire en finale : le cockpit, vu depuis la place du dernier passager. Le siège vide du copilote pivote vers
@@ -15859,7 +15895,20 @@ body.rp-on { overflow: hidden; }
   function hpShow(H, v) {
     if (!H || !H.b.isConnected) return;
     H.b.textContent = v;
-    if (H.bar) H.bar.style.width = Math.max(0, Math.round(100 * v / H.max)) + '%';
+    barTo(H.bar, Math.max(0, Math.round(100 * v / H.max)));
+  }
+  // La barre de PV descend, et la part perdue reste un instant en clair avant de fondre (0.83 : les coups pèsent)
+  function barTo(bar, pct) {
+    if (!bar) return;
+    const old = parseFloat(bar.style.width);
+    bar.style.width = pct + '%';
+    if (!(old > pct + 0.5) || !bar.parentNode || !canAnimate()) return;
+    const t = document.createElement('i');
+    t.className = 'hp-trail'; t.setAttribute('aria-hidden', 'true');
+    t.style.left = pct + '%'; t.style.width = (old - pct) + '%';
+    bar.parentNode.appendChild(t);
+    const a = t.animate([{ transform: 'scaleX(1)', opacity: 1 }, { transform: 'scaleX(1)', opacity: 1, offset: .45 }, { transform: 'scaleX(0)', opacity: .5 }], { duration: 900, easing: 'ease-in', fill: 'forwards' });
+    a.onfinish = () => t.remove(); a.oncancel = () => t.remove();
   }
   // Les sons du tour adverse rejoué partent à l'instant de chaque effet (sound.js ne les joue pas d'un coup)
   const snd = (n, ms, p) => { const S = window.SurbookingSound; if (S && S.play) S.play(n, Math.max(0, ms) / 1000, p); };
@@ -15884,6 +15933,7 @@ body.rp-on { overflow: hidden; }
     if (!r) return;
     const c = centerOf(r), g = document.createElement('div');
     g.className = 'seq-float ' + (kind || 'dmg'); g.setAttribute('aria-hidden', 'true'); g.textContent = txt;
+    const n = floatN({ kind: kind || 'dmg', txt }); if (n) { g.style.setProperty('--s', dmgScale(n).toFixed(2)); if (n >= 20) g.classList.add('big'); }
     g.style.top = Math.round(r.top + r.height * .28 + (k || 0) * 22) + 'px';
     document.body.appendChild(g); SEQ.ghosts.push(g);
     // centré sur la personne, sans déborder de l'écran (sur téléphone, vous êtes tout à gauche)
@@ -15891,6 +15941,23 @@ body.rp-on { overflow: hidden; }
     g.style.left = Math.round(Math.max(half, Math.min(vw - half, c.x + ((k || 0) % 2 ? 26 : -10) * Math.min(1, k || 0)))) + 'px';
     anim(g, [{ opacity: 0, transform: 'translate(-50%, 10px) scale(.6)' }, { opacity: 1, transform: 'translate(-50%, 0) scale(1.15)', offset: .15 }, { opacity: 1, offset: .7 },
       { opacity: 0, transform: 'translate(-50%, -44px) scale(1)' }], { duration: 1000, delay, fill: 'both', easing: 'ease-out' });
+  }
+  // Un gros coup reçu (10 dégâts et plus) fait trembler la scène, d'autant plus que le coup est lourd (0.83)
+  function stageShake(at, dmg) {
+    const st = screenEl.querySelector('.stage'); if (!st) return;
+    const a = Math.min(9, 2 + dmg / 5);
+    anim(st, [{ transform: 'none' }, { transform: `translate(${-a}px, ${(a * .5).toFixed(1)}px)` }, { transform: `translate(${(a * .8).toFixed(1)}px, ${(-a * .4).toFixed(1)}px)` },
+      { transform: `translate(${(-a * .4).toFixed(1)}px, ${(a * .3).toFixed(1)}px)` }, { transform: 'none' }], { duration: Math.round(260 + a * 12), delay: at, easing: 'ease-out' });
+  }
+  // L'armure absorbe tout le coup : un bouclier apparaît et se fend en deux (0.83)
+  function shieldCrack(r, at) {
+    if (!r) return;
+    const w = Math.min(120, r.width * .7), g = fxSvg('shield-crack', SVG_CRACK, centerOf(r).x, r.top + r.height * .62, w, w);
+    anim(g, [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1.08)', offset: .25 }, { opacity: 1, transform: 'scale(1)', offset: .5 }, { opacity: 0, transform: 'scale(1)' }], { duration: 760, delay: at - 60, fill: 'both' });
+    const L = g.querySelector('.l'), R = g.querySelector('.r'), z = g.querySelector('.z');
+    anim(L, [{ transform: 'none' }, { transform: 'none', offset: .5 }, { transform: 'translate(-14px, 6px) rotate(-14deg)' }], { duration: 760, delay: at - 60, fill: 'both', easing: 'ease-in' });
+    anim(R, [{ transform: 'none' }, { transform: 'none', offset: .5 }, { transform: 'translate(14px, 6px) rotate(14deg)' }], { duration: 760, delay: at - 60, fill: 'both', easing: 'ease-in' });
+    anim(z, [{ opacity: 0 }, { opacity: 0, offset: .38 }, { opacity: 1, offset: .45 }, { opacity: 0, offset: .6 }], { duration: 760, delay: at - 60, fill: 'both' });
   }
   // Vous encaissez : secousse et éclair blanc (ou vert pour la Radiation)
   function hurtMe(meFig, delay, rad) {
@@ -15906,6 +15973,10 @@ body.rp-on { overflow: hidden; }
   const SVG_ORB = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#c6ff5e" stroke="#5c9e45" stroke-width="5"/><circle cx="40" cy="40" r="9" fill="#efffcf"/></svg>';
   const SVG_RING = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ffd23f" stroke-width="7"/><circle cx="50" cy="50" r="40" fill="none" stroke="#1e2326" stroke-width="2"/></svg>';
   const SVG_SHIELD = '<svg viewBox="0 0 100 100"><path d="M50 6 L86 20 V48 C86 72 70 86 50 94 C30 86 14 72 14 48 V20 Z" fill="rgba(111, 178, 255, .35)" stroke="#1f5faf" stroke-width="6" stroke-linejoin="round"/><path d="M50 18 L76 28 V48 C76 64 66 76 50 82" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>';
+  // Le bouclier qui se fend : deux moitiés le long d'une fêlure en zigzag, et l'éclair de la fêlure
+  const SVG_CRACK = '<svg viewBox="0 0 100 100"><g class="l"><path d="M50 6 L14 20 V48 C14 72 30 86 50 94 L54 78 L46 62 L56 44 L44 28 Z" fill="rgba(111, 178, 255, .5)" stroke="#1f5faf" stroke-width="5" stroke-linejoin="round"/></g>'
+    + '<g class="r"><path d="M50 6 L86 20 V48 C86 72 70 86 50 94 L54 78 L46 62 L56 44 L44 28 Z" fill="rgba(111, 178, 255, .5)" stroke="#1f5faf" stroke-width="5" stroke-linejoin="round"/></g>'
+    + '<path class="z" d="M50 6 L44 28 L56 44 L46 62 L54 78 L50 94" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/></svg>';
   const SVG_PLUS = '<svg viewBox="0 0 100 100"><path d="M40 14h20v26h26v20H60v26H40V60H14V40h26z" fill="#7ee0a6" stroke="#1d8a55" stroke-width="5" stroke-linejoin="round"/></svg>';
   const SVG_ZZZ = '<svg viewBox="0 0 100 100"><text x="18" y="70" font-family="Anton, Impact, sans-serif" font-size="46" fill="#ffffff" stroke="#1e2326" stroke-width="3">Z z z</text></svg>';
   // Quel geste pour quelle action (clé de ACTIONS dans engine.js)
@@ -15940,7 +16011,7 @@ body.rp-on { overflow: hidden; }
     let k = 0, hurt = 0;
     st.fx.forEach(ev => {
       const at = t + hurt * (spacing || 150);
-      if (ev.type === 'hitPlayer') { if (ev.dmg > 0) { seqFloat(meR, `−${ev.dmg}`, 'dmg', at, k++); hurtMe(meFig, at, false); hpDrop(at, ev.dmg); snd('hurt', at, { dmg: ev.dmg }); } else if (ev.absorbed > 0) { seqFloat(meR, `−${ev.absorbed}`, 'blk', at, k++); snd('blocked', at); } hurt++; }
+      if (ev.type === 'hitPlayer') { if (ev.dmg > 0) { seqFloat(meR, `−${ev.dmg}`, 'dmg', at, k++); hurtMe(meFig, at, false); hpDrop(at, ev.dmg); snd('hurt', at, { dmg: ev.dmg }); if (ev.dmg >= 10) stageShake(at, ev.dmg); } else if (ev.absorbed > 0) { seqFloat(meR, 'Bloqué', 'blk', at, k++); shieldCrack(meR, at); snd('blocked', at); } hurt++; }
       else if (ev.type === 'playerPoison') { seqFloat(meR, `−${ev.dmg}`, 'rad', at, k++); hurtMe(meFig, at, true); hpDrop(at, ev.dmg); snd('radTick', at); snd('hurt', at, { dmg: ev.dmg }); }
       else if (ev.type === 'barbed' && ev.i != null) { seqFloat(rectOf(foeFig(ev.i)), `−${ev.dmg}`, 'dmg', at, 0); snd('spikes', at); }
       else if (ev.type === 'jealousHit') { seqFloat(rectOf(foeFig(ev.i)), `−${ev.dmg}`, 'dmg', at, 0); snd('hit', at, { dmg: ev.dmg }); }
@@ -16289,7 +16360,7 @@ body.rp-on { overflow: hidden; }
       if (!m || !b || b.hp == null || b.hp === m.hp) return;
       const el = screenEl.querySelector(`.foe[data-i="${x.i}"]`), txt = el && el.querySelector('.hp-line > span:last-child'), bar = el && el.querySelector('.bar > span');
       if (!txt) return;
-      const show = v => { if (!txt.isConnected) return; txt.textContent = `${v} / ${m.maxHp}`; if (bar) bar.style.width = Math.max(0, Math.round(100 * v / m.maxHp)) + '%'; };
+      const show = v => { if (!txt.isConnected) return; txt.textContent = `${v} / ${m.maxHp}`; barTo(bar, Math.max(0, Math.round(100 * v / m.maxHp))); };
       const fin = m.hp; let v = b.hp, j = 0, lastAt = fx.at(k, 0);
       show(v);
       ev.forEach(e => {
