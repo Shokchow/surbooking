@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.79.1';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.80.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -290,6 +290,7 @@ header.eden { position: sticky; top: 8px; z-index: 40; pointer-events: none; dis
 .meter i { width: 9px; height: 9px; border-radius: 2px; border: 1px solid #b9c1bc; background: #e9ece7; }
 .meter i.t { margin-right: 5px; }
 .meter i.f { background: var(--accent); border-color: var(--accent); }
+.meter.long { gap: 1px; } .meter.long i { width: 4px; height: 9px; border-radius: 1px; } .meter.long i.t { margin-right: 3px; }
 .meter .mono { font-size: 11px; color: var(--muted); margin-left: 6px; }
 .sdesc { grid-column: 1 / -1; color: var(--muted); display: grid; gap: 2px; }
 .sdesc .tier b { color: var(--muted); font-weight: 600; }
@@ -1615,7 +1616,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Garder 8</dt><dd>Après le 12e pick, vous gardez 8 de vos cartes (ÉDEN en présélectionne 8, vous changez ce que vous voulez) ; les 4 autres partent à l'incinérateur. Les fusions attendent ce choix : une paire gardée fusionne, une paire écartée non. Toutes les cartes que vous possédez sont jouées : le deck grossit de 8 cartes à chaque étage.</dd>
       <dt>Fusion</dt><dd>Automatique : dès que vous possédez 2 cartes identiques, elles fusionnent, en chaîne si besoin. 2 blanches identiques donnent la verte de leur lignée, 2 vertes identiques donnent la bleue, 2 bleues identiques donnent la violette, que les cartes viennent du draft (pendant le draft, dès le pick), d'un coffre, de la boutique ou d'un événement. Le deck perd une carte à chaque fusion, mais jamais de points de famille : la carte fusionnée garde les points de ses deux cartes. 2 blanches (2 points) donnent une verte (2 points) ; 2 vertes (4 points) donnent une bleue qui compte 4 points au lieu de 3 ; 2 bleues donnent une violette qui compte 6, 7 ou 8 points (au lieu de 4) selon les bleues fusionnées. Ces points sont écrits sur la carte, à côté de sa famille, et partent avec elle si elle quitte le deck. Une fusion est donc toujours avantageuse. Les cartes de base, les violettes, les orange et les rouges ne fusionnent pas. Les postulantes fusionnent leurs paires de la même façon.</dd>
       <dt>Familles</dt><dd>Chaque carte appartient à une famille (Instinct, Blindage, Débrouille, Mutation, Cryogénie, Panique, Zizanie, Sacrifice). La ligne « Combo » d'une carte dit avec quoi elle se combine.</dd>
-      <dt>Spécialisation</dt><dd>Blanche 1 point, verte 2, bleue 3, violette 4 (en finale : orange 5, rouge 6) ; une carte fusionnée garde les points de ses deux cartes (voir Fusion). Chaque famille a trois paliers, à 4, 8 et 16 points, qui se cumulent : le premier est un petit bonus, le dernier change la façon de jouer. Seules vos deux familles les plus fournies sont actives (principale et secondaire) ; une troisième famille reste en sommeil tant qu’elle ne les dépasse pas. Les rivaux aussi se spécialisent : votre boss en profite contre vous.</dd>
+      <dt>Spécialisation</dt><dd>Blanche 1 point, verte 2, bleue 3, violette 4 (en finale : orange 5, rouge 6) ; une carte fusionnée garde les points de ses deux cartes (voir Fusion). Chaque famille a trois paliers, à 4, 8 et 16 points, qui se cumulent : le premier est un petit bonus, le troisième change la façon de jouer. Un quatrième, à 36 points, est réservé aux plus obstinés : il demande un deck presque entièrement d'une seule famille, et s'atteint surtout en finale. Seules vos deux familles les plus fournies sont actives (principale et secondaire) ; une troisième famille reste en sommeil tant qu’elle ne les dépasse pas. Les rivaux aussi se spécialisent : votre boss en profite contre vous.</dd>
       <dt>Coups bas</dt><dd>À la serre et à la ménagerie, quelques cartes vertes sans famille se glissent dans les boosters : Coup de coude, Croche-pied, Faux témoignage, Pot-de-vin. Faibles contre un monstre, elles sont fortes contre un postulant, en duel et en finale. Elles ne comptent pour aucune famille. Les postulantes les draftent aussi, et les jouent contre vous. Plusieurs coups bas se renforcent, hors de la limite des deux familles : à 2, Sournois (un coup bas est dans votre main au premier tour de chaque duel et de la finale) ; à 3, Fourbe (ils ne coûtent rien contre un postulant) ; à 5, Crapule (leur effet est doublé contre un postulant).</dd>
       <dt>Orange et rouge</dt><dd>Deux raretés qui n’existent qu’en finale : l’orange est légendaire, la rouge mythique. Une de chaque par famille. Elles ne fusionnent pas, et comptent 5 et 6 points de famille pour les paliers : une seule peut débloquer un palier juste avant le duel.</dd>
       <dt>Boss de finale</dt><dd>Le deck vient toujours de l’autre finaliste, mais la finale a quatre visages, tirés au hasard et annoncés avant le draft final. Le postulant (4 fois sur 10) : le gagnant de l’autre duel, tel quel. Le postulant muté (une fois sur 4) : à la fin de chacun de ses tours, sa carte la plus chère se duplique dans sa main ; gelé, il ne prolifère pas. Le monstre échappé (une fois sur 4) : la Mère, avec le deck de l’autre finaliste et des cartes animales ; elle engendre un rejeton tous les deux tours, ses rejetons la suivent en cryogénie, mais chaque rejeton abattu la met en furie. ÉDEN (une fois sur 10) : elle disqualifie l’autre finaliste, garde son deck et remplace ses cartes de base par des protocoles qui vous retirent de l’énergie, vous font défausser ou inventent une règle en plein combat (Austérité, Taxe, Quota, Tarif unique), dès le premier tour.</dd>
@@ -2127,47 +2128,59 @@ body.in-combat .pops { top: 150px; }
   const ENCOUNTERS3 = [DUEL3, PHALENES, DIONEE];
   const ENCOUNTERS4 = [DUEL4, LAPINS, MERE];
 
-  // Spécialisation : des paliers à 4, 8 et 16 points dans une famille (blanche 1, verte 2, bleue 3, violette 4).
+  // Spécialisation : des paliers à 4, 8, 16 et 36 points dans une famille (blanche 1, verte 2, bleue 3, violette 4).
   // Seules les deux familles les plus fournies sont actives : une principale, une secondaire. Les paliers se cumulent.
+  // 0.80 (Raphaël : « un dernier palier… quelque chose qu'on ne pourrait vraiment pas atteindre à chaque fois ») : le palier 36.
+  // Mesuré avec le joueur automatique, qui draft déjà par familles : jamais avant l'étage 4, 5 % des decks à la fin de
+  // l'étage 4, 21 % en finale (après son draft) ; la deuxième famille n'y arrive jamais. Un palier de finale, rare et fort.
   let SPEC_THRESHOLD = 4;
-  let SPEC_TIERS = 3;
-  // Seuils des trois paliers (le premier vaut SPEC_THRESHOLD) ; tierPts(t) donne le seuil du palier t
-  let SPEC_STEPS = [4, 8, 16]; // 27/10 : troisième palier à 16 (12 avant) : il redevient une récompense
+  let SPEC_TIERS = 4;
+  // Seuils des paliers (le premier vaut SPEC_THRESHOLD) ; tierPts(t) donne le seuil du palier t
+  let SPEC_STEPS = [4, 8, 16, 36]; // 27/10 : troisième palier à 16 (12 avant) : il redevient une récompense
   const tierPts = t => SPEC_STEPS[Math.max(0, Math.min(SPEC_STEPS.length, t) - 1)] || 0;
   const SPECS = {
     'Instinct': { tiers: [
       { name: 'Bête sauvage', text: '+1 Force au début de chaque combat.' },
       { name: 'Bête enragée', text: '+2 Force au début de chaque combat, au lieu de +1.' },
-      { name: 'Prédateur', text: 'Votre première attaque à dégâts fixes de chaque tour inflige 8 dégâts de plus.' } ] },
+      { name: 'Prédateur', text: 'Votre première attaque à dégâts fixes de chaque tour inflige 8 dégâts de plus.' },
+      { name: 'Superprédateur', text: '+1 Force au début de chacun de vos tours, jusqu’à la fin du combat.' } ] },
     'Mutation': { tiers: [
       { name: 'Mutant', text: 'Votre Radiation ne diminue plus d’un tour à l’autre.' },
       { name: 'Surdose', text: 'Vos cartes de Radiation en posent 2 de plus.' },
-      { name: 'Réaction en chaîne', text: 'Au début de chacun de vos tours, chaque ennemi irradié gagne +3 Radiation.' } ] },
+      { name: 'Réaction en chaîne', text: 'Au début de chacun de vos tours, chaque ennemi irradié gagne +3 Radiation.' },
+      { name: 'Cœur du réacteur', text: 'La Réaction en chaîne pose +6 Radiation au lieu de +3, et touche aussi les ennemis qui n’étaient pas irradiés.' } ] },
     'Blindage': { tiers: [
       { name: 'Carapace', text: 'La moitié de votre armure est conservée d’un tour à l’autre.' },
       { name: 'Barbelés', text: 'Tant que vous avez de l’armure, chaque coup reçu renvoie 4 dégâts à l’attaquant.' },
-      { name: 'Forteresse', text: 'Toute votre armure est conservée d’un tour à l’autre, et les Barbelés renvoient 14 dégâts par coup.' } ] },
+      { name: 'Forteresse', text: 'Toute votre armure est conservée d’un tour à l’autre, et les Barbelés renvoient 14 dégâts par coup.' },
+      { name: 'Arche blindée', text: 'Vous gagnez 8 d’armure au début de chacun de vos tours.' } ] },
     'Débrouille': { tiers: [
       { name: 'Débrouillard', text: 'Vous piochez 6 cartes par tour au lieu de 5.' },
       { name: 'Récup', text: 'Chaque victoire vous rapporte 5 tickets de plus.' },
-      { name: 'Système D', text: 'Votre première carte de chaque tour vous fait piocher 1 carte.' } ] },
+      { name: 'Système D', text: 'Votre première carte de chaque tour vous fait piocher 1 carte.' },
+      { name: 'Couteau suisse', text: 'Vous avez 1 énergie de plus à chaque tour.' } ] },
     'Cryogénie': { tiers: [
       { name: 'Cryogéniste', text: 'Une cible gelée subit +2 dégâts par coup.' },
       { name: 'Grand froid', text: 'Vos Gels durent 1 tour de plus, et une cible gelée subit +4 dégâts par coup, au lieu de +2.' },
-      { name: 'Zéro absolu', text: 'Une cible gelée qui tombe à 8 PV ou moins part aussitôt en cryogénie. En duel, la postulante abandonne.' } ] },
+      { name: 'Zéro absolu', text: 'Une cible gelée qui tombe à 8 PV ou moins part aussitôt en cryogénie. En duel, la postulante abandonne.' },
+      { name: 'Ère glaciaire', text: 'Le Zéro absolu frappe dès 25 PV au lieu de 8.' } ] },
     'Panique': { tiers: [
       { name: 'Provocateur', text: 'La Vulnérabilité que vous infligez fait +75 % de dégâts au lieu de +50 %.' },
       { name: 'Sauve-qui-peut', text: 'La Faiblesse et la Vulnérabilité que vous infligez durent 2 tours de plus.' },
       { name: 'Tétanisé', text: 'Un ennemi qui atteint 3 de Faiblesse perd son prochain tour, puis sa Faiblesse retombe à 0.',
-        foeText: 'Quand votre Faiblesse atteint 3, vous perdez 2 énergie à votre prochain tour (jamais deux tours de suite), puis votre Faiblesse retombe à 0.' } ] },
+        foeText: 'Quand votre Faiblesse atteint 3, vous perdez 2 énergie à votre prochain tour (jamais deux tours de suite), puis votre Faiblesse retombe à 0.' },
+      { name: 'Terreur', text: 'Un ennemi tétanisé devient aussi Vulnérable pendant 3 tours.',
+        foeText: 'Quand vous êtes tétanisé, vous devenez aussi Vulnérable pendant 3 tours.' } ] },
     'Zizanie': { tiers: [
       { name: 'Semeur de zizanie', text: 'Les coups détournés par la Jalousie font +100 % de dégâts.' },
       { name: 'Langue de vipère', text: 'Les coups détournés font +125 % de dégâts, au lieu de +100 %.' },
-      { name: 'Rancune', text: 'Votre Jalousie ne s’efface plus à la fin du tour et détourne toute l’attaque de la cible ; seule, la cible encaisse ses coups en entier.' } ] },
+      { name: 'Rancune', text: 'Votre Jalousie ne s’efface plus à la fin du tour et détourne toute l’attaque de la cible ; seule, la cible encaisse ses coups en entier.' },
+      { name: 'Pomme de discorde', text: 'Les coups détournés font +200 % de dégâts, au lieu de +125 %.' } ] },
     'Sacrifice': { tiers: [
       { name: 'Secouriste', text: 'Chaque soin vous donne aussi autant d’armure, et les PV que vos cartes vous font perdre vous sont rendus après chaque victoire.' },
       { name: 'Garrot', text: 'Vos cartes « Perdez N PV » vous coûtent 2 PV de moins.' },
-      { name: 'Dernier souffle', text: 'Une fois par combat, quand vous tombez à 0 PV, vous restez à 1 PV avec 20 d’armure.' } ] },
+      { name: 'Dernier souffle', text: 'Une fois par combat, quand vous tombez à 0 PV, vous restez à 1 PV avec 20 d’armure.' },
+      { name: 'Lazare', text: 'Votre Dernier souffle vous relève à 30 PV au lieu de 1.' } ] },
   };
   Object.values(SPECS).forEach(sp => { sp.name = sp.tiers[0].name; sp.text = sp.tiers[0].text; });
   const tierOf = (sp, a) => (sp && sp[a]) || 0;
@@ -2180,6 +2193,13 @@ body.in-combat .pops { top: 150px; }
   // avec Rancune (palier 16), Système D qui pioche, Tétanisé à 3, Réaction en chaîne +3, Gel en duel : 1 énergie par Gel.
   let STUN_PLAYER = 2; // Tétanisé, côté joueur : énergie perdue (avant : tout le tour)
   let PAN_EXTRA = 2, ZIZ_SELF_T = 3, PRED_FLAT = 8, SYSD_DRAW = true, LB_BLOCK = 20, STUN_AT = 3, CHAIN_N = 3, RANCUNE_FULL = true, DUEL_CHILL = true; // CAP_OFF : familles dont le palier 12 est coupé (mesures seulement)
+  // Palier 36 (0.80) : Superprédateur (+1 Force par tour), Cœur du réacteur (+6, tous les ennemis), Arche blindée (+8 armure
+  // par tour), Couteau suisse (+1 énergie), Ère glaciaire (Zéro absolu à 25 PV), Terreur (le tétanisé devient Vulnérable 3 tours), Pomme de discorde
+  // (×3), Lazare (Dernier souffle à 30 PV). Les mêmes règles pour la postulante d'en face, en solo comme en direct.
+  let APEX = 1, CHAIN4 = 6, BASTION = 8, KNIFE = 1, ZERO_HP4 = 25, TERROR_VULN = 3, ZIZ_MULT4 = 3, LAZARE = 30;
+  const t4 = (sp, a) => tierOf(sp, a) >= 4;
+  const knifeOf = sp => (t4(sp, 'Débrouille') ? KNIFE : 0);
+  const zizMult = z => (z >= 4 ? ZIZ_MULT4 : z >= 2 ? ZIZ_MULT[1] : ZIZ_MULT[0]);
   const cryoTurns = sp => { const t = tierOf(sp, 'Cryogénie'); return t >= 2 ? CRYO_TURNS[1] : t >= 1 ? CRYO_TURNS[0] : 0; };
   // Radiation en plus par carte selon le palier de Mutation (Surdose, palier 8 : +2)
   let SURDOSE = 2;
@@ -2652,7 +2672,7 @@ body.in-combat .pops { top: 150px; }
   // Version du protocole : seules les parties de même version se retrouvent à une table (mêmes cartes, mêmes règles)
   // À chaque changement du moteur (cartes, règles), on l'augmente : l'arbitre des duels n'a qu'un moteur, les tables ne
   // mélangent pas les versions (tools/build_edge.js le rappelle si on l'oublie)
-  const LIVE_VERSION = 12; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73)
+  const LIVE_VERSION = 13; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73) ; 13 : palier 36 des familles (0.80)
   // Une carte telle que le serveur la garde : de quoi faire choisir un bot (valeur, famille, points, rareté)
   const liveCard = id => { const c = CARDS[id]; return { id, v: c.value || 0, a: ARCHS.includes(c.arch) ? c.arch : '', p: ptsOf(id), r: c.rarity }; };
   // Ce qu'un joueur apporte à la table : son nom, sa classe, sa silhouette, ses cartes d'avant ce draft (hors cartes de base)
@@ -2920,7 +2940,13 @@ body.in-combat .pops { top: 150px; }
       else if (t === 'zeroAbsolu') out.push({ type: 'playerZero', name: hName });
       else if (t === 'playerZero') out.push(Object.assign({ type: 'zeroAbsolu', duel: true }, H));
       else if (t === 'barbed') out.push(e.onPlayer ? Object.assign({ type: 'barbed', dmg: e.dmg }, H) : { type: 'barbed', name: hName, dmg: e.dmg, onPlayer: true });
-      else if (t === 'lastBreath') out.push(e.boss ? { type: 'lastBreath' } : { type: 'lastBreath', name: hName, boss: true });
+      else if (t === 'lastBreath') out.push(e.boss ? Object.assign({ type: 'lastBreath' }, e.hp ? { hp: e.hp } : {}) : Object.assign({ type: 'lastBreath', name: hName, boss: true }, e.hp ? { hp: e.hp } : {}));
+      else if (t === 'apex') out.push({ type: 'apexBoss', name: hName, force: e.force });
+      else if (t === 'apexBoss') out.push({ type: 'apex', force: e.force });
+      else if (t === 'bastion') out.push({ type: 'bastionBoss', name: hName, n: e.n, block: e.block });
+      else if (t === 'bastionBoss') out.push({ type: 'bastion', n: e.n, block: e.block });
+      else if (t === 'terror') out.push({ type: 'terrorPlayer', name: hName, n: e.n });
+      else if (t === 'terrorPlayer') out.push(Object.assign({ type: 'terror', n: e.n }, H));
       else if (t === 'guestTurn') out.push({ type: 'turnStart', turn: e.turn });
       else if (t === 'turnStart') out.push({ type: 'foeTurn', name: hName, turn: e.turn });
       else if (t === 'combatStart' || t === 'alert' || t === 'lastTurn' || t === 'duelOver' || t === 'succes') out.push(Object.assign({}, e));
@@ -3171,6 +3197,9 @@ body.in-combat .pops { top: 150px; }
     if (e.variant === 'eden' && run.combat.monsters[0]) setEdenRule(run, run.combat.monsters[0]); // ÉDEN ouvre la finale par une règle
     const sp0 = run.combat.spec;
     if (tierOf(sp0, 'Instinct')) run.combat.player.force += tierOf(sp0, 'Instinct') >= 2 ? 2 : 1;
+    if (t4(sp0, 'Instinct')) run.combat.player.force += APEX; // Superprédateur (36) : +1 Force à chacun de vos tours, le premier compris
+    if (t4(sp0, 'Blindage')) run.combat.player.block += BASTION; // Arche blindée (36)
+    run.combat.player.energy += knifeOf(sp0); // Couteau suisse (36)
     const mo = classMods(classOf(run)); run.combat.player.energy += turnMod(mo, 'energy', 1); // talent de classe (1er tour)
     const duelM = run.combat.monsters.find(x => x.duel);
     if (soloDuelStart(run, duelM)) { run.combat.player.energy = Math.max(0, run.combat.player.energy + DUEL_FIRST_ENERGY); run.combat.duelStart = true; } // vous commencez : 2 énergie
@@ -3285,9 +3314,10 @@ body.in-combat .pops { top: 150px; }
   }
   // Zéro absolu (Cryogénie, 16 points) : une cible gelée à 8 PV ou moins part aussitôt en cryogénie.
   const ZERO_HP = 8;
+  const zeroAt = sp => (t4(sp, 'Cryogénie') ? ZERO_HP4 : ZERO_HP); // Ère glaciaire (36) : dès 25 PV
   function zeroCheck(run, m) {
     const c = run.combat;
-    if (c.over || !m.alive || m.frozen <= 0 || m.hp > ZERO_HP || tierOf(c.spec, 'Cryogénie') < 3) return;
+    if (c.over || !m.alive || m.frozen <= 0 || m.hp > zeroAt(c.spec) || tierOf(c.spec, 'Cryogénie') < 3) return;
     emit(run, 'zeroAbsolu', { i: m.i, name: m.name, duel: !!m.duel });
     toCryo(run, m, { zero: true });
   }
@@ -3306,8 +3336,9 @@ body.in-combat .pops { top: 150px; }
   function lastBreath(run) {
     const c = run.combat;
     if (tierOf(c.spec, 'Sacrifice') < 3 || c.lastBreath) return false;
-    c.lastBreath = true; run.hp = 1; c.player.block += LB_BLOCK;
-    emit(run, 'lastBreath', {});
+    const lz = t4(c.spec, 'Sacrifice'); // Lazare (36) : relevé à 30 PV
+    c.lastBreath = true; run.hp = lz ? Math.min(maxHpOf(run), LAZARE) : 1; c.player.block += LB_BLOCK;
+    emit(run, 'lastBreath', lz ? { hp: run.hp } : {});
     return true;
   }
   function playerHpCheck(run) {
@@ -3318,8 +3349,9 @@ body.in-combat .pops { top: 150px; }
   function toCryo(run, m, src) {
     const c = run.combat;
     if (m.duel && !(src && src.zero) && tierOf(m.spec, 'Sacrifice') >= 3 && !m.lastBreath) {
-      m.lastBreath = true; m.hp = 1; m.block += LB_BLOCK;
-      emit(run, 'lastBreath', { name: m.name, boss: true });
+      const lz = t4(m.spec, 'Sacrifice');
+      m.lastBreath = true; m.hp = lz ? Math.min(m.maxHp, LAZARE) : 1; m.block += LB_BLOCK;
+      emit(run, 'lastBreath', lz ? { name: m.name, boss: true, hp: m.hp } : { name: m.name, boss: true });
       return;
     }
     // Blattes : increvables une fois, sauf gelées ou irradiées (et sauf Zéro absolu)
@@ -3389,7 +3421,7 @@ body.in-combat .pops { top: 150px; }
     const c = run.combat;
     const partner = c.monsters.find(x => x.alive && x !== m && !x.away);
     let d = raw * (m.jealousMult || (m.jealousX2 ? 2 : 1));
-    if (zizSpec) d = Math.floor(d * (zizSpec >= 2 ? ZIZ_MULT[1] : ZIZ_MULT[0]));
+    if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
     const t = partner || m;
     if (!partner && !(zizSpec >= ZIZ_SELF_T)) d = Math.floor(d / 2);
     if (t.vuln > 0) d = Math.floor(d * 1.5);
@@ -3402,7 +3434,7 @@ body.in-combat .pops { top: 150px; }
   function jealousHitPlayer(run, raw, zizSpec) {
     const p = run.combat.player;
     let d = raw * (p.jealousMult || (p.jealousX2 ? 2 : 1));
-    if (zizSpec) d = Math.floor(d * (zizSpec >= 2 ? ZIZ_MULT[1] : ZIZ_MULT[0]));
+    if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
     d = Math.floor(d / 2);
     if (p.vuln > 0) d = Math.floor(d * 1.5);
     emit(run, 'playerJealous', { dmg: d });
@@ -3541,7 +3573,7 @@ body.in-combat .pops { top: 150px; }
         const lost = m.duel.hand.splice(k, 1)[0]; m.duel.discard.push(lost);
         emit(run, 'bribe', { i: m.i, name: m.name, id: lost.id });
       }
-      if (card.weak && tierOf(sp, 'Panique') >= 3 && m.alive && m.weak >= STUN_AT && !m.stunned && !(run.liveDuel && m.stunCd)) { m.stunned = true; m.weak = 0; emit(run, 'stun', { i: m.i, name: m.name }); }
+      if (card.weak && tierOf(sp, 'Panique') >= 3 && m.alive && m.weak >= STUN_AT && !m.stunned && !(run.liveDuel && m.stunCd)) { m.stunned = true; m.weak = 0; emit(run, 'stun', { i: m.i, name: m.name }); if (t4(sp, 'Panique')) { m.vuln = Math.max(m.vuln || 0, TERROR_VULN); emit(run, 'terror', { i: m.i, name: m.name, n: TERROR_VULN }); } }
       if (card.vulnLock) m.vulnLock = true;
       if (card.jealous) { m.jealous = card.jealous === 'full' || (RANCUNE_FULL && tierOf(sp, 'Zizanie') >= 3) ? 2 : Math.max(m.jealous || 0, 1); emit(run, 'jealous', { i: m.i, name: m.name, full: card.jealous === 'full' }); }
       if (card.jealousBoost && m.jealous) m.jealousMult = Math.max(m.jealousMult || 1, card.jealousBoost === true ? 2 : card.jealousBoost);
@@ -3765,7 +3797,9 @@ body.in-combat .pops { top: 150px; }
     }
     if (p.blockLock) { /* Coque de l'arche */ } else if (p.keepBlock) p.keepBlock = false; else p.block = tierOf(c.spec, 'Blindage') >= 3 ? p.block : tierOf(c.spec, 'Blindage') ? Math.floor(p.block / 2) : 0;
     const mo = classMods(c.cls);
-    p.energy = ENERGY + turnMod(mo, 'energy', c.turn);
+    p.energy = ENERGY + turnMod(mo, 'energy', c.turn) + knifeOf(c.spec);
+    if (t4(c.spec, 'Blindage')) { p.block += BASTION; emit(run, 'bastion', { n: BASTION, block: p.block }); }
+    if (t4(c.spec, 'Instinct')) { p.force += APEX; emit(run, 'apex', { force: p.force }); }
     const rg = regenOf(mo, maxHpOf(run));
     if (rg && run.hp > 0 && run.hp < maxHpOf(run)) { const before = run.hp; run.hp = Math.min(maxHpOf(run), run.hp + rg); emit(run, 'classRegen', { amount: run.hp - before }); }
     c.inPlayerTurn = true;
@@ -3773,8 +3807,9 @@ body.in-combat .pops { top: 150px; }
     c.played = 0;
     c.predUsed = false;
     emit(run, 'turnStart', { turn: c.turn });
-    // Réaction en chaîne (Mutation, 12) : chaque ennemi irradié gagne +1 Radiation
-    if (tierOf(c.spec, 'Mutation') >= 3) c.monsters.forEach(m => { if (m.alive && m.poison > 0) { m.poison += CHAIN_N; emit(run, 'chain', { i: m.i, name: m.name, poison: m.poison }); } });
+    // Réaction en chaîne (Mutation, 16) : chaque ennemi irradié gagne +3 Radiation ; Cœur du réacteur (36) : +6, et tous les ennemis
+    const mt = tierOf(c.spec, 'Mutation');
+    if (mt >= 3) c.monsters.forEach(m => { if (m.alive && (m.poison > 0 || mt >= 4)) { m.poison += mt >= 4 ? CHAIN4 : CHAIN_N; emit(run, 'chain', { i: m.i, name: m.name, poison: m.poison }); } });
     if (p.poison > 0) {
       run.hp -= p.poison;
       emit(run, 'playerPoison', { dmg: p.poison });
@@ -3933,7 +3968,7 @@ body.in-combat .pops { top: 150px; }
     if (card.duelTrip) { p.tripped = (p.tripped || 0) + card.duelTrip * lx; emit(run, 'tripPlayer', { name: m.name }); }
     if (card.duelBribe) { p.bribed = (p.bribed || 0) + lx; emit(run, 'bribePlayer', { name: m.name }); }
     if (card.edenRule) setEdenRule(run, m);
-    if (card.weak && tierOf(m.spec, 'Panique') >= 3 && p.weak >= STUN_AT && !p.stunned && !p.stunCd) { p.stunned = true; p.weak = 0; emit(run, 'playerStun', { name: m.name, n: STUN_PLAYER }); }
+    if (card.weak && tierOf(m.spec, 'Panique') >= 3 && p.weak >= STUN_AT && !p.stunned && !p.stunCd) { p.stunned = true; p.weak = 0; emit(run, 'playerStun', { name: m.name, n: STUN_PLAYER }); if (t4(m.spec, 'Panique')) { p.vuln = Math.max(p.vuln || 0, TERROR_VULN); emit(run, 'terrorPlayer', { name: m.name, n: TERROR_VULN }); } }
     if (card.jealous) { p.jealous = card.jealous === 'full' || (RANCUNE_FULL && tierOf(m.spec, 'Zizanie') >= 3) ? 2 : Math.max(p.jealous || 0, 1); emit(run, 'jealousPlayer', { name: m.name }); }
     if (card.jealousBoost && p.jealous) p.jealousMult = Math.max(p.jealousMult || 1, card.jealousBoost === true ? 2 : card.jealousBoost);
     if (card.vulnLock) p.vulnLock = true;
@@ -3988,7 +4023,7 @@ body.in-combat .pops { top: 150px; }
     emit(run, 'bossCardFx', { name: m.name, id: ci.id, block: Math.max(0, (m.block || 0) - fx0.block), weak: Math.max(0, (p.weak || 0) - fx0.weak), vuln: Math.max(0, (p.vuln || 0) - fx0.vuln),
       frozen: Math.max(0, (p.frozen || 0) - fx0.frozen), poison: Math.max(0, (p.poison || 0) - fx0.poison) });
     // Zéro absolu de la postulante : gelé à 8 PV ou moins, c'est vous qui partez en cryogénie
-    if (!c.over && tierOf(m.spec, 'Cryogénie') >= 3 && p.frozen > 0 && run.hp <= ZERO_HP) { emit(run, 'playerZero', { name: m.name }); endCombat(run, 'cryo'); }
+    if (!c.over && tierOf(m.spec, 'Cryogénie') >= 3 && p.frozen > 0 && run.hp <= zeroAt(m.spec)) { emit(run, 'playerZero', { name: m.name }); endCombat(run, 'cryo'); }
   }
   // Énergie d'une adversaire en duel à son prochain tour, calculée comme au début de bossTurn (simple lecture, pour
   // l'interface) : 3, plus ou moins le talent de sa classe, moins 1 si vous l'avez gelée, moins vos croche-pieds.
@@ -3998,7 +4033,7 @@ body.in-combat .pops { top: 150px; }
     // duel en direct : pendant son tour, son énergie du moment
     if (b.nowEnergy != null) return { energy: b.nowEnergy, base: b.nowEnergy, chill: 0, trip: 0, stunned: false, now: true };
     if (run && run.liveDuel && run.combat && run.combat.side === 'g') return { energy: b.energy, base: b.energy, chill: 0, trip: 0, stunned: false, now: true };
-    const base = ENERGY + turnMod(classMods(m.tcls), 'energy', (b.turns || 0) + 1) + (((run && run.liveDuel) || soloDuelStart(run, m)) && !b.turns ? DUEL_SECOND_ENERGY : 0);
+    const base = ENERGY + turnMod(classMods(m.tcls), 'energy', (b.turns || 0) + 1) + knifeOf(m.spec) + (((run && run.liveDuel) || soloDuelStart(run, m)) && !b.turns ? DUEL_SECOND_ENERGY : 0);
     const chill = (DUEL_CHILL ? !!m.chill : m.frozen > 0) ? 1 : 0, trip = m.tripped || 0;
     return { energy: Math.max(0, base - chill - trip), base, chill, trip, stunned: !!m.stunned };
   }
@@ -4011,12 +4046,15 @@ body.in-combat .pops { top: 150px; }
     b.turns = (b.turns || 0) + 1;
     const mo = classMods(m.tcls);
     const chilled = DUEL_CHILL ? !!m.chill : m.frozen > 0; m.chill = 0;
-    b.energy = Math.max(0, ENERGY + turnMod(mo, 'energy', b.turns) - (chilled ? 1 : 0) - (m.tripped || 0));
+    b.energy = Math.max(0, ENERGY + turnMod(mo, 'energy', b.turns) + knifeOf(m.spec) - (chilled ? 1 : 0) - (m.tripped || 0));
+    if (t4(m.spec, 'Blindage')) { m.block += BASTION; emit(run, 'bastionBoss', { name: m.name, n: BASTION, block: m.block }); }
+    if (t4(m.spec, 'Instinct')) { m.force += APEX; emit(run, 'apexBoss', { name: m.name, force: m.force }); }
     const rg = regenOf(mo, m.maxHp);
     if (rg && b.turns > 1 && m.hp < m.maxHp) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hp + rg); emit(run, 'bossRegen', { name: m.name, amount: m.hp - before }); }
     if (m.tripped) { emit(run, 'tripped', { name: m.name, n: m.tripped }); m.tripped = 0; }
     b.played = 0; b.predUsed = false;
-    if (tierOf(m.spec, 'Mutation') >= 3 && p.poison > 0) { p.poison += CHAIN_N; emit(run, 'chainPlayer', { name: m.name, poison: p.poison }); }
+    const mt = tierOf(m.spec, 'Mutation');
+    if (mt >= 3 && (p.poison > 0 || mt >= 4)) { p.poison += mt >= 4 ? CHAIN4 : CHAIN_N; emit(run, 'chainPlayer', { name: m.name, poison: p.poison }); }
     if (chilled) emit(run, 'bossFrozen', { name: m.name });
     if (b.turns === 1 && soloDuelStart(run, m)) b.energy += DUEL_SECOND_ENERGY; // duel solo : elle aussi, 4 énergie à son premier tour
     if (run.liveDuel) {
@@ -4692,7 +4730,7 @@ body.in-combat .pops { top: 150px; }
     MAX_HP, maxHpOf, get FLOOR_HP() { return FLOOR_HP; }, set FLOOR_HP(v) { FLOOR_HP = v; }, get FINALE_PLAYER_HP() { return FINALE_PLAYER_HP; }, set FINALE_PLAYER_HP(v) { FINALE_PLAYER_HP = v; },
     TICKETS_BONUS, previewDmg, bossNextEnergy, ENERGY, HAND, get MAX_TURNS() { return MAX_TURNS; }, set MAX_TURNS(v) { MAX_TURNS = v; }, PICKS, CARDS, ORANGES, ROUGES, BLUES, get BASE_DECK() { return BASE_DECK; }, set BASE_DECK(v) { BASE_DECK = v; }, WHITES, GREENS, ACTIONS, ENCOUNTERS, RIVALS, SUCCES,
     get ZIZ_MULT() { return ZIZ_MULT; }, set ZIZ_MULT(v) { ZIZ_MULT = v; }, get CRYO_DMG() { return CRYO_DMG; }, set CRYO_DMG(v) { CRYO_DMG = v; }, get SAC_REFUND() { return SAC_REFUND; }, set SAC_REFUND(v) { SAC_REFUND = v; }, get GARROT() { return GARROT; }, set GARROT(v) { GARROT = v; }, get CRYO_TURNS() { return CRYO_TURNS; }, set CRYO_TURNS(v) { CRYO_TURNS = v; }, get BARBED() { return BARBED; }, set BARBED(v) { BARBED = v; }, get BARBED3() { return BARBED3; }, set BARBED3(v) { BARBED3 = v; }, get SURDOSE() { return SURDOSE; }, set SURDOSE(v) { SURDOSE = v; }, get CAP_OFF() { return CAP_OFF; }, set CAP_OFF(v) { CAP_OFF = v; },
-    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
+    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get APEX() { return APEX; }, set APEX(v) { APEX = v; }, get CHAIN4() { return CHAIN4; }, set CHAIN4(v) { CHAIN4 = v; }, get BASTION() { return BASTION; }, set BASTION(v) { BASTION = v; }, get KNIFE() { return KNIFE; }, set KNIFE(v) { KNIFE = v; }, get ZERO_HP4() { return ZERO_HP4; }, set ZERO_HP4(v) { ZERO_HP4 = v; }, get TERROR_VULN() { return TERROR_VULN; }, set TERROR_VULN(v) { TERROR_VULN = v; }, get ZIZ_MULT4() { return ZIZ_MULT4; }, set ZIZ_MULT4(v) { ZIZ_MULT4 = v; }, get LAZARE() { return LAZARE; }, set LAZARE(v) { LAZARE = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
     get STUN_AT() { return STUN_AT; }, set STUN_AT(v) { STUN_AT = v; }, get STUN_PLAYER() { return STUN_PLAYER; }, set STUN_PLAYER(v) { STUN_PLAYER = v; }, get CHAIN_N() { return CHAIN_N; }, set CHAIN_N(v) { CHAIN_N = v; }, get RANCUNE_FULL() { return RANCUNE_FULL; }, set RANCUNE_FULL(v) { RANCUNE_FULL = v; }, get DUEL_CHILL() { return DUEL_CHILL; }, set DUEL_CHILL(v) { DUEL_CHILL = v; },
     LOWBLOW_TIERS, lowblowCount, lowTierOf, COUPS_BAS, get LOWBLOW_CHANCE() { return LOWBLOW_CHANCE; }, set LOWBLOW_CHANCE(v) { LOWBLOW_CHANCE = v; },
     FINALE_VARIANTS, EDEN_RULES, finaleVariant, finaleOpponentName, finaleHp, get FINALE_FORCE_VARIANT() { return FINALE_FORCE_VARIANT; }, set FINALE_FORCE_VARIANT(v) { FINALE_FORCE_VARIANT = v; },
@@ -4723,7 +4761,7 @@ body.in-combat .pops { top: 150px; }
   else root.Engine = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
-window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
+window.SURBOOKING_ENGINE_FP = '82a7601ae811';
 </script>
 <script>
 /* ---- outfit_costumes_1.js ---- */
@@ -5098,7 +5136,7 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
     (st ? st.worn : []).forEach(w => {
       const it = itemOf(w.arch, w.role === 'costume' ? 'costume' : 'prop') || w.item, d = it && it.draw;
       if (!d) return;
-      const cls = `av-it av-${w.role || 'costume'}${w.tier >= 3 ? ' av-t3' : ''}`; // palier 16 : l'objet brille
+      const cls = `av-it av-${w.role || 'costume'}${w.tier >= 4 ? ' av-t3 av-t4' : w.tier >= 3 ? ' av-t3' : ''}`; // palier 16 : l'objet brille ; 36 : il resplendit
       // l'accessoire de la troisième famille passe dans la main gauche (miroir autour de x = 60)
       Object.keys(d).forEach(k => layers[k] && layers[k].push(`<g class="${cls}">${w.role === 'prop2' ? `<g transform="matrix(-1 0 0 1 120 0)">${d[k]}</g>` : d[k]}</g>`));
     });
@@ -5175,6 +5213,9 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
 .outfit li .of { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .outfit li.sleep { opacity: .62; }
 .avatar .av-t3 { filter: drop-shadow(0 0 1.4px rgba(255, 200, 70, .95)) drop-shadow(0 0 3px rgba(255, 190, 60, .55)); }
+.avatar .av-t4 { filter: drop-shadow(0 0 1.6px #fff6c8) drop-shadow(0 0 4px rgba(255, 196, 60, .95)) drop-shadow(0 0 9px rgba(140, 220, 255, .7)); }
+@media (prefers-reduced-motion: no-preference) { .avatar .av-t4 { animation: avT4 2.4s ease-in-out infinite alternate; } }
+@keyframes avT4 { from { filter: drop-shadow(0 0 1.6px #fff6c8) drop-shadow(0 0 4px rgba(255, 196, 60, .95)) drop-shadow(0 0 9px rgba(140, 220, 255, .7)); } to { filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 210, 90, 1)) drop-shadow(0 0 14px rgba(190, 140, 255, .8)); } }
 .outfit .none { color: var(--muted); font-size: 13.5px; }
 .player.has-avatar { grid-template-columns: auto minmax(0, 1fr) auto; }
 .player .avatar-mini { width: 46px; }
@@ -5546,6 +5587,7 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
     { id: 'givre', slot: 'frame', name: 'Givre', price: 400, desc: 'Des coins givrés qui scintillent au survol.', cls: 'cf-givre' },
     { id: 'dorure', slot: 'frame', name: 'Dorure du commandant', price: 800, desc: 'Un liseré doré et un reflet qui passe au survol.', cls: 'cf-dorure' },
     { id: 'cadre-admis', slot: 'frame', name: 'Tampon ADMIS', price: 0, unlock: 'dresseur', desc: 'Le tampon des dossiers acceptés, dans le coin de chaque carte.', cls: 'cf-admis' },
+    { id: 'cadre-prisme', slot: 'frame', name: 'Prisme', price: 0, unlock: 'monomaniaque', desc: 'Un liseré aux couleurs changeantes. Pour les decks d’une seule couleur, c’est l’ironie.', cls: 'cf-prisme' },
     // Teintes
     { id: 'sans-teinte', slot: 'tint', name: 'Sans teinte', price: 0, desc: 'Les familles écrites en gris, comme sur les formulaires.' },
     { id: 'familles', slot: 'tint', name: 'Teintes de famille', price: 300, desc: 'Une bande et un nom de famille en couleur : Cryogénie en bleu glacier, Sacrifice en rouge…', cls: 'ct-familles' },
@@ -5555,6 +5597,7 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
     { id: 'dos-tickets', slot: 'back', name: 'Tickets de rationnement', price: 200, desc: 'Des tickets à perte de vue. Aucun n’est valable.' },
     { id: 'dos-radiation', slot: 'back', name: 'Zone contaminée', price: 350, desc: 'Des trèfles de radiation sur fond kaki.' },
     { id: 'dos-dossier', slot: 'back', name: 'Dossier confidentiel', price: 0, unlock: 'crapule', desc: 'Une chemise cartonnée, tamponnée « CONFIDENTIEL ». Votre dossier, en fait.' },
+    { id: 'dos-cockpit', slot: 'back', name: 'Tableau de bord', price: 0, unlock: 'copilote_10', desc: 'Les cadrans du cockpit et les ailes dorées du copilote titulaire.' },
     // Teints : tous gratuits
     { id: 'teint-origine', slot: 'skin', name: 'Teint d’origine', price: 0, desc: 'Celui de la cabine.' },
     { id: 'teint-clair', slot: 'skin', name: 'Clair', price: 0, desc: '', vars: { skin: '#f3d3ba', shade: '#d8a888' }, swatch: '#f3d3ba' },
@@ -5831,6 +5874,7 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
     if (op.t === 'equip' && owns(op.id)) state.equipped[BY_ID[op.id].slot] = op.id;
     if (op.t === 'box' && BY_ID[op.id] && !owns(op.id) && state.points >= op.price) { state.points -= op.price; state.owned = state.owned.concat(op.id); }
     if (op.t === 'reward') grantReward(op.key, op.pts, op.id);
+    if (op.t === 'gift' && BY_ID[op.id] && !state.owned.includes(op.id)) state.owned = state.owned.concat(op.id); // objet d'une caisse offerte par un succès
     if (op.t === 'body') state.body = op.b === 'f' ? 'f' : 'm';
     if (op.t === 'import') state = mergeIn(state, op.d);
   }
@@ -6008,6 +6052,54 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
         <div class="actions">${on ? '<span class="chip spec">Équipé</span>' : '<button type="button" class="primary" data-act="vestboxequip">Équiper</button>'}<button type="button" class="ghost" data-act="vestboxclose">Continuer</button></div></div>
     </section>`;
   }
+  // Le butin d'un succès (0.80) : la même fenêtre que les caisses, ouverte depuis le Dossier d'ÉDEN. Ce qui en sort : l'article
+  // exclusif, l'objet tiré d'une caisse offerte, ou, s'il n'y a que des points, un jeton « +N points ».
+  const TIER_LIGHT = { b: 'commun', a: 'rare', o: 'precieux', p: 'legendaire' };
+  function lootHTML(ctx, L) {
+    const res = L && L.res;
+    if (!res) return '';
+    const it = BY_ID[res.item] || BY_ID[res.drawn] || null, drawn = !res.item && BY_ID[res.drawn];
+    const rk = drawn ? rarityOf(drawn).k : TIER_LIGHT[L.tier] || 'rare';
+    const crate = res.box || (L.tier === 'o' || L.tier === 'p' ? 'commandant' : 'fret'), b = BOX_BY[res.box];
+    const fresh = !L.shown; L.shown = true;
+    const art = ctx && ctx.chestArt, still = !fresh || !(art && art.motion);
+    const on = it && equippedId(it.slot) === it.id;
+    const reveal = it ? `<span class="bxp-item sk-thumb">${thumb(it, ctx)}</span>`
+      : `<span class="bxp-item bxp-pts" aria-hidden="true"><b>+${res.pts}</b><small>points</small></span>`;
+    const title = it ? it.name : `+${res.pts} points`;
+    const quip = [drawn && b ? `${b.name} : ${rarityOf(drawn).name.toLowerCase()}.` : '', res.item && it ? 'Article exclusif.' : '', it ? `+${res.pts} points au vestiaire.` : 'Versés au vestiaire.',
+      res.boxPts ? `La caisse était vide : tout le contenu est déjà à vous, elle vaut ${res.boxPts} points.` : ''].filter(Boolean).join(' ');
+    const acts = `<div class="actions bxp-actions">${it ? (on ? '<span class="chip spec">Équipé</span>' : '<button type="button" class="primary" data-act="achlootequip">Équiper</button>') : ''}<button type="button" class="${it && !on ? 'ghost' : 'primary'}" data-act="achlootclose">Continuer</button></div>`;
+    const label = `Butin de « ${L.title} » : ${title}`;
+    if (art && art.lid) {
+      const sparks = Array.from({ length: 12 }, (_, k) => `<i style="--x:${((k * 37) % 100) - 50}px;--d:${(1150 + (k * 83) % 600)}ms;--h:${120 + (k * 29) % 90}px;--z:${4 + (k % 3) * 2}px"></i>`).join('');
+      return `<div class="chest-pop bxp loot-pop rt-${rk === 'commun' ? 'blanche' : rk}${still ? ' still' : ''}" style="--rt:${POP_LIGHT[rk]}" role="dialog" aria-modal="true" aria-label="${esc(label)}" data-act="achlootclose">
+        <div class="chest-box">
+          <div class="chest-stage"><span class="chest-rays" aria-hidden="true"></span><span class="chest-beam" aria-hidden="true"></span>
+            <div class="chest b-${crate}"><span class="chest-glow" aria-hidden="true"></span>${art.lid}<span class="chest-seam" aria-hidden="true"></span>${art.base}
+              <span class="chest-steam l" aria-hidden="true"><i></i><i></i><i></i></span><span class="chest-steam r" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <span class="chest-sparks" aria-hidden="true">${sparks}</span>
+            ${reveal}</div>
+          <p class="chest-cap"><span class="eyebrow">Butin · ${esc(L.title)} · ${esc(L.tierName || '')}</span><b>${esc(title)}</b><span class="chest-quip">${esc(quip)}</span></p>
+          ${acts}
+        </div></div>`;
+    }
+    return `<section class="panel bx-open rt-${rk}${fresh ? ' fresh' : ''} loot-pop" aria-live="polite">
+      <div class="bx-stage"><span class="bx-rays" aria-hidden="true"></span><span class="bx-crate">${crateSVG(crate)}</span>${it ? `<span class="bx-item sk-thumb">${thumb(it, ctx)}</span>` : `<span class="bx-item bxp-pts"><b>+${res.pts}</b><small>points</small></span>`}</div>
+      <div class="bx-text"><span class="eyebrow">Butin · ${esc(L.title)}</span><h3>${esc(title)}</h3><p class="muted">${esc(quip)}</p>${acts}</div>
+    </section>`;
+  }
+  // Ouvrir le butin d'un succès : versé une seule fois (comme reward), avec la caisse offerte tirée tout de suite
+  function claimLoot(key, pts, id, box) {
+    if (typeof key !== 'string' || !/^[a-z0-9_]{1,40}$/.test(key) || state.succes.includes(key)) return null;
+    const b = BOX_BY[box] || null, got = b ? drawFrom(b) : null, extra = b && !got ? b.price : 0; // caisse vide : son prix en points
+    const p = Math.max(0, Math.floor(+pts || 0)) + extra;
+    grantReward(key, p, id);
+    record({ t: 'reward', key, pts: p, id });
+    if (got) { state.owned = state.owned.concat(got.id); record({ t: 'gift', id: got.id }); }
+    apply(); save(); notify();
+    return { key, pts: p, item: id && BY_ID[id] && BY_ID[id].unlock ? id : null, drawn: got ? got.id : null, box: b ? b.id : null, boxPts: extra };
+  }
   function render(ctx) {
     const eq = previewEq(), tryingAny = Object.keys(view.trying).length > 0;
     const tabs = [['cartes', 'Cartes'], ['perso', 'Personnage'], ['classes', 'Classes']].map(([k, n]) =>
@@ -6105,6 +6197,14 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
       return true;
     },
     rewarded: key => state.succes.includes(key),
+    // Butins des succès (0.80) : ouvrir, montrer, équiper ce qui en sort
+    claimLoot, lootHTML,
+    equipOwned(id) {
+      const it = BY_ID[id];
+      if (!it || !owns(id)) return false;
+      state.equipped[it.slot] = id; delete view.trying[it.slot]; record({ t: 'equip', id }); apply(); save(); notify();
+      return true;
+    },
     // Transfert de progression (transfer.js) : ce qui passe d'une version du jeu à l'autre, et la fusion à l'arrivée.
     // Rien n'est perdu ni compté deux fois : skins et récompenses de succès réunis, points = le plus grand des deux totaux.
     exportState() { const s = JSON.parse(JSON.stringify(state)); delete s.credited; return s; },
@@ -6157,6 +6257,7 @@ window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
     arche: back('#1d3557', `<path d='M14 50 L50 50 L44 58 L20 58 Z' fill='#f1e3c6'/><rect x='24' y='40' width='16' height='10' fill='#f1e3c6'/><rect x='30' y='30' width='2' height='10' fill='#f1e3c6'/><path d='M6 64 Q14 60 22 64 T38 64 T54 64 T62 64 M6 72 Q14 68 22 72 T38 72 T54 72 T62 72' stroke='#5b86b8' stroke-width='2' fill='none'/>`),
     tickets: back('#efe2bf', [0, 1, 2, 3].map(r => [0, 1].map(c => `<rect x='${7 + c * 26}' y='${8 + r * 19}' width='22' height='14' rx='2' fill='none' stroke='#b8955a' stroke-width='1.4' stroke-dasharray='2 1.5'/><circle cx='${18 + c * 26}' cy='${15 + r * 19}' r='2.5' fill='#b8955a'/>`).join('')).join('')),
     dossier: back('#e6d6b0', `<rect x='4' y='4' width='56' height='80' rx='3' fill='none' stroke='#b89b62' stroke-width='1.5'/><path d='M4 14 L24 14 L28 9 L60 9' stroke='#b89b62' stroke-width='1.5' fill='none'/><g transform='rotate(-18 32 46)'><rect x='8' y='39' width='48' height='13' rx='2' fill='none' stroke='#d63a40' stroke-width='1.8'/><text x='32' y='48.4' text-anchor='middle' font-family='monospace' font-weight='700' font-size='5.6' fill='#d63a40'>CONFIDENTIEL</text></g>`),
+    cockpit: back('#14213a', `<rect x='5' y='5' width='54' height='78' rx='4' fill='none' stroke='#d9b45a' stroke-width='1.3'/>${[[19, 22], [45, 22]].map(([x, y]) => `<circle cx='${x}' cy='${y}' r='9' fill='#0b1426' stroke='#7f93b3' stroke-width='1.4'/>${[0, 1, 2, 3, 4, 5, 6].map(k => { const a = Math.PI * (0.8 + k * 0.233); return `<path d='M${(x + 7 * Math.cos(a)).toFixed(1)} ${(y + 7 * Math.sin(a)).toFixed(1)} L${(x + 8.6 * Math.cos(a)).toFixed(1)} ${(y + 8.6 * Math.sin(a)).toFixed(1)}' stroke='#cfd8e6' stroke-width='.9'/>`; }).join('')}<path d='M${x} ${y} L${x + 5} ${y - 4}' stroke='#ffb347' stroke-width='1.6' stroke-linecap='round'/>`).join('')}<g fill='#d9b45a'><path d='M32 44 C26 40 15 39 8 41 C14 43 20 45 25 46 C19 46 14 47 10 49 C17 50 24 49 29 48 Z'/><path d='M32 44 C38 40 49 39 56 41 C50 43 44 45 39 46 C45 46 50 47 54 49 C47 50 40 49 35 48 Z'/><circle cx='32' cy='46' r='4' stroke='#14213a' stroke-width='1'/></g><circle cx='32' cy='68' r='10' fill='#2f6fbf' stroke='#7f93b3' stroke-width='1.4'/><path d='M22.2 69.5 L41.8 66.5 A10 10 0 0 1 22.2 69.5 Z' fill='#8a5a2b'/><path d='M26 68 L38 68 M32 65 L32 71' stroke='#ffd34d' stroke-width='1.3'/>`),
     radiation: back('#34391a', [[18, 20], [46, 20], [32, 44], [18, 68], [46, 68]].map(([x, y]) => `<circle cx='${x}' cy='${y}' r='8' fill='#e6cf2f'/><path d='M${x} ${y} L${x} ${y - 8} A8 8 0 0 1 ${x + 6.9} ${y - 4} Z M${x} ${y} L${x - 6.9} ${y + 4} A8 8 0 0 1 ${x - 6.9} ${y - 4} Z M${x} ${y} L${x + 6.9} ${y + 4} A8 8 0 0 1 ${x} ${y + 8} Z' fill='#34391a'/><circle cx='${x}' cy='${y}' r='1.6' fill='#e6cf2f'/>`).join('')),
   };
   const CSS = `
@@ -6188,6 +6289,12 @@ ${Object.keys(BACKS).map(k => `:root[data-cardback="${k}"], .cb-${k} { --sk-back
   .card.cf-dorure:hover:not(:disabled)::after { background-position: -30% 0; }
 }
 @keyframes sk-frost { from { opacity: .55; } to { opacity: 1; } }
+/* Prisme (succès Monomaniaque, 0.80) : un liseré arc-en-ciel découpé au bord de la carte, qui tourne au survol */
+.card.cf-prisme::after { padding: 3px; background: conic-gradient(from var(--pa, 0deg), #ff5f6d, #ffc371, #f9f871, #6ee7b7, #60a5fa, #a78bfa, #f472b6, #ff5f6d);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); opacity: .9; }
+@property --pa { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@media (prefers-reduced-motion: no-preference) { .card.cf-prisme:hover:not(:disabled)::after { animation: sk-prism 2.2s linear infinite; } }
+@keyframes sk-prism { to { --pa: 360deg; } }
 /* Teintes de famille */
 .card.ct-familles::before { content: ""; position: absolute; left: 3px; top: 14px; bottom: 14px; width: 3px; border-radius: 3px; background: var(--fam, transparent); }
 .card.ct-familles .arch { color: var(--fam, var(--muted)); font-weight: 500; }
@@ -6275,6 +6382,11 @@ ${Object.keys(BACKS).map(k => `:root[data-cardback="${k}"], .cb-${k} { --sk-back
 .bxp .chest.b-commandant svg { filter: hue-rotate(185deg) saturate(.75) brightness(.72); }
 .bxp-actions { justify-content: center; animation: chCap .4s ease-out 1.5s both; }
 .bxp-actions .ghost { background: rgba(255, 255, 255, .92); }
+.bxp-pts { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6cf, #ffd34d 55%, #d99a12); border: 3px solid #1e2326; color: #1e2326; }
+.bxp-pts b { font: 400 34px/1 var(--font-pop, Impact, sans-serif); letter-spacing: .02em; }
+.bxp-pts small { font: 700 12px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+.bx-item.bxp-pts { border-radius: 50%; }
 @keyframes bxpRise { from { opacity: 0; transform: translateY(150px) scale(.3); } 60% { opacity: 1; } to { opacity: 1; transform: none; } }
 .chest-pop.bxp.still, .chest-pop.bxp.still * { animation: none !important; }
 .chest-pop.bxp.still .chest-lid { transform: translateY(-34px) rotateX(64deg); }
@@ -9133,8 +9245,10 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
 /* ---- achievements.js ---- */
 /* Surbooking : les succès façon Dungeon Crawler Carl et le Dossier d'ÉDEN.
    Module branché sur l'interface par le bus window.SurbookingModules (voir ui.js, « modules branchés »).
-   - 47 succès, débloqués une seule fois par joueur, annoncés par un autocollant « Succès débloqué ».
-   - Récompenses purement cosmétiques : des points du vestiaire et six articles exclusifs (shop.js, champ `unlock`).
+   - Des succès débloqués une seule fois par joueur, annoncés par un autocollant « Succès débloqué ».
+   - Chaque succès cache un butin, purement cosmétique : des points du vestiaire, parfois une caisse des soutes ou un article
+     exclusif (shop.js, champ `unlock`). Depuis la 0.80, on l'ouvre en cliquant sur le succès dans le dossier, avec
+     l'animation des caisses (demande de Raphaël) ; avant, il était versé tout seul.
    - Le Dossier d'ÉDEN : succès, historique des dernières sessions, statistiques.
    Où le dossier est gardé : comme le vestiaire, un document privé data/users/<id>/succes grâce à la capacité `db`
    (id = await user.id()), sinon le stockage du navigateur, sinon la mémoire de la page. On n'écrit qu'après une
@@ -9144,10 +9258,11 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   if (typeof window === 'undefined' || window.SURBOOKING_SUCCES === false) return; // SURBOOKING_SUCCES = false : coupé (tests)
 
   /* ---------- les succès ---------- */
-  const TIERS = { b: { name: 'Bronze', pts: 25 }, a: { name: 'Argent', pts: 50 }, o: { name: 'Or', pts: 100 } };
-  const GROUPS = [['etages', 'Les étages'], ['finale', 'La finale'], ['impro', 'Les boss d’étage'], ['spec', 'Spécialisations'],
+  const TIERS = { b: { name: 'Bronze', pts: 25 }, a: { name: 'Argent', pts: 50 }, o: { name: 'Or', pts: 100 }, p: { name: 'Platine', pts: 200 } };
+  const GROUPS = [['etages', 'Les étages'], ['finale', 'La finale'], ['hauts', 'Hauts faits'], ['impro', 'Les boss d’étage'], ['spec', 'Spécialisations'],
     ['coups', 'Coups bas'], ['classes', 'Les classes'], ['echecs', 'Échecs mémorables'], ['pvp', 'Les fantômes'], ['daily', 'Sessions du jour'], ['notes', 'Notes au dossier']];
-  const A = (id, g, t, title, hint, text, item) => ({ id, g, t, title, hint, text, item: item || null });
+  // item : un article exclusif du vestiaire ; box : une caisse des soutes offerte ('fret' ou 'commandant')
+  const A = (id, g, t, title, hint, text, item, box) => ({ id, g, t, title, hint, text, item: item || null, box: box || null });
   const ACH = [
     // Les étages
     A('decongele', 'etages', 'b', 'Décongelé', 'Lancer une première partie.', 'Vous êtes sorti de la cabine. Tout nu, avec une feuille. On a connu des débuts plus glorieux, mais rarement.'),
@@ -9163,6 +9278,14 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     A('finale_mute', 'finale', 'o', 'Antiprolifération', 'Gagner la finale contre le postulant muté.', 'Il se multipliait, vous l’avez divisé. C’est exactement le poste.'),
     A('finale_echappe', 'finale', 'o', 'Retour à la cage', 'Gagner la finale contre la Mère échappée.', 'La Mère est rentrée à la ménagerie. Ses rejetons aussi, dans l’ordre. J’avais essayé, je n’avais pas fait mieux.'),
     A('contredire', 'finale', 'o', 'Contredire ÉDEN', 'Gagner la finale contre ÉDEN elle-même.', 'Vous m’avez contredite. C’est agaçant. Je vous ai imprimé une feuille pour l’occasion.', 'feuille-circuit'),
+    // Hauts faits (0.80) : des jalons qui se comptent sur plusieurs parties
+    A('copilote_3', 'hauts', 'a', 'Période d’essai prolongée', 'Gagner 3 finales.', 'Trois fois copilote. Je prolonge votre période d’essai. Ce n’est pas une faveur, c’est une mesure de prudence.', null, 'fret'),
+    A('copilote_10', 'hauts', 'p', 'Copilote titulaire', 'Gagner 10 finales.', 'Dix finales. Je vous titularise. Le contrat ne prévoit ni salaire, ni congés, ni retour sur Terre.', 'dos-cockpit'),
+    A('copilote_25', 'hauts', 'p', 'Pilote automatique', 'Gagner 25 finales.', 'Vingt-cinq. Je pourrais vous laisser les commandes et faire une sieste. Je ne le ferai pas, mais je pourrais.', null, 'commandant'),
+    A('abonne', 'hauts', 'o', 'Abonné à la finale', 'Atteindre 10 finales.', 'Dix finales. Le strapontin à côté du cockpit porte votre nom. Je l’ai écrit au feutre : c’est provisoire.', null, 'commandant'),
+    A('equipage', 'hauts', 'p', 'Équipage complet', 'Gagner la finale avec les quatre classes.', 'Postulant, vétérinaire, mécano, clandestin : copilote dans les quatre rôles. Je n’ai plus besoin d’équipage, j’ai vous. C’est inquiétant.', null, 'commandant'),
+    A('pilier', 'hauts', 'o', 'Pilier de l’arche', 'Jouer 50 parties.', 'Cinquante sessions. Vous faites partie de la structure. Si vous partez, je crains pour l’étanchéité.', null, 'fret'),
+    A('meuble', 'hauts', 'p', 'Fait partie du mobilier', 'Jouer 100 parties.', 'Cent sessions. Je vous ai inscrit à l’inventaire, entre le capybara empaillé et l’extincteur.', null, 'commandant'),
     // Les boss d'étage alternatifs (les anciens remplaçants improvisés du duel)
     A('gaston', 'impro', 'a', 'Taureau par les cornes', 'Battre Gaston, le taureau de réserve.', 'Gaston retourne à la réserve. Il ne comprend toujours pas ce qui s’est passé.'),
     A('rx7', 'impro', 'a', 'Lu le manuel aussi', 'Battre l’unité d’entretien RX-7.', 'RX-7 a été démontée. Elle avait pourtant lu le manuel. Vous non, et ça a suffi.'),
@@ -9177,6 +9300,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     A('specialiste', 'spec', 'b', 'Spécialiste', 'Débloquer un premier palier de spécialisation.', 'Vous savez faire une chose. C’est une de plus que la moyenne des postulants.'),
     A('expert', 'spec', 'a', 'Expert assermenté', 'Atteindre le palier 8 points d’une famille.', 'Huit points dans la même famille. Vous devenez un cas d’étude.'),
     A('obsessionnel', 'spec', 'o', 'Obsessionnel', 'Atteindre le palier 16 points d’une famille.', 'Seize points. À ce stade, ce n’est plus un style, c’est un diagnostic.'),
+    A('monomaniaque', 'spec', 'p', 'Monomaniaque', 'Atteindre le palier 36 points d’une famille.', 'Trente-six points dans la même famille. Je n’ai plus de mot pour ça. J’en ai inventé un, il est dans votre dossier.', 'cadre-prisme'),
     A('touche', 'spec', 'a', 'Bon partout, excellent nulle part', 'Débloquer Touche-à-tout.', 'Six familles. Vous ne savez pas choisir, et le règlement vous en félicite. Moi, je note.'),
     // Coups bas
     A('sournois', 'coups', 'b', 'Sournois', 'Débloquer le palier Sournois des coups bas.', 'Un coup bas en main dès le premier tour. Vous préparez vos mauvais coups : c’est presque de l’organisation.'),
@@ -9215,16 +9339,20 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   let bitApple = false; // le Serpent : une pomme croquée pendant ce combat
   const serpentClean = run => resultLast(run).enc === 'serpent' && !bitApple && !(run.combat && run.combat.apples);
   const VARIANT_WIN = { mute: 'finale_mute', echappe: 'finale_echappe', eden: 'contredire' };
-  const SPEC_TIER = { 1: 'specialiste', 2: 'expert', 3: 'obsessionnel' };
+  const SPEC_TIER = { 1: 'specialiste', 2: 'expert', 3: 'obsessionnel', 4: 'monomaniaque' };
   const LOW_TIER = { 1: 'sournois', 2: 'fourbe', 3: 'crapule' };
   const ENGINE_NOTES = ['recyclage', 'diplomatie', 'drame', 'egratignure', 'couple'];
   const HABITUE = 10;
+  // Jalons comptés d'une partie à l'autre (0.80) : finales gagnées, parties jouées, finales atteintes
+  const WIN_ACH = [[3, 'copilote_3'], [10, 'copilote_10'], [25, 'copilote_25']]; // la 1re finale : « Copilote », débloqué par la finale elle-même
+  const RUN_ACH = [[HABITUE, 'habitue'], [50, 'pilier'], [100, 'meuble']];
+  const FIN_ACH = [[10, 'abonne']];
 
   /* ---------- l'état du dossier et sa validation ---------- */
   const KEY = 'surbooking.dossier.v1';
   const MAX_SESSIONS = 30, MAX_SEEN = 80;
   const KINDS = ['champion', 'finale', 'mort', 'vide', 'abandon'];
-  const blank = () => ({ v: 1, got: {}, vu: [], sessions: [], seen: [], runs: 0, wins: 0, best: 0, cls: {} }); // vu : succès débloqués déjà regardés dans le dossier
+  const blank = () => ({ v: 1, got: {}, vu: [], sessions: [], seen: [], runs: 0, wins: 0, best: 0, cls: {}, fin: 0, cw: {} }); // vu : succès débloqués déjà regardés dans le dossier ; fin : finales atteintes ; cw : finales gagnées par classe
   const int = (x, lo, hi) => { const n = Math.floor(+x); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : lo; };
   const NOW_MAX = () => Date.now() + 864e5;
   const okTs = t => typeof t === 'number' && Number.isFinite(t) && t > 1.5e12 && t < NOW_MAX();
@@ -9249,6 +9377,9 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     // Cohérence minimale : jamais moins de parties que de sessions listées
     b.runs = Math.max(b.runs, b.sessions.length); b.wins = Math.max(b.wins, b.sessions.filter(s => s.kind === 'champion').length);
     b.best = Math.max(b.best, ...b.sessions.map(s => s.floor), 0);
+    // 0.80 : compteurs des hauts faits ; un dossier d'avant les retrouve (au moins) dans ses dernières sessions
+    b.fin = Math.max(int(d.fin, 0, 1e6), b.sessions.filter(s => s.floor >= 5).length, b.wins);
+    CLASS_KEYS.forEach(k => { const v = Math.max(d.cw && d.cw[k] != null ? int(d.cw[k], 0, 1e6) : 0, b.sessions.filter(s => s.kind === 'champion' && s.cls === k).length); if (v) b.cw[k] = v; });
     return b;
   }
   // Fusion de deux dossiers (navigateur et compte) : rien n'est perdu, rien n'est compté deux fois.
@@ -9261,6 +9392,8 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     m.vu = [...new Set(a.vu.concat(b.vu))].filter(k => m.got[k]);
     m.runs = Math.max(a.runs, b.runs); m.wins = Math.max(a.wins, b.wins); m.best = Math.max(a.best, b.best);
     CLASS_KEYS.forEach(k => { const v = Math.max(a.cls[k] || 0, b.cls[k] || 0); if (v) m.cls[k] = v; });
+    m.fin = Math.max(a.fin || 0, b.fin || 0);
+    CLASS_KEYS.forEach(k => { const v = Math.max((a.cw || {})[k] || 0, (b.cw || {})[k] || 0); if (v) m.cw[k] = v; });
     return m;
   }
   const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
@@ -9294,11 +9427,12 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     const merged = merge(acc, state);
     state = merged; ref = r; mode = 'db';
     if (snap && snap.exists ? !same(acc, merged) : (merged.runs || Object.keys(merged.got).length)) save();
-    syncRewards(); refresh();
+    if (milestones()) pendingSave = true; // hauts faits d'un dossier d'avant : écrits à la prochaine action du joueur
+    refresh();
     try {
       r.onSnapshot(sn => {
         if (!sn || !sn.exists || (sn.metadata && sn.metadata.hasPendingWrites) || inflight || dirty) return;
-        state = merge(normalize(sn.data()), state); syncRewards(); refresh();
+        state = merge(normalize(sn.data()), state); refresh();
       }, () => { /* l'abonnement s'arrête : on garde l'état connu */ });
     } catch (e) { /* rien */ }
   }
@@ -9318,24 +9452,46 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   /* ---------- déblocage ---------- */
   let queue = [], last = null, E = null;
   const has = id => !!state.got[id];
-  function rewardLine(a) {
+  // Le butin d'un succès : ses points, son article exclusif, sa caisse offerte
+  function lootLine(a) {
     const it = a.item && window.Shop && window.Shop.item ? window.Shop.item(a.item) : null;
-    return `+${TIERS[a.t].pts} points au vestiaire${it ? ` · débloque : ${it.name}` : ''}`;
+    const box = a.box && window.Shop && window.Shop.BOXES ? window.Shop.BOXES.find(b => b.id === a.box) : null;
+    return `+${TIERS[a.t].pts} points${box ? ` et une ${box.name.charAt(0).toLowerCase() + box.name.slice(1)}` : ''}${it ? ` et ${it.name}, article exclusif` : ''}`;
   }
+  const rewardLine = lootLine;
+  // Butin pas encore ouvert : le succès est à vous, sa récompense n'est pas encore au vestiaire
+  const claimable = id => !!state.got[id] && !!BY[id] && !!window.Shop && typeof window.Shop.rewarded === 'function' && typeof window.Shop.claimLoot === 'function' && !window.Shop.rewarded(id);
+  const lootCount = () => Object.keys(state.got).filter(claimable).length;
   function unlock(id, when) {
     const a = BY[id];
     if (!a || has(id)) return false;
     state.got[id] = when || Date.now();
-    queue.push({ tag: 'Succès débloqué', title: a.title, text: `${a.text} ${rewardLine(a)}.` });
+    queue.push({ tag: 'Succès débloqué', title: a.title, text: `${a.text} Butin : ${lootLine(a)}, à ouvrir dans le Dossier d’ÉDEN.` });
     if (id !== 'tous_metiers' && Object.values(CLASS_ACH).every(has)) unlock('tous_metiers');
-    syncRewards();
     return true;
   }
-  // Versement des récompenses au vestiaire : idempotent (le vestiaire garde la liste des succès déjà versés)
-  function syncRewards() {
-    const S = window.Shop;
-    if (!S || typeof S.reward !== 'function') return;
-    Object.keys(state.got).forEach(id => { const a = BY[id]; if (a && !S.rewarded(id)) S.reward(id, TIERS[a.t].pts, a.item); });
+  // 0.80 : plus de versement automatique ; le butin attend qu'on l'ouvre dans le dossier (claim)
+  // Les hauts faits qui se comptent : débloqués dès que le compteur y est (y compris pour un dossier d'avant la 0.80)
+  let pendingSave = false;
+  function milestones() {
+    let n = 0;
+    const at = (list, v) => list.forEach(([k, id]) => { if (v >= k && unlock(id)) n++; });
+    at(WIN_ACH, state.wins); at(RUN_ACH, state.runs); at(FIN_ACH, state.fin || 0);
+    if (CLASS_KEYS.length >= 4 && CLASS_KEYS.every(k => (state.cw[k] || 0) > 0) && unlock('equipage')) n++;
+    return n;
+  }
+  // Ouvrir un butin : le vestiaire le verse (une seule fois) et dit ce qu'il y avait dedans ; la fenêtre des caisses le montre
+  const LOOT_LINES = ['Votre butin. Je l’ai emballé moi-même : c’est pour ça qu’il y a des trous.', 'Un succès, une caisse. Je ne fais pas de cadeau : je règle mes dettes.',
+    'Ouvrez doucement. Si ça mord, c’est un capybara : refermez.'];
+  function claim(id, ctx) {
+    const a = BY[id];
+    if (!a || !claimable(id)) { markSeen([id]); return false; }
+    const res = window.Shop.claimLoot(id, TIERS[a.t].pts, a.item, a.box);
+    markSeen([id]);
+    if (!res) return false;
+    view.loot = { id, title: a.title, tier: a.t, tierName: TIERS[a.t].name, res, shown: false };
+    try { if (ctx && ctx.quip) ctx.quip('achloot', LOOT_LINES); else if (ctx && ctx.say) ctx.say(LOOT_LINES[Math.floor(Math.random() * LOOT_LINES.length)]); } catch (e) { /* rien */ }
+    return true;
   }
   const resultLast = run => (run.results && run.results[run.results.length - 1]) || {};
   const encNow = run => { try { const e = E.currentEncounter ? E.currentEncounter(run) : null; return e || {}; } catch (e) { return {}; } };
@@ -9409,13 +9565,15 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     state.runs += 1; if (s.kind === 'champion') state.wins += 1;
     state.best = Math.max(state.best, s.floor);
     state.cls[cls] = (state.cls[cls] || 0) + 1;
-    if (state.runs >= HABITUE) unlock('habitue');
+    if (s.floor >= 5) state.fin = (state.fin || 0) + 1;
+    if (s.kind === 'champion') state.cw[cls] = (state.cw[cls] || 0) + 1;
+    milestones();
     return true;
   }
   const finished = run => run && (run.phase === 'champion' || run.phase === 'defeat');
 
   /* ---------- le Dossier d'ÉDEN à l'écran ---------- */
-  const view = { open: false };
+  const view = { open: false, loot: null };
   const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
   const floorName = f => f >= 5 ? 'Finale' : ((E && E.FLOORS && E.FLOORS[f] && E.FLOORS[f].short) || `Étage ${f}`);
   const className = k => (E && E.CLASSES && E.CLASSES[k] && E.CLASSES[k].name) || 'Postulant';
@@ -9460,16 +9618,21 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     else if (state.best >= 4) first = `Vous êtes monté jusqu’à ${state.best >= 5 ? 'la finale' : 'la ménagerie'}. Le cockpit est juste au-dessus. Il le restera.`;
     else first = `${state.runs} session${state.runs > 1 ? 's' : ''}, meilleur résultat : ${floorName(state.best || 1).toLowerCase()}. Je classe ça dans « potentiel », rubrique « inexploité ».`;
     const second = n === ACH.length ? 'Tous les succès. Je n’ai plus rien à vous reprocher, et ça me contrarie.'
-      : n === 0 ? 'Aucun succès. Le règlement en prévoit quarante-sept. Lisez-le.'
+      : n === 0 ? `Aucun succès. Le règlement en prévoit ${ACH.length}. Lisez-le.`
         : `${n} succès sur ${ACH.length}. Les autres sont dans le règlement, page sept cent douze.`;
     return `${first} ${second}`;
   }
   function badgeHTML(a, i) {
-    const t = state.got[a.id], it = a.item && window.Shop && window.Shop.item ? window.Shop.item(a.item) : null;
-    if (!t) return `<li class="ach locked"><span class="ach-tier t-${a.t}">${TIERS[a.t].name}</span><p class="ach-t">${esc(a.title)}</p><p class="ach-h"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>${esc(a.hint)}</p>${it ? `<p class="ach-r">Récompense : ${esc(it.name)}</p>` : ''}</li>`;
-    const nw = isNew(a.id);
-    return `<li class="ach got${nw ? ' new' : ''}"${nw ? ` data-act="achseen" data-id="${a.id}"` : ''} style="--rot:${['-1.2deg', '.9deg', '-.6deg', '1.4deg'][i % 4]}">${nw ? `<button type="button" class="ach-newtag" data-act="achseen" data-id="${a.id}" aria-label="${esc(a.title)} : marquer comme vu">Nouveau</button>` : ''}<span class="ach-tier t-${a.t}">${TIERS[a.t].name}</span><p class="ach-t">${esc(a.title)}</p><p class="ach-x">${esc(a.text)}</p><p class="ach-r">${esc(rewardLine(a))} · ${esc(dateText(t))}</p></li>`;
+    const t = state.got[a.id];
+    if (!t) return `<li class="ach locked"><span class="ach-tier t-${a.t}">${TIERS[a.t].name}</span><p class="ach-t">${esc(a.title)}</p><p class="ach-h"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>${esc(a.hint)}</p><p class="ach-r">Butin : ${esc(lootLine(a))}</p></li>`;
+    const nw = isNew(a.id), lt = claimable(a.id);
+    // Butin pas encore ouvert : un clic sur le succès ouvre la caisse ; sinon, un clic le marque comme vu
+    const act = lt ? 'achclaim' : nw ? 'achseen' : '';
+    const tag = lt ? `<button type="button" class="ach-newtag ach-loottag${nw ? '' : ' seen'}" data-act="achclaim" data-id="${a.id}" aria-label="${esc(a.title)} : ouvrir le butin">${CRATE_ICON}Butin</button>`
+      : nw ? `<button type="button" class="ach-newtag" data-act="achseen" data-id="${a.id}" aria-label="${esc(a.title)} : marquer comme vu">Nouveau</button>` : '';
+    return `<li class="ach got${nw ? ' new' : ''}${lt ? ' loot' : ''}"${act ? ` data-act="${act}"` : ''} data-id="${a.id}" style="--rot:${['-1.2deg', '.9deg', '-.6deg', '1.4deg'][i % 4]}">${tag}<span class="ach-tier t-${a.t}">${TIERS[a.t].name}</span><p class="ach-t">${esc(a.title)}</p><p class="ach-x">${esc(a.text)}</p><p class="ach-r">${lt ? `<b>Butin à ouvrir</b> : ${esc(lootLine(a))}` : `Butin ouvert : ${esc(lootLine(a))}`} · ${esc(dateText(t))}</p></li>`;
   }
+  const CRATE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v11H3z"></path><path d="M2 5h20v4H2z"></path><path d="M10 13h4"></path></svg>';
   function sessionsHTML() {
     if (!state.sessions.length) return '<p class="muted">Aucune session archivée. Terminez une partie, même mal : surtout mal.</p>';
     const rows = state.sessions.map(s => `<tr><td class="mono">${s.num}</td><td>${esc(className(s.cls))}</td><td>${esc(floorName(s.floor))}</td><td>${esc(causeText(s))}</td><td class="mono">${s.score}</td><td class="mono">${esc(dateText(s.date))}</td></tr>`).join('');
@@ -9482,7 +9645,8 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     const groups = GROUPS.map(([g, name]) => {
       const list = ACH.filter(a => a.g === g), got = list.filter(a => has(a.id)).length;
       const nw = list.filter(a => isNew(a.id)).length;
-      return `<section class="ach-group"><h3>${esc(name)} <span class="mono ach-count">${got} / ${list.length}</span>${nw ? `<span class="ach-newcount">${nw} nouveau${nw > 1 ? 'x' : ''}</span>` : ''}</h3><ul class="ach-list">${list.map(badgeHTML).join('')}</ul></section>`;
+      const lc = list.filter(a => claimable(a.id)).length;
+      return `<section class="ach-group"><h3>${esc(name)} <span class="mono ach-count">${got} / ${list.length}</span>${nw ? `<span class="ach-newcount">${nw} nouveau${nw > 1 ? 'x' : ''}</span>` : ''}${lc ? `<span class="ach-lootcount">${lc} butin${lc > 1 ? 's' : ''}</span>` : ''}</h3><ul class="ach-list">${list.map(badgeHTML).join('')}</ul></section>`;
     }).join('');
     const where = mode === 'db' ? 'Dossier gardé sur votre compte : vous le retrouvez sur tous vos appareils.' : mode === 'local' ? 'Dossier gardé dans ce navigateur.' : 'Dossier gardé pour cette visite seulement.';
     return `<div class="dossier">
@@ -9491,9 +9655,9 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
           <button type="button" class="ghost" data-act="dossierclose">Retour au jeu</button></div>
         <p class="ach-eden"><span class="ach-eden-tag">ÉDEN</span>${esc(edenComment())}</p>
         <dl class="ach-stats">${stats.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-        <p class="muted">Les succès rapportent des points du vestiaire, et six d’entre eux un article exclusif. Rien ici ne change le jeu. ${esc(where)}</p>
+        <p class="muted">Chaque succès cache un butin : des points du vestiaire, parfois une caisse des soutes ou un article exclusif. Cliquez sur un succès débloqué pour l’ouvrir. Rien ici ne change le jeu. ${esc(where)}</p>
       </section>
-      <section class="panel"><div class="ach-succhead"><h3>Succès</h3>${fresh() ? `<p class="muted">${fresh()} succès à découvrir : cliquez sur chacun pour le marquer comme vu.</p><button type="button" class="ghost" data-act="achseenall">Tout marquer comme vu</button>` : ''}</div>${groups}</section>
+      <section class="panel"><div class="ach-succhead"><h3>Succès</h3>${lootCount() ? `<p class="ach-lootline">${lootCount()} butin${lootCount() > 1 ? 's' : ''} à ouvrir : cliquez sur ${lootCount() > 1 ? 'chaque succès marqué « Butin »' : 'le succès marqué « Butin »'}.</p>` : ''}${fresh() ? `<p class="muted">${fresh()} succès à découvrir : cliquez sur chacun pour le marquer comme vu.</p><button type="button" class="ghost" data-act="achseenall">Tout marquer comme vu</button>` : ''}</div>${groups}</section>
       <section class="panel"><h3>Dernières sessions</h3>${sessionsHTML()}</section>
       <div class="actions"><button type="button" class="primary" data-act="dossierclose">Retour au jeu</button></div>
     </div>`;
@@ -9527,7 +9691,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
         btn.addEventListener('click', () => { if (view.open) view.open = false; else openDossier(last); refresh(); if (last && last.render) last.render(); });
         ctx.toolsEl.appendChild(btn);
       }
-      syncRewards();
+      if (milestones()) pendingSave = true; // jamais d'écriture au chargement : à la prochaine action
       connect();
     },
     onEvents(events, ctx) {
@@ -9540,32 +9704,37 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     },
     beforeAction(a, el, ctx) {
       last = ctx; E = ctx.E;
+      if (pendingSave) { pendingSave = false; save(); }
       // « Rejouer » ou « Commencer » pendant une partie entamée : la session est archivée comme abandon
       if (a === 'start' && ctx.run && !finished(ctx.run) && recordRun(ctx.run, ctx.ui)) save();
     },
     afterAction(a, el, ctx) {
       last = ctx; E = ctx.E;
       if (finished(ctx.run) && recordRun(ctx.run, ctx.ui)) save();
-      syncRewards();
       setBadge();
     },
-    handles: a => a === 'dossier' || a === 'dossierclose' || a === 'achseen' || a === 'achseenall',
+    handles: a => a === 'dossier' || a === 'dossierclose' || a === 'achseen' || a === 'achseenall' || a === 'achclaim' || a === 'achlootclose' || a === 'achlootequip',
     act(a, el, ctx) {
       last = ctx; E = ctx.E;
+      if (pendingSave) { pendingSave = false; save(); }
       if (a === 'achseen') { markSeen([el && el.dataset ? el.dataset.id || '' : '']); setBadge(); return; } // un succès regardé : la pastille baisse
       if (a === 'achseenall') { markSeen(Object.keys(state.got)); setBadge(); return; }
-      if (a === 'dossier') openDossier(ctx); else view.open = false;
+      if (a === 'achclaim') { if (!view.loot) claim(el && el.dataset ? el.dataset.id || '' : '', ctx); setBadge(); return; } // le butin : la caisse s'ouvre
+      if (a === 'achlootclose') { view.loot = null; return; }
+      if (a === 'achlootequip') { const L = view.loot, id = L && L.res && (L.res.item || L.res.drawn); if (id && window.Shop && window.Shop.equipOwned) window.Shop.equipOwned(id); view.loot = null; return; }
+      if (a === 'dossier') openDossier(ctx); else { view.open = false; view.loot = null; }
       if (btn) btn.setAttribute('aria-pressed', String(view.open));
     },
     afterRender(screenEl, ctx) {
       last = ctx; E = ctx.E;
       if (view.open) {
-        screenEl.innerHTML = dossierHTML();
+        const pop = view.loot && window.Shop && window.Shop.lootHTML ? window.Shop.lootHTML(ctx, view.loot) : '';
+        screenEl.innerHTML = pop + dossierHTML();
         document.body.classList.remove('in-combat');
       } else {
         // Bouton du dossier sur l'écran titre, et à côté du vestiaire sur les écrans de fin
         const phase = ctx.run ? ctx.run.phase : 'title';
-        const nw = fresh(), dbtn = `<button type="button" class="ghost" data-act="dossier">Dossier d’ÉDEN · ${count()} / ${ACH.length}${nw ? ` <span class="ach-newcount">${nw} nouveau${nw > 1 ? 'x' : ''}</span>` : ''}</button>`;
+        const nw = fresh(), lc = lootCount(), dbtn = `<button type="button" class="ghost" data-act="dossier">Dossier d’ÉDEN · ${count()} / ${ACH.length}${nw ? ` <span class="ach-newcount">${nw} nouveau${nw > 1 ? 'x' : ''}</span>` : ''}${lc ? ` <span class="ach-lootcount">${lc} butin${lc > 1 ? 's' : ''}</span>` : ''}</button>`;
         const slot = phase === 'title' ? screenEl.querySelector('#slot-dossier') : null;
         // Écran titre, onglet « Collection » : le bouton et ce qu'il fait
         if (slot) { if (!slot.querySelector('[data-act="dossier"]')) slot.innerHTML = `<div class="opt"><div class="opt-btn">${dbtn}</div><p class="opt-what">Vos succès (ils rapportent des points de boutique, et certains un skin exclusif), vos statistiques et vos dernières parties.</p></div>`; }
@@ -9592,9 +9761,12 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     importState(d) {
       const m = merge(state, normalize(d));
       if (same(m, state)) return false;
-      state = m; save(); syncRewards(); refresh();
+      state = m; milestones(); save(); refresh();
       return true;
     },
+    // 0.80 : les butins (tests, autres modules)
+    claimable, lootCount, lootLine: id => (BY[id] ? lootLine(BY[id]) : ''),
+    claim: id => claim(id, last), loot: () => (view.loot ? JSON.parse(JSON.stringify(view.loot)) : null),
     _reset(st) { state = normalize(st); queue = []; },
     _normalize: d => normalize(d),
     _merge: (a, b) => merge(normalize(a), normalize(b)),
@@ -9621,6 +9793,16 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
 .ach-newtag { position: absolute; top: -12px; right: -8px; transform: rotate(4deg); padding: 3px 8px; border: 2px solid #000; background: var(--pop); color: #000;
   font: 400 12px/1 var(--font-pop); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; box-shadow: 2px 2px 0 #000; }
 .ach-newtag:focus-visible { outline: 3px solid var(--amber-ink, #8a5a00); outline-offset: 2px; }
+.ach-lootcount { display: inline-block; margin-left: 6px; padding: 2px 7px; border: 2px solid #000; border-radius: 10px; background: #ffd34d; color: #000;
+  font: 700 11px/1.2 var(--font-mono); letter-spacing: .04em; text-transform: none; vertical-align: 1px; }
+.ach-lootline { margin: 0; flex: 1 1 100%; font-weight: 700; color: var(--amber-ink, #8a5a00); }
+.ach.got.loot { cursor: pointer; box-shadow: 5px 5px 0 #1e2326, 0 0 0 4px #ffd34d; }
+.ach.got.loot:hover { box-shadow: 6px 6px 0 #1e2326, 0 0 0 5px #ffd34d; }
+.ach-loottag { display: inline-flex; align-items: center; gap: 5px; background: #ffd34d; }
+.ach-loottag svg { width: 14px; height: 14px; fill: none; stroke: #000; stroke-width: 2.2; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) { .ach.got.loot .ach-loottag { animation: achLoot 1.6s ease-in-out infinite; } }
+@keyframes achLoot { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-3deg) scale(1.06); } }
+.ach-tier.t-p { background: linear-gradient(135deg, #f4f7fb, #b9c6d6 45%, #eef3f9 60%, #9fb0c4); }
 .dossier { display: flex; flex-direction: column; gap: 14px; }
 .ach-head .phase-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 10px; }
 .ach-eden { font-family: var(--font-eden); font-size: 15px; line-height: 1.5; color: #10161b; }
@@ -12340,7 +12522,10 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     bossSpec: 'Votre adversaire d’en face s’est spécialisée : {spec}. Elle a eu le temps de réfléchir. Vous aussi, j’espère.',
     bossSpec_m: 'Votre adversaire d’en face s’est spécialisé : {spec}. Il a eu le temps de réfléchir. Vous aussi, j’espère.',
     spec2: ['Palier atteint : {spec}. Huit points dans la même famille. Je commence à vous trouver monomaniaque, c’est un compliment.', '{spec}. Vous vous améliorez. Je mets à jour votre dossier, rubrique « obstination ».'],
-    spec3: ['{spec}. Douze points. Je n’avais pas prévu de case pour ça dans votre dossier. J’en ajoute une.', 'Palier maximal : {spec}. Vous êtes devenu vos cartes. Je trouve ça touchant, et un peu inquiétant.'],
+    spec3: ['{spec}. Seize points. Je n’avais pas prévu de case pour ça dans votre dossier. J’en ajoute une.', 'Palier atteint : {spec}. Vous êtes devenu vos cartes. Je trouve ça touchant, et un peu inquiétant.'],
+    // 0.80 : le palier 36, rare (voix à enregistrer)
+    spec4: ['{spec}. Trente-six points dans la même famille. Je n’ai plus de case, plus de dossier, plus de mot. J’en invente un : vous.', 'Palier ultime : {spec}. Je n’y croyais pas. J’avais même parié contre vous. Avec moi-même. J’ai perdu.'],
+    lazare: 'Lazare. Vous étiez mort, et vous voilà debout. Je retire ce que j’ai dit : ça marche une fois, mais ça marche bien.',
     bossFresh: '{name} arrive avec {hp} PV. Elle a traversé son étage presque sans une égratignure. Je l’ai notée « préoccupante ».',
     bossMid: '{name} arrive avec {hp} PV sur {max}. Elle aussi a croisé des animaux. Ils lui ont laissé quelques souvenirs.',
     bossHurt: '{name} n’a plus que {hp} PV. Son étage s’est mal passé. Le vôtre aussi, mais c’est elle qui saigne.',
@@ -12649,7 +12834,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   /* ---------- autocollants des moments forts (non bloquants) ---------- */
   function popFor(ev) {
     switch (ev.type) {
-      case 'specUnlocked': { const t = (E.SPECS[ev.arch] && E.SPECS[ev.arch].tiers[(ev.tier || 1) - 1]) || {}; return { tag: (ev.tier || 1) > 1 ? `Palier ${E.tierPts(ev.tier || 1)} points` : 'Spécialisation débloquée', title: ev.name, text: `${ev.arch} · ${t.text || ''}` }; }
+      case 'specUnlocked': { const t = (E.SPECS[ev.arch] && E.SPECS[ev.arch].tiers[(ev.tier || 1) - 1]) || {}; return { tag: (ev.tier || 1) >= 4 ? `Palier ultime · ${E.tierPts(4)} points` : (ev.tier || 1) > 1 ? `Palier ${E.tierPts(ev.tier || 1)} points` : 'Spécialisation débloquée', title: ev.name, text: `${ev.arch} · ${t.text || ''}` }; }
       case 'fuse': return { tag: 'Fusion', title: E.CARDS[ev.to].name, text: `2 × ${E.CARDS[ev.from].name}${ev.bonus ? ` · elle garde leurs ${ev.pts} points ${deFam(ev.arch)}` : ''}` };
       case 'toucheUnlocked': return { tag: 'Succès débloqué', title: 'Touche-à-tout', text: `${E.TOUCHE_FAMILIES} familles à 4 points : une troisième famille devient active.` };
       case 'lowblowTier': { const t = E.LOWBLOW_TIERS[(ev.tier || 1) - 1] || {}; return { tag: 'Coups bas', title: ev.name, text: t.text || '' }; }
@@ -12817,7 +13002,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
         case 'classChosen': flavor('class:' + ev.cls, 96, E.CLASSES[ev.cls].line); log(`Classe : ${ev.name}. ${E.CLASSES[ev.cls].talent.name} : ${E.CLASSES[ev.cls].talent.text}`, 'succes'); break;
         case 'doublePick': flavor('doublePick', 70, CLASS_LINES.double); log(`Fouineur : vous prenez aussi ${E.CARDS[ev.id].name} dans ce booster.`, 'succes'); break;
         case 'draftReset': consider(99, ev.fresh ? LINES.draftResetFresh : LINES.draftReset); break;
-        case 'specUnlocked': flavor('spec', 88 + (ev.tier || 1), rnd(ev.tier >= 3 ? LINES.spec3 : ev.tier === 2 ? LINES.spec2 : LINES.spec).replace('{spec}', ev.name)); log(`${ev.tier > 1 ? `Palier ${E.tierPts(ev.tier)} points` : 'Spécialisation débloquée'} : ${ev.name}.`, 'succes'); break;
+        case 'specUnlocked': if (ev.tier >= 4) consider(95, rnd(LINES.spec4).replace('{spec}', ev.name)); else flavor('spec', 88 + (ev.tier || 1), rnd(ev.tier >= 3 ? LINES.spec3 : ev.tier === 2 ? LINES.spec2 : LINES.spec).replace('{spec}', ev.name)); log(`${ev.tier > 1 ? `Palier ${E.tierPts(ev.tier)} points` : 'Spécialisation débloquée'} : ${ev.name}.`, 'succes'); break;
         case 'toucheUnlocked': consider(91, LINES.touche); log(`Touche-à-tout : ${E.TOUCHE_FAMILIES} familles à 4 points, une troisième famille devient active.`, 'succes'); break;
         case 'lowblowTier': flavor('lowblowTier:' + (ev.tier || 1), 90, (LINES.lowblowTier[ev.tier] || LINES.lowblowTier[1])); log(`Coups bas : ${ev.name} débloqué.`, 'succes'); break;
         case 'lowblowReady': log('Sournois : un coup bas vous attend dans votre première main.', 'succes'); break;
@@ -12833,7 +13018,14 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
         case 'barbed': if (ev.onPlayer) log(`Barbelés de ${ev.name} : ${ev.dmg} dégâts pour vous.`, 'hurt'); else { flash.monsters.push(ev.i); log(`Barbelés : ${ev.name} se blesse de ${ev.dmg}.`); } break;
         case 'zeroAbsolu': flash.monsters.push(ev.i); consider(93, ev.duel ? foeLine('zeroDuel', ev.name) : LINES.zero); log(ev.duel ? `Zéro absolu : ${ev.name} abandonne.` : `Zéro absolu : ${ev.name} part en cryogénie.`, 'succes'); break;
         case 'playerZero': consider(100, foeLine('playerZero', ev.name)); log(`Zéro absolu de ${ev.name} : vous partez en cryogénie.`, 'hurt'); break;
-        case 'lastBreath': consider(94, ev.boss ? foeLine('lastBreathBoss', ev.name) : LINES.lastBreath); log(ev.boss ? `Dernier souffle : ${ev.name} reste à 1 PV, avec ${E.LB_BLOCK} d’armure.` : `Dernier souffle : vous restez à 1 PV, avec ${E.LB_BLOCK} d’armure.`, ev.boss ? 'warn' : 'succes'); break;
+        case 'lastBreath': consider(94, ev.boss ? foeLine('lastBreathBoss', ev.name) : ev.hp ? LINES.lazare : LINES.lastBreath); log(ev.boss ? `${ev.hp ? 'Lazare' : 'Dernier souffle'} : ${ev.name} ${ev.hp ? `se relève à ${ev.hp} PV` : 'reste à 1 PV'}, avec ${E.LB_BLOCK} d’armure.` : `${ev.hp ? 'Lazare' : 'Dernier souffle'} : vous ${ev.hp ? `vous relevez à ${ev.hp} PV` : 'restez à 1 PV'}, avec ${E.LB_BLOCK} d’armure.`, ev.boss ? 'warn' : 'succes'); break;
+        // palier 36 (0.80) : le journal seulement, à chaque tour
+        case 'apex': log(`Superprédateur : +${E.APEX} Force (${ev.force}).`, 'succes'); break;
+        case 'apexBoss': log(`Superprédateur : ${ev.name} gagne +${E.APEX} Force (${ev.force}).`, 'warn'); break;
+        case 'bastion': log(`Arche blindée : +${ev.n} d’armure.`, 'succes'); break;
+        case 'bastionBoss': log(`Arche blindée : ${ev.name} gagne ${ev.n} d’armure.`, 'warn'); break;
+        case 'terror': log(`Terreur : ${ev.name} est Vulnérable ${ev.n} tours.`, 'succes'); break;
+        case 'terrorPlayer': log(`Terreur : vous voilà Vulnérable ${ev.n} tours.`, 'hurt'); break;
         case 'stun': flavor('stun', 62, LINES.stun); log(`${ev.name} est tétanisé : il perd son prochain tour.`, 'succes'); break;
         case 'stunned': log(`${ev.name} est tétanisé et ne fait rien.`); break;
         case 'bossHeal': log(`${ev.name} se soigne de ${ev.amount} PV.`, 'warn'); break;
@@ -13061,25 +13253,27 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const specLines = (spec, foe) => Object.keys(spec || {}).map(a => E.SPECS[a].tiers.slice(0, spec[a]).map(t => `<b>${esc(t.name)}</b> : ${esc(foe && t.foeText ? t.foeText : t.text)}`).join('<br>')).join('<br>');
   function specPanel(ids, o) {
     o = o || {};
-    const steps = E.SPEC_STEPS, max = E.tierPts(E.SPEC_TIERS), pts = E.familyPoints(ids); // paliers à 4, 8 et 16 points
+    const steps = E.SPEC_STEPS, pts = E.familyPoints(ids); // paliers à 4, 8, 16 et 36 points
     const rank = E.specRanking(ids), byArch = {};
     rank.forEach((x, k) => { byArch[x.arch] = Object.assign({ k }, x); });
     const fams = (run.families || E.ARCHS).slice().sort((a, b) => (pts[b] || 0) - (pts[a] || 0) || E.ARCHS.indexOf(a) - E.ARCHS.indexOf(b));
     const rows = fams.map(a => {
       const p = pts[a] || 0, r = byArch[a], tier = E.tierFor(p), sp = E.SPECS[a];
+      // la jauge va jusqu'à 16 ; passé le palier 16, jusqu'au palier ultime (36), en cases plus fines
+      const max = E.tierPts(Math.min(E.SPEC_TIERS, tier >= 3 ? 4 : 3)), long = max > 20;
       const meter = Array.from({ length: max }, (_, k) => `<i class="${k < p ? 'f' : ''}${steps.includes(k + 1) && k + 1 < max ? ' t' : ''}"></i>`).join('');
       const role = r ? (r.active ? (r.k === 0 ? 'principale' : r.k === 1 ? 'secondaire' : r.k === 2 ? 'troisième, Touche-à-tout' : 'quatrième, Touche-à-tout') : 'en sommeil') : '';
       const shown = sp.tiers.slice(0, Math.min(E.SPEC_TIERS, tier + 1));
       const tiers = shown.map((t, k) => `<span class="tier${k < tier ? (r && r.active ? ' got' : ' slept') : ''}"><b class="mono">${E.tierPts(k + 1)}</b> <b>${esc(t.name)}</b> · ${esc(t.text)}</span>`).join('');
       return `<li class="${r ? (r.active ? 'on' : 'sleep') : ''}">
         <span class="fam">${a}${role ? ` <span class="chip ${r.active ? 'spec' : 'sleepchip'}">${role}</span>` : ''}</span>
-        <span class="meter" role="img" aria-label="${p} point${p > 1 ? 's' : ''} sur ${max}">${meter}<span class="mono">${p}/${max}</span></span>
+        <span class="meter${long ? ' long' : ''}" role="img" aria-label="${p} point${p > 1 ? 's' : ''} sur ${max}">${meter}<span class="mono">${p}/${max}</span></span>
         <span class="sdesc">${tiers}</span>
       </li>`;
     }).join('');
     return `<div class="specbox">
       <h3>Spécialisations</h3>
-      <p class="muted">${o.intro || ''}Blanche 1 point, verte 2, bleue 3, violette 4${run && run.finale ? ', orange 5, rouge 6' : ''}. Paliers à ${steps[0]}, ${steps[1]} et ${steps[2]} points : ils se cumulent. Seules vos <b>deux familles les plus fournies</b> sont actives, une principale et une secondaire (trois avec Touche-à-tout) ; les autres restent en sommeil. ${fams.length < E.ARCHS.length ? `Cette partie mélange ${fams.length} familles sur ${E.ARCHS.length}.` : `Les ${E.ARCHS.length} familles sont en jeu.`}</p>
+      <p class="muted">${o.intro || ''}Blanche 1 point, verte 2, bleue 3, violette 4${run && run.finale ? ', orange 5, rouge 6' : ''}. Paliers à ${steps[0]}, ${steps[1]} et ${steps[2]} points, et un palier ultime à ${steps[3]} pour les plus obstinés : ils se cumulent. Seules vos <b>deux familles les plus fournies</b> sont actives, une principale et une secondaire (trois avec Touche-à-tout) ; les autres restent en sommeil. ${fams.length < E.ARCHS.length ? `Cette partie mélange ${fams.length} familles sur ${E.ARCHS.length}.` : `Les ${E.ARCHS.length} familles sont en jeu.`}</p>
       <ul class="specs">${rows}${toucheRow(ids)}${lowblowRow(ids)}</ul>
     </div>`;
   }
@@ -13168,7 +13362,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       log(`Tenue : ${it.name} (${ev.arch}, ${kind === 'costume' ? 'spécialisation principale' : 'à la main'}).`, 'succes');
     } else if (ev.type === 'specUnlocked' && ev.tier >= 3) {
       const w = worn();
-      if (w) log(`Tenue : ${w.item.name} brille, palier ${E.tierPts(3)} points.`, 'succes');
+      if (w) log(ev.tier >= 4 ? `Tenue : ${w.item.name} resplendit, palier ${E.tierPts(4)} points.` : `Tenue : ${w.item.name} brille, palier ${E.tierPts(3)} points.`, 'succes');
     } else if (ev.type === 'toucheUnlocked') {
       consider(92, AV.TOUCHE.line);
     } else if (ev.type === 'specDormant') {
@@ -13279,7 +13473,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       <ol class="steps">
         <li><b>Classe.</b> Avant le premier draft, choisissez votre ancien métier : Postulant, Vétérinaire, Mécano de l’arche ou Passager clandestin. Il fixe vos 8 cartes de base, vos PV, et un talent qui vient avec son inconvénient (le Postulant n’a ni l’un ni l’autre). Aucune classe ne favorise une famille : le draft reste ouvert.</li>
         <li><b>Draft.</b> Vous arrivez tout nu, avec 8 cartes de base (le Postulant : 4 Poings nus et 4 Esquives). Draftez-en 8 de plus dans quatre boosters de 8 cartes (une tête d’affiche, verte 1 fois sur 4, et 7 blanches) : gardez une carte, passez le reste à gauche. Au pick 5, votre premier booster revient.</li>
-        <li><b>Combos.</b> Les cartes appartiennent à 8 familles (Instinct, Mutation, Cryogénie…), et celles d’une même famille se répondent. Une famille débloque un bonus à ${E.SPEC_STEPS[0]}, ${E.SPEC_STEPS[1]} et ${E.SPEC_STEPS[2]} points (blanche 1, verte 2, bleue 3, violette 4). Seules vos deux familles les plus fournies sont actives, trois si vous en avez ${E.TOUCHE_FAMILIES} à ${E.SPEC_THRESHOLD} points (Touche-à-tout).</li>
+        <li><b>Combos.</b> Les cartes appartiennent à 8 familles (Instinct, Mutation, Cryogénie…), et celles d’une même famille se répondent. Une famille débloque un bonus à ${E.SPEC_STEPS[0]}, ${E.SPEC_STEPS[1]} et ${E.SPEC_STEPS[2]} points (blanche 1, verte 2, bleue 3, violette 4), et un dernier, rare, à ${E.SPEC_STEPS[3]}. Seules vos deux familles les plus fournies sont actives, trois si vous en avez ${E.TOUCHE_FAMILIES} à ${E.SPEC_THRESHOLD} points (Touche-à-tout).</li>
         <li><b>Fusion.</b> Automatique : dès que vous avez deux cartes identiques, elles fusionnent. Deux blanches donnent la verte de leur lignée, deux vertes la bleue. Un doublon pris au draft, trouvé dans un coffre, à la boutique ou dans un événement compte aussi.</li>
         <li><b>Duels.</b> Juste après le draft, à chaque table, deux duels : vous contre votre vis-à-vis, assis en face, et les deux autres entre eux. En face, personne n’est avantagé : chacun choisit avant l’autre dans deux boosters sur quatre. Les perdants sont éliminés.</li>
         <li><b>Quarantaine.</b> Après le duel, un couple d'animaux à renvoyer en cryogénie, puis le boss de l'étage : le bouc émissaire. Vos ${E.FLOOR_HP[1]} PV sont conservés d'un combat à l'autre, duel compris. Entre deux combats, une seule salle, tirée au hasard : boutique, coffre ou événement.</li>
@@ -15522,7 +15716,9 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const modTools = document.getElementById('mod-tools');
   function modCtx() {
     return { E, run, ui, render, say, quip, log, showPops, esc, toolsEl: modTools, screenEl, processEvents, getRun: () => run, animate: animateFoe,
-      setRun: r => { run = r; }, motionOK: typeof motionOK === 'function' ? motionOK() : true };
+      setRun: r => { run = r; }, motionOK: typeof motionOK === 'function' ? motionOK() : true,
+      // les butins du dossier (0.80) s'ouvrent dans la fenêtre des caisses : la caisse de fret des parties, et les cartes pour les aperçus
+      cardHTML: (id, o) => cardHTML(id, o), get chestArt() { return { lid: CHEST_LID, base: CHEST_BASE, motion: canAnimate() }; } };
   }
 
   /* ---------- actions ---------- */
@@ -15689,7 +15885,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       ev.preventDefault(); list[j].focus(); return;
     }
     if (ev.key === 'Escape' && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap passe l'animation
-    if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
+    if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"], .bxp .bxp-actions [data-act="achlootclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
     if (ev.key === 'Escape' && !pause.open && run == null && menuTab()) { ev.preventDefault(); setMenuTab('', true); return; } // un panneau du menu : retour aux boutons
     if (ev.key === 'Escape' && pause.open) { ev.preventDefault(); closePause(); return; }
     if (ev.key === 'Escape' && ui.drawer) { setDrawer(false); const b = screenEl.querySelector('.cb-journal-btn'); if (b) b.focus({ preventScroll: true }); return; }
