@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.83.2';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.84.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -1366,6 +1366,88 @@ header.eden { position: relative; top: auto; min-height: 56px; }
   .ms-panel-head h2 { font-size: 30px; }
   .ms-panel .opt { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Écrans de jeu à hauteur fixe (0.84) : draft, garder 8, préparation de l'étage, fin d'étage. La page ne défile plus ;
+   la colonne principale tient dans l'écran (ui.js fitMain) et le reste passe dans des onglets à droite ; sous 1000 px,
+   les onglets restent en bas et ouvrent un tiroir. */
+body.gs #screen { overflow: hidden; display: flex; flex-direction: column; padding-bottom: 10px; }
+body.gs #screen > .gs { flex: 1 1 auto; min-height: 0; }
+#screen > .split.gs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); align-items: stretch; gap: 14px; max-width: 1280px; }
+.gs > .gs-main { min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #9aa6ae transparent; }
+section.gs-main:not(.panel) { display: flex; flex-direction: column; gap: 12px; }
+.gs-main > *, .gs-pane > * { flex-shrink: 0; } /* la colonne défile au lieu d'écraser ses blocs (la carte de l'étage défile en largeur) */
+.gs > .gs-side { min-height: 0; padding: 12px 12px 10px; gap: 10px; }
+.gs-tabs { display: flex; flex-wrap: wrap; gap: 5px; flex: none; }
+.gs-tab { display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: 999px; border: 1.5px solid #c3cbc6; background: #ffffff; color: #36424a;
+  font: 700 12.5px/1.1 var(--font-body, inherit); cursor: pointer; white-space: nowrap; }
+.gs-tab:hover { border-color: #8d999f; }
+.gs-tab[aria-selected="true"] { background: #1e2326; border-color: #1e2326; color: #ffffff; }
+.gs-badge { min-width: 18px; padding: 1px 5px; border-radius: 999px; background: var(--amber); color: #1e2326; font-size: 11px; text-align: center; }
+.gs-close { display: none; }
+.gs-pane { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scrollbar-width: thin; scrollbar-color: #9aa6ae transparent; padding-right: 2px; }
+.gs-pane[hidden] { display: none; }
+.gs-pane > h3:first-child { margin-top: 0; }
+.gs-pane .specbox h3 { display: none; } /* l'onglet porte déjà le nom */
+.gs-fit { min-height: 0; }
+#screen > .split.gs.gs-single { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); max-width: 1240px; }
+/* Classes (0.84) : les deux cartes de base en lignes compactes, au lieu de deux grandes cartes */
+.cl-base { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.cl-base li { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; align-items: center; padding: 6px 8px; border-radius: 8px; background: #ffffff; border: 1.5px solid #d3dad6; border-left: 4px solid var(--fc); font-size: 13px; }
+.cl-base li .dm-cost { grid-row: 1 / span 2; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--amber); color: #1e2326; font-weight: 800; font-size: 12px; border: 1.5px solid #1e2326; }
+.cl-base li b { font-family: var(--font-display); font-size: 14px; text-transform: uppercase; letter-spacing: .02em; }
+.cl-base li .muted { font-size: 12.5px; }
+/* l'écran des classes tient dans l'écran (0.84) : silhouette et cartes plus compactes */
+.classes .silhouette { margin-top: 0; padding: 6px 12px; }
+.classes .silhouette .sil-opt { padding: 4px 10px; } .classes .silhouette .sil-av { height: 44px; width: auto; }
+.classes .classgrid { margin-top: 0; gap: 10px; }
+.classes .classopt { padding: 10px 12px; gap: 7px; }
+.classes .classopt h3 { font-size: 22px; }
+.classes .classopt .cl-talent { font-size: 13px; }
+.classes .classopt > p.muted:not(.cl-hp) { font-size: 13px; }
+.classes .phase-head + p.muted { font-size: 13.5px; margin: 0; }
+@media (max-width: 999px) {
+  #screen > .split.gs { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 8px; }
+  .gs > .gs-side { padding: 6px; border-radius: 12px; }
+  .gs-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .gs-side:not(.sheet-open) .gs-pane { display: none; }
+  .gs-side.sheet-open .gs-close { display: inline-flex; margin-left: auto; padding: 4px 10px; font-size: 18px; line-height: 1; }
+  .gs-side.sheet-open { position: relative; z-index: 46; }
+  .gs-side.sheet-open .gs-pane:not([hidden]) { position: fixed; left: 8px; right: 8px; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); max-height: min(72dvh, 640px); z-index: 45;
+    background: #ffffff; border: 1.5px solid #c3cbc6; border-radius: 14px; box-shadow: 0 -12px 34px -12px rgba(30, 35, 38, .55); padding: 12px; }
+}
+/* Préparation de l'étage : les trois combats en vignettes illustrées */
+.enc-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.enc-tiles li.enc-tile { position: relative; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 4px; padding: 10px; border: 1.5px solid #d3dad6; border-radius: 12px;
+  background: #fafbf9; border-bottom: 1.5px solid #d3dad6; }
+.enc-tile.enc-duel { border-color: var(--hp); box-shadow: 0 0 0 2px rgba(179, 38, 30, .12); }
+.enc-tile.enc-boss { border-color: #1e2326; box-shadow: 0 0 0 2px rgba(30, 35, 38, .12); }
+.enc-art { display: flex; align-items: flex-end; justify-content: center; gap: 2px; height: clamp(110px, 24vh, 200px); border-radius: 9px; overflow: hidden; padding-bottom: 6px;
+  background: radial-gradient(ellipse at 50% 100%, #e3e8e3 0 32%, transparent 33%), linear-gradient(#ffffff, #eef1ee); }
+.enc-art svg { height: 92%; width: auto; max-width: 48%; flex: 0 1 auto; }
+.enc-art svg.foe-svg:not(.sb-art) { fill: none; stroke: #1e2326; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.enc-art .avatar, .enc-art svg.enc-av { height: 100%; max-width: none; transform: scaleX(-1); }
+.enc-k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.enc-duel .enc-k { color: var(--hp); }
+.enc-n { font-family: var(--font-display); font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; }
+.enc-tiles .enc-tile .diff { font-family: inherit; font-size: 12.5px; line-height: 1.35; color: #46525c; text-align: left; text-transform: none; letter-spacing: 0; }
+@media (max-width: 700px) { .enc-tiles { grid-template-columns: minmax(0, 1fr); } .enc-tiles li.enc-tile { display: grid; grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: 10px; }
+  .enc-art { grid-row: 1 / span 3; height: 96px; } }
+/* Le deck en liste compacte : la couleur de la famille, le nom, le coût */
+.deckmini { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 5px; }
+.deckmini li { display: flex; align-items: center; gap: 6px; padding: 4px 6px 4px 4px; border-radius: 8px; background: #ffffff; border: 1.5px solid #d3dad6; border-left: 4px solid var(--fc); font-size: 13px; cursor: help; min-width: 0; }
+.deckmini li.r-verte { box-shadow: inset 0 0 0 1px rgba(46, 154, 92, .25); } .deckmini li.r-bleue { box-shadow: inset 0 0 0 1px rgba(37, 99, 217, .3); } .deckmini li.r-violette { box-shadow: inset 0 0 0 1px rgba(124, 77, 235, .35); }
+.deckmini .dm-fam { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--fc); }
+.deckmini .dm-fam svg { width: 12px; height: 12px; fill: none; stroke: var(--fi, #ffffff); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.deckmini .dm-name { flex: 1 1 auto; min-width: 0; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.deckmini .dm-n { flex: none; font-family: var(--font-display); font-size: 13px; }
+.deckmini .dm-cost { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--amber); color: #1e2326; font-weight: 800; font-size: 12px; border: 1.5px solid #1e2326; }
+.deck-full > summary { cursor: pointer; font-weight: 700; font-size: 13px; }
+.deck-full .cards { margin-top: 8px; zoom: .82; }
+/* Fin d'étage : le tampon s'abat, le total monte (ui.js countUp) */
+.endscreen .stamp.ok { animation: stampIn .5s cubic-bezier(.3, 1.6, .5, 1) .35s both; }
+@keyframes stampIn { 0% { opacity: 0; transform: rotate(-9deg) scale(2.4); } 60% { opacity: 1; } 100% { opacity: .95; transform: rotate(-9deg) scale(1); } }
+.endscreen .countup { font-variant-numeric: tabular-nums; }
+.endscreen .actions { position: sticky; bottom: -18px; padding: 10px 0 2px; background: linear-gradient(transparent, var(--panel) 30%); }
 
 /* Le draft : les cartes à gauche, la table et votre deck à droite */
 #screen > .draft-split { max-width: 1280px; }
@@ -7077,9 +7159,11 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
    Style : aplat vectoriel en cel-shading, contour sombre épais, deux ou trois tons d'ombre, proportions de bande dessinée.
    Les monstres regardent vers la gauche (le joueur est à gauche de l'écran). La lueur radioactive (#C6FF5E) et la lueur
    cyan des machines sont dans des groupes à part (.sb-glow) : leur halo (.sb-halo) pulse en CSS.
-   API : window.SurbookingArt.foe(clé, variante) renvoie une chaîne <svg> complète ; variantOf(monstre, rencontre)
+   API : window.SurbookingArt.foe(clé, variante) renvoie une chaîne <svg> complète ; variantOf(monstre, rencontre, ctx)
    calcule la variante à partir de l'état du combat (« b » second du couple, « clone », « mute », « boite », « gros »,
-   « evadee », « n0 » à « n3 » pour les poussins). Repère commun : viewBox 0 0 100 100, sol à y = 94. */
+   « evadee », « n0 » à « n3 » pour les poussins) et, si ctx = { floor, finale } est donné, de l'étage : « c3 » à la
+   serre, « c4 » à la ménagerie et en finale (la contamination, voir plus bas). Sans ctx, ou aux étages 1 et 2, la
+   variante et le dessin sont ceux d'avant, caractère pour caractère. Repère commun : viewBox 0 0 100 100, sol à y = 94. */
 (function () {
   'use strict';
   const INK = '#2b2622';
@@ -7087,6 +7171,28 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const CYAN = '#7fe7ff', CYAN_CORE = '#e6fbff', CYAN_EDGE = '#1d89a8';
   let UID = 0;
   const r2 = n => Math.round(n * 100) / 100;
+
+  /* ---------- contamination (étages 3 et 4, finale) ----------
+     Variante « c3 » (la serre : un peu) ou « c4 » (la ménagerie et la finale : franchement). Deux choses s'ajoutent :
+     1. la teinte : les tons clairs de chaque pièce virent au vert acide, les ombres au violet (éclairage « contaminé ») ;
+     2. les mutations propres à chaque monstre (MUT, plus bas) : pustules, yeux en trop, cristaux de radiation violets,
+        excroissances, veines, bave acide. Sans « c3 » ni « c4 », rien de tout cela ne s'applique : le dessin est le même,
+        caractère pour caractère. Les machines (RX-7, drones, ÉDEN) ne sont jamais contaminées. */
+  const BRUISE = '#8d4bb8', VEIN = '#7434a8';
+  const CRYST = ['#d2b3ff', '#9a64dc', '#5d3196'], TUMOR = ['#c99acb', '#9a69a6', '#6c4277'];
+  const T_TO = ['#d6f27a', '#6b4a96', '#321c4c'];
+  const T_AMT = { 3: [0.09, 0.19, 0.26], 4: [0.2, 0.4, 0.52] };
+  const T_KEEP = new Set([INK, GLOW, GLOW_CORE, GLOW_EDGE, CYAN, CYAN_CORE, CYAN_EDGE, '#ffffff', '#fffdf5']);
+  const hexRGB = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const rgbHex = c => '#' + c.map(x => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+  // role : 0 ton clair, 1 ombre, 2 ombre profonde ; sans rôle, il se déduit de la luminosité
+  function taint(col, lvl, role) {
+    if (typeof col !== 'string' || !/^#[0-9a-f]{6}$/i.test(col) || T_KEEP.has(col.toLowerCase())) return col;
+    const c = hexRGB(col);
+    if (role == null) { const l = (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255; role = l > 0.62 ? 0 : l > 0.36 ? 1 : 2; }
+    const t = T_AMT[lvl][role], to = hexRGB(T_TO[role]);
+    return rgbHex(c.map((x, i) => x + (to[i] - x) * t));
+  }
 
   /* ---------- formes ---------- */
   function ell(cx, cy, rx, ry, rot) {
@@ -7116,16 +7222,20 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   }
 
   /* ---------- contexte de dessin : identifiants uniques, ombres, lueurs ---------- */
-  function ctx() {
+  function ctx(lvl) {
     const id = 'sb' + (++UID).toString(36);
     let n = 0, glowF = false, cyanF = false, ghostF = false;
     const defs = [];
+    // Contamination : les couleurs passent par la teinte (voir taint) ; sans niveau, elles ne sont pas touchées
+    const tn = lvl ? c => taint(c, lvl) : null;
     const C = {
-      id,
+      id, lvl: lvl || 0,
       // Une pièce : aplat, ombre propre (le ton clair est décalé vers la lumière, en haut à gauche), détails internes
       // découpés dans la pièce, puis le contour. col = [clair, ombre, ombre profonde].
+      // o.pure : la pièce garde ses couleurs même contaminée (la pomme du Serpent).
       part(d, col, o) {
         o = o || {};
+        if (tn && !o.pure) col = col.map((c, i) => taint(c, lvl, i));
         const cid = `${id}c${n++}`, s = o.s == null ? 2.6 : o.s;
         defs.push(`<clipPath id="${cid}"><path d="${d}"/></clipPath>`);
         let inner = `<path d="${d}" fill="${col[0]}" transform="translate(${r2(-s * 0.75)} ${r2(-s)})"/>`;
@@ -7136,10 +7246,61 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
         return `<path d="${d}" fill="${col[1]}"/><g clip-path="url(#${cid})">${inner}</g>` +
           (w ? `<path d="${d}" fill="none" stroke="${o.stroke || INK}" stroke-width="${w}"${o.dash ? ` stroke-dasharray="${o.dash}"` : ''}/>` : '');
       },
-      ink(d, w, col, extra) { return `<path d="${d}" fill="none" stroke="${col || INK}" stroke-width="${w || 2}"${extra || ''}/>`; },
-      fill(d, col, extra) { return `<path d="${d}" fill="${col}"${extra || ''}/>`; },
+      ink(d, w, col, extra) { if (tn && col) col = tn(col); return `<path d="${d}" fill="none" stroke="${col || INK}" stroke-width="${w || 2}"${extra || ''}/>`; },
+      fill(d, col, extra) { if (tn) col = tn(col); return `<path d="${d}" fill="${col}"${extra || ''}/>`; },
       // Trait doublé (queue, corde, tige) : un trait d'encre épais puis la couleur par-dessus
-      tube(d, w, col) { return `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${r2(w + 2.6)}"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}"/>`; },
+      tube(d, w, col) { if (tn) col = tn(col); return `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${r2(w + 2.6)}"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}"/>`; },
+      /* -- outils de la contamination (appelés seulement par MUT, donc jamais sans « c3 » / « c4 ») -- */
+      // Pustules : un bouton vert acide, cerné de violet, avec un reflet. list : [x, y, r]. Renvoie [cernes, boutons] :
+      // les cernes vont sur la peau, les boutons dans le groupe lumineux (un seul par monstre, pour le coût du filtre).
+      boils(list) {
+        const ring = list.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r2(r * 1.5)}" fill="${BRUISE}" fill-opacity=".55"/>`).join('');
+        const bump = list.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${GLOW}" stroke="${INK}" stroke-width="${r > 2.4 ? 1.4 : 1.1}"/>` +
+          `<circle cx="${r2(x - r * 0.36)}" cy="${r2(y - r * 0.38)}" r="${r2(r * 0.34)}" fill="${GLOW_CORE}"/>`).join('');
+        return [ring, bump];
+      },
+      // Œil en trop : blanc, iris violet, pupille fendue, qui regarde à gauche comme les autres
+      xeye(cx, cy, r) {
+        return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff6e2" stroke="${INK}" stroke-width="${r > 2.2 ? 1.4 : 1.1}"/>` +
+          `<circle cx="${r2(cx - r * 0.3)}" cy="${r2(cy + r * 0.05)}" r="${r2(r * 0.6)}" fill="#8f3fd0"/>` +
+          `<ellipse cx="${r2(cx - r * 0.34)}" cy="${r2(cy + r * 0.05)}" rx="${r2(r * 0.17)}" ry="${r2(r * 0.46)}" fill="${INK}"/>` +
+          `<circle cx="${r2(cx - r * 0.55)}" cy="${r2(cy - r * 0.3)}" r="${r2(r * 0.2)}" fill="#ffffff"/>`;
+      },
+      // Cristaux de radiation : des éclats violets qui percent la peau. list : [x, y, longueur, angle (degrés), largeur]
+      shards(list) {
+        return list.map(([x, y, len, a, w]) => {
+          const t = a * Math.PI / 180, ux = Math.cos(t), uy = Math.sin(t), px = -uy * (w || 4) / 2, py = ux * (w || 4) / 2;
+          const tx = x + ux * len, ty = y + uy * len, mx = x + ux * len * 0.55, my = y + uy * len * 0.55;
+          const d = `M${r2(x + px)} ${r2(y + py)}L${r2(mx + px * 0.9)} ${r2(my + py * 0.9)}L${r2(tx)} ${r2(ty)}L${r2(mx - px * 0.9)} ${r2(my - py * 0.9)}L${r2(x - px)} ${r2(y - py)}Z`;
+          const f = `M${r2(x)} ${r2(y)}L${r2(mx - px * 0.9)} ${r2(my - py * 0.9)}L${r2(tx)} ${r2(ty)}Z`;
+          return `<path d="${d}" fill="${CRYST[1]}"/><path d="${f}" fill="${CRYST[0]}"/><path d="M${r2(x + px * 0.3)} ${r2(y + py * 0.3)}L${r2(tx)} ${r2(ty)}" stroke="${CRYST[2]}" stroke-width=".8"/>` +
+            `<path d="${d}" fill="none" stroke="${INK}" stroke-width="1.7"/>`;
+        }).join('');
+      },
+      // Grappe de cristaux : un gros éclat et deux plus petits en éventail, sortis du même point (taille s, angle a)
+      cluster(x, y, a, s) {
+        const t = a * Math.PI / 180, px = -Math.sin(t), py = Math.cos(t);
+        return C.shards([[r2(x - px * s * 0.2), r2(y - py * s * 0.2), r2(s * 0.62), a - 32, r2(s * 0.3)], [r2(x + px * s * 0.2), r2(y + py * s * 0.2), r2(s * 0.56), a + 30, r2(s * 0.28)], [x, y, s, a, r2(s * 0.42)]]);
+      },
+      // Fissure luisante : bord d'encre et liseré violet sur la peau, cœur vert acide (à mettre dans le groupe lumineux)
+      crack(d, w) {
+        return [`<path d="${d}" fill="none" stroke="${INK}" stroke-width="${r2(w + 2.4)}"/><path d="${d}" fill="none" stroke="${BRUISE}" stroke-width="${r2(w + 1.1)}"/>`,
+          `<path d="${d}" fill="none" stroke="${GLOW}" stroke-width="${w}"/>`];
+      },
+      // Veines violettes qui partent d'un point. br : [angle (degrés), longueur]
+      veins(x, y, br, w) {
+        const d = br.map(([a, len]) => {
+          const t = a * Math.PI / 180, ux = Math.cos(t), uy = Math.sin(t);
+          return `M${x} ${y}q${r2(ux * len * 0.5 - uy * len * 0.18)} ${r2(uy * len * 0.5 + ux * len * 0.18)} ${r2(ux * len)} ${r2(uy * len)}`;
+        }).join('');
+        return `<path d="${d}" fill="none" stroke="${VEIN}" stroke-width="${w || 1.2}" stroke-opacity=".85"/>`;
+      },
+      // Bave acide : une coulure qui pend (dans le groupe lumineux)
+      drip(x, y, len) {
+        return `<path d="M${r2(x - 1.4)} ${y}C${r2(x - 1.4)} ${r2(y + len * 0.5)} ${r2(x - 1.9)} ${r2(y + len * 0.8)} ${r2(x - 1.9)} ${r2(y + len)}a1.9 1.9 0 0 0 3.8 0C${r2(x + 1.9)} ${r2(y + len * 0.8)} ${r2(x + 1.4)} ${r2(y + len * 0.5)} ${r2(x + 1.4)} ${y}Z" fill="${GLOW}" stroke="${GLOW_EDGE}" stroke-width=".9"/>`;
+      },
+      // Excroissance de chair violacée, bosselée
+      tumor(cx, cy, rx, ry, k, inner) { return C.part(cloud(cx, cy, rx, ry, k || 7, 0.72, 0.3), TUMOR, { s: 1.6, pure: true, inner: inner || '' }); },
       // Groupe lumineux : halo flou (qui pulse) + formes nettes
       glow(inner) { glowF = true; return `<g class="sb-glow"><g class="sb-halo" filter="url(#${id}g)">${inner}</g>${inner}</g>`; },
       cyan(inner) { cyanF = true; return `<g class="sb-glow sb-cyan"><g class="sb-halo" filter="url(#${id}g)">${inner}</g>${inner}</g>`; },
@@ -7729,7 +7890,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       C.ink('M2 92C6 84 12 88 16 84C20 80 24 86 30 82', 1, '#a9b294', ' stroke-dasharray="1.6 1.6"') + C.ink('M6.6 85.6l1.6 2.6M12 86l1.4 2.6M18.6 82l1.4 2.6M24 83.4l1.4 2.6', 0.9, '#b8c0a2') : '';
     // la queue et la pomme, derrière
     s += C.tube('M84 82C96 78 98 62 88 58C82 56 78 62 82 66', 5, sc[1]);
-    s += C.part(circ(76, 54, 8.4), ['#ff6a5a', '#d93a2e', '#a51d1d'], { s: 2, hl: ell(73, 50, 2.6, 1.6, -30), hlo: 0.6 });
+    s += C.part(circ(76, 54, 8.4), ['#ff6a5a', '#d93a2e', '#a51d1d'], { s: 2, hl: ell(73, 50, 2.6, 1.6, -30), hlo: 0.6, pure: true });
     s += C.ink('M76 46.4q1-4 3.4-5', 1.8) + C.part('M78.6 42.6q5-3 8.6 0q-4.4 3.4-8.6 0z', ['#7bc043', '#4f8a25'], { s: 0.8, w: 1.2 });
     s += C.dots([[79, 57, 1.1], [73, 58.6, 0.8], [77, 51, 0.7]]); // la pomme irradiée
     // les anneaux au sol
@@ -7890,6 +8051,183 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     return s;
   };
 
+  /* ---------- les mutations de la contamination ----------
+     MUT[clé](C, v, L) renvoie { back, front } : back passe derrière la figure (ce qui dépasse de la silhouette : cristaux,
+     excroissances, oreille en trop), front par-dessus (pustules, yeux en trop, veines, bave). L vaut 3 (la serre : un peu)
+     ou 4 (la ménagerie et la finale : franchement). Repère : celui du dessin (viewBox 0 0 100 100, regard vers la gauche).
+     Pour chaque monstre, la pièce qui le fait reconnaître (la tête, le profil) reste dégagée. */
+  const MUT = {};
+  // Assemble la couche avant : cernes, veines et bords de fissures sur la peau, puis un seul groupe lumineux (pustules,
+  // cœur des fissures, bave), puis les yeux en trop. o.cracks : [tracé, largeur] ; o.lit : formes lumineuses en plus.
+  const mutFront = (C, o) => {
+    const [ring, bump] = C.boils(o.boils || []);
+    const cr = (o.cracks || []).map(([d, w]) => C.crack(d, w));
+    const lit = cr.map(x => x[1]).join('') + bump + (o.drips || []).map(([x, y, l]) => C.drip(x, y, l)).join('') + (o.lit || '');
+    return ring + (o.veins || []).map(([x, y, br, w]) => C.veins(x, y, br, w)).join('') + cr.map(x => x[0]).join('') + (o.under || '') +
+      (lit ? C.glow(lit) : '') + (o.eyes || []).map(([x, y, r]) => C.xeye(x, y, r)).join('') + (o.over || '');
+  };
+  // Un troisième œil luisant (front du chat, crâne de la vesse) : pupille fendue verticale
+  const eye3 = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${GLOW}" stroke="${INK}" stroke-width="1.4"/><ellipse cx="${r2(x - r * 0.18)}" cy="${y}" rx="${r2(r * 0.24)}" ry="${r2(r * 0.72)}" fill="${INK}"/><circle cx="${r2(x - r * 0.45)}" cy="${r2(y - r * 0.4)}" r="${r2(r * 0.2)}" fill="${GLOW_CORE}"/>`;
+
+  // Phalène-lampe : l'ocelle de l'aile s'ouvre (un vrai œil), une pustule au thorax ; à 4, une grappe de cristaux sur le
+  // thorax, l'aile fendue qui luit et un second œil sur l'aile basse.
+  MUT.phalenes = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(35, 53, -100, 13) : C.shards([[35, 52, 7, -104, 3.4]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[30.5, 61, 2.4], [35.8, 58.6, 1.7], [55, 71, 1.8]] : [[30.6, 61.2, 1.9]],
+      veins: [[70, 28, [[150, 12], [200, 10], [110, 9], [60, 8]], 1.1]].concat(L >= 4 ? [[80, 70, [[190, 9], [150, 7]], 1]] : []),
+      cracks: L >= 4 ? [['M54 45l5-1.6 3 2.4 4.6-3 3.4.4M62 45.8l1.4 3', 1.4]] : [],
+      eyes: L >= 4 ? [[70, 28, 5.6], [80.5, 69.5, 3.2]] : [[70, 28, 5]],
+    }),
+  });
+  // Vesse-de-loup : des verrues tournent en pustules, un troisième œil ; à 4, des cristaux lui percent le crâne, des
+  // fissures luisantes, trois yeux de plus, elle bave.
+  MUT.vesses = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(74, 38, -55, 17) + C.cluster(88, 54, -15, 11) : C.cluster(76, 40, -52, 10),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[73, 52, 3.6], [77.6, 56.4, 2.2], [80, 66, 3], [66, 72, 2.4], [76, 76, 1.8], [86, 60, 1.6]] : [[72, 50, 2.8], [80, 65, 2.1]],
+      veins: [[72, 50, [[160, 9], [210, 8], [30, 8], [100, 7]], 1.15], [80, 64, [[250, 6], [20, 6]], 1]],
+      cracks: L >= 4 ? [['M56 77l3.6-3.4-.6-4 3.8-2.6.4-3M59 69.6l-3.4-1.4', 1.5], ['M85 47l-3 3.4 1.6 3.4', 1.2]] : [],
+      drips: L >= 4 ? [[33, 71.4, 8], [39, 70.6, 5]] : [],
+      eyes: L >= 4 ? [[64, 60, 2.8], [49, 37, 2.2]] : [],
+      over: eye3(55, 45, L >= 4 ? 4 : 3.3),
+    }),
+  });
+  // Crapaud-cactus : un œil s'ouvre sur son dos ; à 4, de grosses grappes de cristaux remplacent des touffes d'épines,
+  // une fissure luisante, la bave.
+  MUT.crapauds = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(56, 47, -95, 15) + C.cluster(76, 52, -50, 13) : C.shards([[66, 48, 9, -78, 4.2], [57, 47, 7, -100, 3.6]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[52, 60, 2.8], [70, 62, 2.4], [78, 73, 3], [82.6, 77.4, 1.8], [64, 79, 2], [44, 72, 1.6]] : [[52, 59, 2.3], [78, 72, 2.2]],
+      veins: [[78, 72, [[180, 8], [250, 7], [300, 6]], 1.1]].concat(L >= 4 ? [[52, 59, [[160, 7], [30, 7]], 1]] : []),
+      cracks: L >= 4 ? [['M56 85l3-3.8-1.6-3.4 3.6-3 .2-3.4M58.4 78l3 .8', 1.5]] : [],
+      drips: L >= 4 ? [[46, 70, 8]] : [],
+      eyes: L >= 4 ? [[61, 55, 4], [72, 66, 2.6]] : [[61, 55, 3.2]],
+    }),
+  });
+  // Dionée : des yeux poussent sur la mâchoire, des pustules sur la tige, elle bave ; à 4, des cristaux sortent de la dalle.
+  MUT.dionee = (C, v, L) => ({
+    back: '',
+    front: (L >= 4 ? C.cluster(40, 93, -115, 13) + C.cluster(80, 93, -62, 11) : C.cluster(80, 93, -62, 8)) + mutFront(C, {
+      boils: L >= 4 ? [[63.4, 70, 2.8], [61.8, 80, 2.2], [65.4, 60, 1.8], [86, 82, 1.6]] : [[63.4, 70, 2.3], [62, 80, 1.7]],
+      veins: [[42, 26, [[200, 9], [160, 8], [20, 9]], 1.1], [63.4, 70, [[100, 6], [260, 6]], 1]],
+      cracks: L >= 4 ? [['M52 37.4l-4.4-1-3.2 2.6-4.6-1.4M47.6 36.4l-.6-3', 1.3]] : [],
+      drips: L >= 4 ? [[24, 62, 9], [33, 63, 6]] : [[26, 62, 6]],
+      eyes: L >= 4 ? [[46, 27, 3.6], [55, 34, 2.6], [36, 22, 2.4]] : [[46, 27, 3.2], [36, 22, 2]],
+    }),
+  });
+  // Nounours : la bourre verte crève l'épaule, un œil pousse sur la joue ; à 4, une excroissance sur le dos, hérissée de
+  // cristaux, une fissure luisante.
+  MUT.ours = (C, v, L) => ({
+    back: L >= 4 ? C.tumor(85, 30, 11, 10, 7, C.ink('M80 28q4 2 6-1M84 36q3-3 7-1', 1.1, TUMOR[2])) + C.cluster(90, 24, -45, 13) : C.shards([[84, 30, 9, -50, 4.2], [78, 27, 7, -82, 3.6]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[74, 36, 3.2], [78.6, 40.6, 2], [81, 47, 2.6], [70, 28, 1.8], [84, 62, 2.2], [46, 78, 1.6]] : [[74, 36, 2.6], [80, 44, 2]],
+      veins: [[74, 36, [[150, 9], [210, 8], [270, 7], [20, 7]], 1.15]],
+      cracks: L >= 4 ? [['M86 50l-2.4 4.6 2.6 3.6-2.2 4.8 1 3M84.2 58.2l3.4 1', 1.5]] : [],
+      drips: L >= 4 ? [[16, 44, 8]] : [],
+      eyes: L >= 4 ? [[44, 33, 3.2], [64, 34, 2.6]] : [[44, 33, 2.8]],
+    }),
+  });
+  // Le Serpent : deux petits yeux en plus sur la tête, une crête de cristaux le long du cou, des pustules sur les anneaux.
+  MUT.serpent = (C, v, L) => ({
+    back: C.shards(L >= 4 ? [[59, 53, 12, -8, 5.4], [58, 44, 12, -42, 5.2], [50.6, 37, 11, -84, 5], [42, 34, 10, -112, 4.6]] : [[59, 53, 10, -8, 4.4], [58, 44, 10, -42, 4.4], [50.6, 37, 9, -84, 4.2], [42, 34, 8, -112, 3.8]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[66, 79, 2.8], [50, 80.4, 2.2], [80, 84, 2], [44, 56, 1.8]] : [[66, 79, 2.2], [51, 80.6, 1.6]],
+      veins: [[66, 79, [[180, 7], [0, 7]], 1]],
+      cracks: L >= 4 ? [['M70 86.4l3.6-2.6 4.4 1.4 3.4-2.6', 1.3]] : [],
+      eyes: L >= 4 ? [[28.4, 23.2, 2.4], [33.8, 25.4, 1.8], [12.6, 22.6, 1.6]] : [[28.4, 23.2, 2.1], [33.8, 25.6, 1.5]],
+    }),
+  });
+  // Lapin mutant : des cristaux sur l'échine ; à 4, des grappes plein le dos, une grosseur violacée sur la croupe, une
+  // fissure luisante dans le flanc, un œil en trop, des pustules, la bave aux dents.
+  MUT.lapins = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(67, 51, -78, 16) + C.cluster(81, 56, -38, 12) + C.tumor(86, 79, 8, 7, 6, C.ink('M84 76q3 2 5 0', 1, TUMOR[2])) : C.shards([[70, 51, 9, -70, 4.4], [62, 50, 7, -98, 3.6]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[70, 80, 3.2], [75, 76.4, 2.2], [64, 85, 2], [87.4, 78, 2], [83, 82.6, 1.6]] : [[68, 77, 2.4], [77, 71, 1.8]],
+      veins: [[70, 80, [[170, 8], [220, 7], [300, 7], [30, 6]], 1.1]],
+      cracks: L >= 4 ? [['M50 72.4l4.2 2.4-.8 4 4.6 2.8.8 3.4M53.4 78.8l-3.2 1.6', 1.5]] : [],
+      drips: L >= 4 ? [[20, 73.6, 7]] : [],
+      eyes: L >= 4 ? [[77, 63, 3.2], [36.6, 49.6, 2.2]] : [[77, 64, 2.6]],
+    }),
+  });
+  // Chat de Schrödinger : un troisième œil au front, des cristaux sur l'échine ; dans sa boîte, trop d'yeux dans le noir,
+  // le carton percé de cristaux, une flaque acide.
+  MUT.chat = (C, v, L) => {
+    const slit = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="2.2" ry="1.5" fill="${GLOW}" stroke="${INK}" stroke-width="1"/><rect x="${r2(x - 0.5)}" y="${r2(y - 1.1)}" width=".9" height="2.2" fill="${INK}"/>`;
+    if (v.has('boite')) return {
+      back: L >= 4 ? C.cluster(30, 42, -110, 15) + C.cluster(66, 40, -78, 11) : C.shards([[30, 40, 11, -110, 4.6], [70, 40, 9, -76, 4]]),
+      front: (L >= 4 ? C.cluster(87, 70, -8, 13) : '') + mutFront(C, {
+        lit: `<path d="M6 93Q9 88.6 18 89.6Q27 88.6 34 92.6Q25 95.4 16 94.6Q9 95.4 6 93Z" fill="${GLOW}" fill-opacity=".85" stroke="${GLOW_EDGE}" stroke-width=".9"/>` +
+          C.drip(24, 92, L >= 4 ? 4.4 : 3) + slit(60.5, 50.2) + slit(67, 50.6) + (L >= 4 ? slit(22, 50) + slit(73, 51) : ''),
+        cracks: L >= 4 ? [['M20 60l4 4.4-2.6 4 4 4.4.4 3.6M21.4 68.4l-3 1.4', 1.5]] : [],
+        veins: [[72, 70, [[180, 9], [120, 8], [240, 7]], 1.1]],
+      }),
+    };
+    return {
+      back: L >= 4 ? C.cluster(62, 47, -80, 16) + C.cluster(75, 53, -40, 11) : C.shards([[58, 47, 8, -84, 3.8], [68, 49, 7, -55, 3.4]]),
+      front: mutFront(C, {
+        boils: L >= 4 ? [[56, 76, 3], [61, 80, 2], [70, 64, 2], [48, 84, 1.6]] : [[57, 73, 2.3], [67, 79, 1.7]],
+        veins: [[56, 76, [[170, 7], [250, 7], [20, 7]], 1.1]],
+        cracks: L >= 4 ? [['M75 69l-3.4 4 2.6 3.6-2.4 4.4.6 3M74.2 76.6l3 1.2', 1.5]] : [],
+        drips: L >= 4 ? [[19.4, 47.6, 6]] : [],
+        eyes: L >= 4 ? [[64, 61, 2.8]] : [],
+        over: eye3(28, 27.4, L >= 4 ? 3.2 : 2.6),
+      }),
+    };
+  };
+  // Chauves-souris : une seconde paire d'yeux ; à 4, une corne de cristal entre les oreilles, des cristaux aux poignets
+  // des ailes, la membrane trouée qui luit, une fissure sur le ventre.
+  MUT.chauvesouris = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(50, 31, -90, 13) + C.cluster(18, 30, -125, 10) + C.cluster(82, 30, -55, 10) : C.shards([[37, 18, 6, -112, 3], [63, 18, 6, -68, 3]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[45, 64, 2.6], [54.6, 70, 2], [53, 57, 1.7]] : [[46, 65, 2], [54, 70, 1.6]],
+      veins: [[24, 45, [[180, 8], [140, 7], [30, 7]], 1], [76, 45, [[0, 8], [40, 7], [150, 7]], 1]],
+      cracks: L >= 4 ? [['M50 54.6l1.8 4-1.6 3.2 2.4 3.6', 1.2]] : [],
+      lit: L >= 4 ? `<ellipse cx="22" cy="46" rx="3.6" ry="2.4" fill="${GLOW}" stroke="${INK}" stroke-width="1.1"/><ellipse cx="78" cy="46" rx="3.6" ry="2.4" fill="${GLOW}" stroke="${INK}" stroke-width="1.1"/><ellipse cx="30" cy="54" rx="2" ry="1.4" fill="${GLOW}" stroke="${INK}" stroke-width="1"/>` : '',
+      drips: L >= 4 ? [[48, 52, 6]] : [],
+      eyes: L >= 4 ? [[46.4, 33.6, 2.2], [53.6, 33.6, 2.2]] : [[50, 33.4, 1.9]],
+    }),
+  });
+  // La Mère : une couronne de cristaux sur la poche, des fissures entre les œufs, la bave ; des yeux de plus.
+  MUT.mere = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(64, 24, -108, 18) + C.cluster(80, 21, -76, 17) + C.cluster(93, 34, -40, 14) : C.shards([[66, 22, 10, -104, 4.6], [82, 22, 11, -70, 4.8]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[52, 56, 3], [47, 70, 2.2], [56, 62, 1.8], [94, 64, 2]] : [[52, 56, 2.2]],
+      veins: [[67, 48, [[0, 8], [90, 8], [200, 7]], 1.2], [80, 62, [[90, 7], [330, 7], [200, 6]], 1.2]],
+      cracks: L >= 4 ? [['M66 30l3.6 4.4-2.6 3 3.6 3.8M69 37.4l3.2-1', 1.4], ['M93 44l-3.6 3.4 2 3.6', 1.2]] : [],
+      drips: L >= 4 ? [[16, 76, 9], [27, 80, 7]] : [[17, 76, 6]],
+      eyes: L >= 4 ? [[54, 44, 2.8], [28, 30.6, 2.2]] : [[54, 44, 2.4]],
+    }),
+  });
+  // Rejeton : un œil en plus, une pointe de cristal sur le dos ; à 4, une grappe, une pustule, la bave.
+  MUT.rejeton = (C, v, L) => {
+    const g = s => `<g transform="translate(56 94) scale(1.22) translate(-56 -94)">${s}</g>`;
+    return {
+      back: g(L >= 4 ? C.cluster(64, 63, -82, 11) : C.shards([[64, 62, 7, -84, 3.2]])),
+      front: g(mutFront(C, { boils: L >= 4 ? [[58, 82, 2]] : [], drips: L >= 4 ? [[38, 86, 5]] : [], eyes: [[56, 68, L >= 4 ? 2.8 : 2.2]] })),
+    };
+  };
+  // La Chimère : des cristaux à la place des épines, des yeux le long des coutures, des pustules, une fissure.
+  MUT.chimere = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(58, 45, -100, 15) + C.cluster(74, 45, -66, 15) : C.shards([[60, 44, 8, -94, 3.8], [74, 45, 8, -66, 3.6]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[82, 74, 3], [86.6, 70, 2], [72, 78, 2.2], [58, 58, 1.8]] : [[82, 72, 2.2], [72, 77, 1.6]],
+      veins: [[82, 72, [[180, 8], [250, 6], [330, 6]], 1.1]],
+            drips: L >= 4 ? [[6, 40.4, 7]] : [],
+      eyes: L >= 4 ? [[87, 61, 2.8], [55, 71, 2.4]] : [[87, 61, 2.4]],
+    }),
+  });
+  // Le Léviathan : des yeux le long de la tête, une crête de cristaux, des pustules et une fissure sur la queue.
+  MUT.leviathan = (C, v, L) => ({
+    back: L >= 4 ? C.cluster(40, 24, -100, 15) + C.cluster(27, 27, -128, 11) + C.cluster(91, 38, -58, 12) : C.shards([[40, 23, 8, -104, 4], [30, 25, 7, -126, 3.6]]),
+    front: mutFront(C, {
+      boils: L >= 4 ? [[80, 62, 3], [84.6, 58, 2], [88, 50, 2.2], [72, 70, 1.8], [62, 44, 1.6]] : [[80, 62, 2.2], [88, 52, 1.6]],
+      veins: [[80, 62, [[180, 8], [250, 7], [110, 6]], 1.1]],
+      cracks: L >= 4 ? [['M70 77l3.4-4.4-1.6-4.6 4.4-3.4.4-3M71.8 68l-3.2-1.4', 1.4]] : [],
+      eyes: L >= 4 ? [[52, 34, 3], [58, 41, 2.2], [27, 31, 2.2]] : [[52, 34, 2.6]],
+    }),
+  });
+
   const ALIAS = { impro1: 'gaston', impro2: 'robot', impro3: 'ours', impro4: 'chimere', poussin: 'couvee' };
   const KEYS = Object.keys(D);
   const CLONES = new Set(['dolly', 'lapins', 'chimere']);
@@ -7897,19 +8235,24 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   function parse(variant) { return new Set(String(variant || '').split(/\s+/).filter(Boolean)); }
   function foe(key, variant) {
     const k = D[key] ? key : D[ALIAS[key]] ? ALIAS[key] : 'rejeton';
-    const v = parse(variant), C = ctx();
+    const v = parse(variant), L = MUT[k] ? (v.has('c4') ? 4 : v.has('c3') ? 3 : 0) : 0, C = ctx(L);
     let body = D[k](C, v);
+    const mu = L ? MUT[k](C, v, L) : null; // contamination : ce qui dépasse derrière, ce qui pousse dessus
+    if (mu) body = mu.back + body + mu.front;
     if (v.has('clone') && CLONES.has(k)) {
       // L'écho vert d'un clone : la même figure en aplat, décalée derrière
-      const echo = D[k](C, new Set([...v].filter(t => t !== 'clone')));
+      const echo = (mu ? mu.back : '') + D[k](C, new Set([...v].filter(t => t !== 'clone')));
       body = `<g class="sb-echo" filter="${C.ghostFilter()}" opacity=".5" transform="translate(5 -3)">${echo}</g>${body}`;
     }
     const label = k === 'eden' ? 'ÉDEN' : '';
-    return `<svg class="foe-svg sb-art" data-sb="${k}" viewBox="0 0 100 100" aria-hidden="true"${label ? ` data-label="${label}"` : ''}><defs>${C.defsHTML()}</defs>` +
+    return `<svg class="foe-svg sb-art" data-sb="${k}" viewBox="0 0 100 100" aria-hidden="true"${label ? ` data-label="${label}"` : ''}${L ? ` data-c="${L}"` : ''}><defs>${C.defsHTML()}</defs>` +
       `<g stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>`;
   }
-  // Variante d'un monstre selon l'état du combat (voir l'en-tête)
-  function variantOf(m, e) {
+  // Niveau de contamination d'un étage : la serre (3) un peu, la ménagerie (4) et la finale franchement ; avant, rien
+  const contaminationOf = c => !c ? 0 : c.finale || c.floor >= 4 ? 4 : c.floor === 3 ? 3 : 0;
+  // Variante d'un monstre selon l'état du combat (voir l'en-tête). ctx = { floor, finale } (facultatif) : l'étage ajoute
+  // la contamination, « c3 » ou « c4 » ; sans ctx, ou aux étages 1 et 2, la variante est celle d'avant.
+  function variantOf(m, e, ctx) {
     if (!m) return '';
     const t = [], base = m.cloneOf != null ? m.cloneOf : m.i || 0;
     if (base % 2 === 1) t.push('b');
@@ -7920,6 +8263,8 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     if (m.glutton && m.force > (m.fury && e && e.fury ? e.fury.force || 0 : 0)) t.push('gros');
     if (m.variant === 'echappe') t.push('evadee');
     if (m.molted) t.push('mue');
+    const cl = contaminationOf(ctx);
+    if (cl) t.push('c' + cl);
     return t.join(' ');
   }
   // Les clés et variantes à montrer sur la planche
@@ -7932,7 +8277,317 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     ['lapins', ''], ['lapins', 'b'], ['lapins', 'clone'], ['chat', ''], ['chat', 'boite'],
     ['mere', ''], ['mere', 'evadee'], ['rejeton', ''], ['gaston', ''], ['bouc', ''], ['robot', ''], ['ours', ''], ['chimere', ''], ['chimere', 'clone'], ['serpent', ''], ['serpent', 'mue'], ['colombe', ''], ['corbeau', ''], ['sauterelle', 'n0'], ['sauterelle', 'n1'], ['leviathan', ''], ['leviathan', 'plein'], ['chauvesouris', ''], ['chauvesouris', 'b'], ['eden', ''],
   ];
-  window.SurbookingArt = { foe, variantOf, keys: KEYS, has: k => !!(D[k] || D[ALIAS[k]]), SHEET };
+  // Les monstres qui ont une version contaminée (les autres ignorent « c3 » / « c4 »)
+  const CONTAMINABLE = Object.keys(MUT);
+  window.SurbookingArt = { foe, variantOf, keys: KEYS, has: k => !!(D[k] || D[ALIAS[k]]), SHEET, CONTAMINABLE, contaminationOf };
+})();
+
+/* ---- scenes.js ---- */
+/* Surbooking · les décors des étages, derrière la scène de combat (et, floutés, derrière les autres écrans).
+   window.SurbookingScenes = { quarantaine, etable, serre, menagerie, arene } : chaque fonction renvoie le contenu d'un
+   SVG « viewBox="0 0 1000 600" » (le même repère que SCENE dans ui.js, qu'elles remplacent) : la paroi jusqu'à y = 300,
+   puis le sol. Le joueur se tient à gauche (x ≈ 100-170), les monstres à droite (x ≈ 480-1000) : derrière eux, rien de
+   contrasté entre y = 170 et 300 (intentions et figures). Ce qui raconte l'abandon va au bord gauche, dans le creux entre
+   le joueur et les monstres (x ≈ 180-470), au sol et dans le haut de la paroi. Sur téléphone, seule la bande du milieu
+   (x ≈ 370-630) se voit : chaque étage y garde un signe de son état (flaque, câble, terre…).
+
+   Le vaisseau se dégrade d'étage en étage (niveau d) :
+     0 la quarantaine : propre et blanche, c'est le début (le décor d'avant, inchangé) ;
+     1 l'étable : un néon qui grésille, un panneau qui se décolle, un câble qui pend, des coulures, une petite flaque ;
+     2 la serre : une vitre brisée, un panneau arraché (tuyaux et câbles à nu), une fuite qui goutte dans une flaque
+       luminescente, la terre renversée, les lampes de culture violettes dont une grésille ;
+     3 la ménagerie : le néon est mort, un gyrophare rouge tourne, un panneau du plafond pend, des câbles crépitent, une
+       cage forcée, des griffures, de grandes flaques, la végétation partout ;
+     4 l'arène (finale) : le spectacle d'ÉDEN tient encore (projecteurs, écran) dans une salle à l'abandon : gradins
+       cassés, bâche déchirée, câbles, flaques, lianes sur les rangées.
+
+   Chaque appel a ses propres identifiants (filtres, dégradés) : la scène de combat et le décor flouté de l'arrière-plan
+   peuvent être dans la page en même temps. Le CSS des boucles (grésillement, gyrophare, gouttes, étincelles, câbles qui
+   se balancent) est injecté ici une fois (<style id="surb-scenes">), calé sur l'horloge de la page (--clk) comme les
+   autres boucles du combat, et coupé si l'on préfère moins d'animations. Les boucles ne tournent que dans la scène de
+   combat (.backdrop), pas dans le décor flouté de l'arrière-plan (trop cher à refaire à chaque image). */
+(function () {
+  'use strict';
+  let SEQ = 0;
+  const rep = (n, f) => Array.from({ length: n }, (_, k) => f(k)).join('');
+  const r1 = n => Math.round(n * 10) / 10;
+
+  /* ---------- les boucles ---------- */
+  const CSS = `
+.backdrop .sc-buzz { animation: scBuzz 5.3s steps(1, end) infinite; animation-delay: calc(var(--clk, 0s) - 1.7s); }
+.backdrop .sc-buzz.b2 { animation-duration: 3.7s; animation-delay: calc(var(--clk, 0s) - .4s); }
+@keyframes scBuzz { 0%, 100% { opacity: 1; } 8% { opacity: .25; } 9% { opacity: .9; } 10% { opacity: .15; } 12% { opacity: 1; } 55% { opacity: 1; } 56% { opacity: .4; } 57.5% { opacity: 1; } 81% { opacity: .2; } 82% { opacity: .85; } 83.5% { opacity: .3; } 85% { opacity: 1; } }
+.backdrop .sc-spark { animation: scSpark 2.9s steps(1, end) infinite; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+@keyframes scSpark { 0%, 100% { opacity: 0; } 4% { opacity: 1; } 7% { opacity: .2; } 9% { opacity: 1; } 12% { opacity: 0; } 61% { opacity: 0; } 63% { opacity: .9; } 66% { opacity: 0; } }
+.backdrop .sc-alarm { animation: scAlarm 1.9s ease-in-out infinite; animation-delay: var(--clk, 0s); }
+@keyframes scAlarm { 0%, 100% { opacity: .18; } 45% { opacity: .9; } 60% { opacity: .75; } }
+.backdrop .sc-pulse { animation: scPulse 4.6s ease-in-out infinite; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+@keyframes scPulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.backdrop .sc-drop { animation: scDrop 2.2s cubic-bezier(.55, 0, 1, .45) infinite; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+@keyframes scDrop { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; transform: translateY(var(--dy, 100px)); } 100% { opacity: 0; transform: translateY(var(--dy, 100px)); } }
+.backdrop .sc-sway { transform-box: view-box; animation: scSway 6.5s ease-in-out infinite alternate; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+@keyframes scSway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .backdrop .sc-buzz, .backdrop .sc-spark, .backdrop .sc-alarm, .backdrop .sc-pulse, .backdrop .sc-drop, .backdrop .sc-sway { animation: none !important; }
+  .backdrop .sc-drop, .backdrop .sc-spark { opacity: 0; }
+}`;
+  (function inject() {
+    if (typeof document === 'undefined' || document.getElementById('surb-scenes')) return;
+    const st = document.createElement('style');
+    st.id = 'surb-scenes';
+    st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+  })();
+
+  /* ---------- la boîte à outils d'un décor (identifiants propres à l'appel) ---------- */
+  const VG = { stem: '#4e7f3a', stem2: '#5c9246', a: '#5c9e45', b: '#6fae50', c: '#7dba55', moss: '#8db86e', pod: '#c6ff5e' };
+  function kit() {
+    const P = 'sc' + (++SEQ).toString(36);
+    const K = { P };
+    K.defs = `<defs><filter id="${P}g" x="-120%" y="-120%" width="340%" height="340%"><feGaussianBlur stdDeviation="4.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <radialGradient id="${P}pd"><stop offset="0" stop-color="#f2ffc8"/><stop offset=".45" stop-color="#c6ff5e" stop-opacity=".7"/><stop offset="1" stop-color="#c6ff5e" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${P}rd"><stop offset="0" stop-color="#ff5a46" stop-opacity=".55"/><stop offset=".5" stop-color="#ff5a46" stop-opacity=".16"/><stop offset="1" stop-color="#ff5a46" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${P}vi"><stop offset="0" stop-color="#c77dff" stop-opacity=".42"/><stop offset="1" stop-color="#c77dff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${P}vc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cf8cff" stop-opacity=".3"/><stop offset="1" stop-color="#cf8cff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${P}hole" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3338"/><stop offset="1" stop-color="#4b545a"/></linearGradient>
+      <linearGradient id="${P}cf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2326" stop-opacity=".55"/><stop offset="1" stop-color="#1e2326" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${P}sl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9d45f" stop-opacity=".75"/><stop offset="1" stop-color="#a9d45f" stop-opacity=".12"/></linearGradient></defs>`;
+    K.vine = (d, w, c) => `<path d="${d}" stroke="${c || VG.stem}" stroke-width="${w || 5}" fill="none" stroke-linecap="round"/>`;
+    // Feuilles : [x, y, angle, grande ?, teinte a/b/c]
+    K.leaves = list => list.map(([x, y, r, big, t]) => `<ellipse cx="${x}" cy="${y}" rx="${big ? 11 : 8}" ry="${big ? 5 : 3.5}" transform="rotate(${r} ${x} ${y})" fill="${VG[t || 'a']}"/>`).join('');
+    K.pods = list => `<g filter="url(#${P}g)">${list.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${VG.pod}" stroke="#7fb52e" stroke-width="1.5"/>`).join('')}</g>`;
+    K.moss = list => list.map(([x, y, rx, ry, o]) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${VG.moss}" fill-opacity="${o || .45}"/>`).join('');
+    K.crack = d => `<path d="${d}" stroke="#bfc5bf" stroke-width="2" fill="none" stroke-linejoin="round"/>`;
+    // Coulures de rouille sous les rivets, taches d'humidité
+    K.streaks = list => list.map(([x, y, h, o]) => `<path d="M${x} ${y}q-1.5 ${r1(h * .5)} 0 ${h}" stroke="#cdb99a" stroke-width="3" stroke-opacity="${o || .45}" fill="none" stroke-linecap="round"/>`).join('');
+    K.stains = list => list.map(([x, y, rx, ry, c, o]) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c || '#e3e5da'}" fill-opacity="${o || .9}"/>`).join('');
+    // Flaque luminescente : un halo qui respire doucement, une surface plus nette, un reflet
+    K.puddle = (x, y, rx, ry, d) => `<ellipse cx="${x}" cy="${y}" rx="${r1(rx * 1.5)}" ry="${r1(ry * 1.7)}" fill="url(#${P}pd)" class="sc-pulse" style="--d:${d || 0}s"/>` +
+      `<path d="M${x - rx} ${y}c${r1(rx * .2)} ${r1(-ry * 1.1)} ${r1(rx * .9)} ${r1(-ry * .9)} ${r1(rx * 1.1)} ${r1(-ry * .7)}s${r1(rx * .7)} ${r1(-ry * .5)} ${r1(rx * .9)} ${r1(ry * .2)}s${r1(-rx * .1)} ${r1(ry * 1.2)} ${r1(-rx * .8)} ${r1(ry * 1.1)}s${r1(-rx * .9)} ${r1(ry * .3)} ${r1(-rx * 1.2)} ${r1(-ry * .6)}z" fill="#d6ff86" fill-opacity=".72" stroke="#9ccf45" stroke-width="2"/>` +
+      `<path d="M${r1(x - rx * .45)} ${r1(y - ry * .25)}q${r1(rx * .3)} ${r1(-ry * .3)} ${r1(rx * .6)} ${r1(-ry * .2)}" stroke="#ffffff" stroke-width="2.5" stroke-opacity=".8" fill="none" stroke-linecap="round"/>`;
+    // Câble qui pend du plafond : gaine noire, couleur, bout effiloché, étincelle (spark : délai, ou null)
+    K.cable = (x, y0, len, dx, col, spark, w) => {
+      const x1 = x + dx, y1 = y0 + len, d = `M${x} ${y0}C${r1(x + dx * .1)} ${r1(y0 + len * .45)} ${r1(x1 + dx * .2)} ${r1(y0 + len * .7)} ${x1} ${y1}`;
+      const ww = w || 4;
+      return `<g class="sc-sway" style="transform-origin:${x}px ${y0}px;--d:${spark == null ? -1.3 : -spark * 1.7}s"><path d="${d}" stroke="#2b2622" stroke-width="${ww + 2.4}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${col || '#3a4148'}" stroke-width="${ww}" fill="none" stroke-linecap="round"/>` +
+        `<path d="M${x1} ${y1}l-4 9M${x1} ${y1}l1 10M${x1} ${y1}l5 8" stroke="#c98a3a" stroke-width="2" fill="none" stroke-linecap="round"/>` +
+        (spark == null ? '' : `<path class="sc-spark" style="--d:${spark}s" d="M${x1} ${y1 + 12}l3 -7 2 7 7 -1 -6 4 5 6 -7 -3 -3 7 -1 -7 -7 2 5 -5 -5 -5z" fill="#fff6b0" stroke="#ffd23f" stroke-width="1.5" stroke-linejoin="round"/>`) + '</g>';
+    };
+    // Trou dans la paroi (panneau arraché) : bords déchirés, gaines et câbles à nu, une diode ; x, y, largeur, hauteur
+    K.hole = (x, y, w, h, o) => {
+      o = o || {};
+      const jag = `M${x} ${y + 8}l${r1(w * .18)} -8 ${r1(w * .14)} 6 ${r1(w * .22)} -5 ${r1(w * .2)} 7 ${r1(w * .26)} -4 0 ${r1(h * .3)} -6 ${r1(h * .16)} 5 ${r1(h * .2)} -3 ${r1(h * .34)} ${r1(-w * .3)} 4 ${r1(-w * .24)} -6 ${r1(-w * .22)} 5 ${r1(-w * .24)} -3 0 ${r1(-h * .4)} 5 ${r1(-h * .2)}z`;
+      return `<path d="${jag}" fill="url(#${P}hole)" stroke="#9aa19c" stroke-width="3" stroke-linejoin="round"/>` +
+        `<path d="M${x + 4} ${r1(y + h * .32)}H${x + w - 4}M${x + 4} ${r1(y + h * .5)}H${x + w - 4}" stroke="#59626a" stroke-width="7"/><path d="M${x + 4} ${r1(y + h * .32 - 2)}H${x + w - 4}M${x + 4} ${r1(y + h * .5 - 2)}H${x + w - 4}" stroke="#7d878f" stroke-width="2"/>` +
+        `<path d="M${x + 6} ${r1(y + h * .22)}Q${r1(x + w * .5)} ${r1(y + h * .62)} ${x + w - 6} ${r1(y + h * .26)}" stroke="#c4524a" stroke-width="3.5" fill="none"/><path d="M${x + 6} ${r1(y + h * .28)}Q${r1(x + w * .45)} ${r1(y + h * .74)} ${x + w - 6} ${r1(y + h * .36)}" stroke="#d9b23a" stroke-width="3" fill="none"/><path d="M${x + 6} ${r1(y + h * .36)}Q${r1(x + w * .55)} ${r1(y + h * .8)} ${x + w - 6} ${r1(y + h * .42)}" stroke="#4a7fb5" stroke-width="3" fill="none"/>` +
+        `<rect x="${r1(x + w * .62)}" y="${r1(y + h * .6)}" width="${r1(w * .22)}" height="${r1(h * .16)}" rx="2" fill="#4a525a" stroke="#2b2622" stroke-width="1.5"/><circle cx="${r1(x + w * .68)}" cy="${r1(y + h * .66)}" r="2.6" fill="${o.led || '#ff5a4f'}" class="sc-spark" style="--d:-.8s"/>` +
+        (o.inner || '');
+    };
+    // Coin de panneau qui se décolle (étable) : x, y du coin haut droit
+    K.peel = (x, y) => `<path d="M${x - 46} ${y}L${x} ${y}L${x} ${y + 40}Z" fill="#9aa19c" fill-opacity=".45"/><path d="M${x - 44} ${y + 2}L${x - 6} ${y - 6}L${x + 4} ${y + 38}Z" fill="#eef0ec" stroke="#c3c9c4" stroke-width="2.5" stroke-linejoin="round"/><circle cx="${x - 34}" cy="${y + 2}" r="3" fill="#d6dbd7"/>`;
+    // Morceaux de tôle et vis par terre
+    K.debris = list => list.map(([x, y, s, r]) => `<path d="M${x} ${y}l${r1(16 * s)} ${r1(-5 * s)} ${r1(10 * s)} ${r1(7 * s)} ${r1(-18 * s)} ${r1(6 * s)}z" transform="rotate(${r || 0} ${x} ${y})" fill="#e7e9e5" stroke="#b9c0ba" stroke-width="2" stroke-linejoin="round"/>`).join('');
+    // Griffures sur la paroi
+    K.claws = (x, y, s) => rep(4, k => `<path d="M${x + k * 11 * s} ${y + k * 3 * s}q${r1(10 * s)} ${r1(26 * s)} ${r1(4 * s)} ${r1(58 * s)}" stroke="#a6aca7" stroke-width="${r1(4.5 * s)}" fill="none" stroke-linecap="round"/><path d="M${x + k * 11 * s + 1.5} ${y + k * 3 * s + 3}q${r1(9 * s)} ${r1(24 * s)} ${r1(3.6 * s)} ${r1(52 * s)}" stroke="#eef0ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>`);
+    // Bave verte qui coule de la bouche d'aération (vent : x, y du bas de la grille)
+    K.slime = (x, y, h) => `<path d="M${x} ${y}h44c-2 ${r1(h * .3)} 3 ${r1(h * .5)} 1 ${r1(h * .7)}s-4 ${r1(h * .2)} -6 ${r1(h * .3)}c-2-${r1(h * .25)}-6-${r1(h * .3)}-8-${r1(h * .55)}c-3 ${r1(h * .2)}-7 ${r1(h * .25)}-9 ${r1(h * .1)}c-2-${r1(h * .2)}-6-${r1(h * .3)}-9-${r1(h * .2)}c-3-${r1(h * .2)}-6-${r1(h * .3)}-13-${r1(h * .45)}z" fill="url(#${P}sl)"/>` +
+      `<circle cx="${x + 30}" cy="${r1(y + h * .9)}" r="3" fill="#c6ff5e" filter="url(#${P}g)"/>`;
+    return K;
+  }
+
+  /* ---------- la coursive (le décor d'avant, plus les dégâts du niveau d) ---------- */
+  // o.noLamp : pas de néon au plafond ; o.lamp : 'ok' (le néon d'avant), 'buzz' (il grésille), 'dead' (éteint)
+  function corridor(K, o) {
+    const d = o.d || 0, lamp = o.noLamp ? null : o.lamp || 'ok';
+    let s = `<rect width="1000" height="600" fill="#f8f9f6"/>${K.defs}
+      <path d="M0 56H1000" stroke="#dce0dc" stroke-width="2"/>${rep(8, k => `<path d="M${k * 125 + 62} 56V300" stroke="#e3e6e2" stroke-width="2"/><circle cx="${k * 125 + 55}" cy="68" r="3" fill="#d6dbd7"/><circle cx="${k * 125 + 69}" cy="68" r="3" fill="#d6dbd7"/>`)}
+      <ellipse cx="430" cy="214" rx="54" ry="22" fill="#e9ebe6"/><ellipse cx="790" cy="150" rx="30" ry="12" fill="#ecede8"/><ellipse cx="180" cy="250" rx="26" ry="9" fill="#eceee9"/>`;
+    // L'usure de la paroi : rouille sous les rivets, humidité au pied du mur, crasse
+    if (d >= 1) s += K.streaks([[180, 74, 46], [431, 74, 34, .35], [806, 74, 58], [56, 74, 30, .35]]) + K.stains([[262, 290, 70, 12], [930, 292, 50, 9]]);
+    if (d >= 2) s += K.streaks([[194, 74, 70, .5], [556, 74, 40, .3], [681, 74, 62, .45], [944, 74, 80, .5]]) + K.stains([[90, 120, 40, 22, '#eceee6'], [600, 288, 90, 13, '#e1e4d6']]);
+    if (d >= 3) s += K.stains([[250, 170, 60, 40, '#e8eae0'], [520, 98, 70, 24, '#e6e8de'], [880, 200, 50, 70, '#ebece4']]);
+    if (lamp) {
+      const on = lamp !== 'dead';
+      s += `<rect x="470" y="12" width="130" height="15" rx="4" fill="#e2e5e0"/><rect x="477" y="27" width="52" height="8" rx="3" fill="${on ? '#fff3c4' : '#b9bfba'}"${on ? ` class="${lamp === 'buzz' ? 'sc-buzz' : 'neon-ok'}"` : ''}/><rect x="541" y="27" width="52" height="8" rx="3" fill="#b9bfba"/><path d="M541 31l18 3M560 29l14 4" stroke="#9aa19c" stroke-width="1.5"/>`;
+      if (on) s += `<polygon points="477,35 529,35 640,300 330,300" fill="#fff8dc" fill-opacity=".38" class="${lamp === 'buzz' ? 'sc-buzz' : 'neon-ok'}"/>`;
+      else s += `<path d="M482 35l-6 16 4 2-3 12" stroke="#2b2622" stroke-width="2" fill="none"/>`;
+    }
+    return s;
+  }
+  // La bouche d'aération (posée après les dégâts de la paroi), puis le sol
+  function vent(K, d) {
+    return `<rect x="318" y="78" width="92" height="52" rx="6" fill="#e4e7e3" stroke="#c8cec9" stroke-width="2"/><path d="M328 91H400M328 103H400M328 115H400" stroke="#c8cec9" stroke-width="3"/>` +
+      (d >= 2 ? `<path d="M398 78l14 -10 4 6-6 6z" fill="#e4e7e3" stroke="#c8cec9" stroke-width="2"/>` : '');
+  }
+  function floor(K, d) {
+    let s = `<rect x="0" y="300" width="1000" height="300" fill="#dde1db"/><rect x="0" y="430" width="1000" height="170" fill="#d6dbd4"/><path d="M0 300H1000" stroke="#c7ccc6" stroke-width="3"/>
+      <path d="M0 382H1000M0 470H1000M0 572H1000" stroke="#cdd2cb" stroke-width="2"/>${rep(9, k => `<path d="M${k * 125 + 60} 300L${(k * 125 + 60 - 500) * 1.9 + 500} 600" stroke="#d0d5ce" stroke-width="2"/>`)}
+      ${rep(10, k => `<polygon points="${k * 110},302 ${k * 110 + 40},302 ${k * 110 + 10},318 ${k * 110 - 30},318" fill="#e8c766" fill-opacity="${d >= 3 && k % 3 === 1 ? .18 : .45}"/>`)}
+      ${K.crack('M600 330l26 16-10 24 34 20M250 360l-18 28M760 500l-20 22 12 26')}`;
+    if (d >= 2) s += K.crack('M420 312l-14 18 8 14-16 22M880 340l18 20-6 18M90 420l26 14 4 22') + `<path d="M40 330l40-6 30 8-38 8z" fill="#cfd4cd"/>`;
+    if (d >= 3) s += K.crack('M520 306l10 22 -12 18 16 26 -6 22M300 410l-30 30 10 26M960 470l-26 24');
+    return s;
+  }
+
+  /* ---------- la végétation des mutations (celle d'avant ; niveau 4 : elle tient toute la paroi) ---------- */
+  function veg(K, lvl, o) {
+    o = o || {};
+    const { vine, leaves, moss, pods } = K;
+    let s = vine('M364 130C372 176 350 214 358 254C362 278 356 294 342 299C318 306 292 299 266 303', 4) + vine('M410 98C428 92 444 102 462 95', 3, VG.stem2)
+      + leaves([[369, 156, -30], [353, 188, 35, 1], [362, 226, -40], [357, 262, 30, 1, 'b'], [318, 298, -15, 0, 'c'], [284, 300, 20], [440, 94, -25, 0, 'b']]);
+    if (lvl >= 2) s += vine('M0 26C70 40 120 22 190 50C230 64 262 54 300 60', 5) + vine('M190 56C198 96 184 128 192 168', 3.5, VG.stem2)
+      + vine('M1000 344C966 334 944 360 906 352C880 348 864 370 846 378', 4, VG.stem2)
+      + leaves([[40, 34, 20, 0, 'c'], [110, 32, -25, 1], [160, 42, 15], [250, 54, -20, 1, 'c'], [194, 100, 40], [188, 140, -35, 1], [964, 342, 160, 0, 'c'], [910, 354, 200, 1]])
+      + pods([[192, 170, 5]]);
+    if (lvl >= 3) s += vine('M300 60C360 76 420 52 500 66C560 78 610 56 660 66', 5.5) + vine('M1000 18C934 62 902 36 840 84C792 120 776 196 800 300', 6)
+      + vine('M840 84C866 130 856 176 880 222', 4, VG.stem2) + vine('M500 66C508 112 494 156 502 206', 3.5, VG.stem2)
+      + leaves([[330, 68, -15, 1], [410, 60, 25], [470, 62, -20, 1, 'c'], [560, 76, 15], [620, 62, -25, 1], [960, 40, 30, 1], [890, 62, -20, 0, 'b'], [842, 100, 35, 1],
+        [862, 142, -30], [874, 196, 25, 1], [796, 150, -40, 0, 'c'], [790, 214, 35, 1, 'b'], [800, 270, -20, 0, 'c'], [504, 120, 40], [496, 166, -35, 1]])
+      + moss([[330, 318, 150, 15], [800, 322, 170, 17, .4], [560, 306, 70, 7, .35]])
+      + pods([[502, 208, 8], [800, 300, 10], [880, 224, 6], [268, 302, 5]]);
+    // Niveau 4 : des racines crèvent le sol, la mousse gagne le bord gauche, des cosses partout
+    if (lvl >= 4) s += vine('M0 150C30 170 22 220 46 250C60 268 52 290 70 300', 5, VG.stem2) + vine('M0 240C24 250 34 280 30 300', 4)
+      + vine('M230 300C250 320 236 340 262 352C280 360 276 378 300 386', 4.5) + vine('M640 300C628 322 650 336 634 356', 3.5, VG.stem2)
+      + leaves([[30, 176, 30, 1], [40, 222, -30, 0, 'c'], [54, 270, 25, 1, 'b'], [20, 262, -20], [252, 326, 40, 1], [286, 372, -20, 0, 'c'], [636, 330, 30, 0, 'b']])
+      + moss([[60, 300, 90, 12, .5], [270, 380, 60, 9, .35], [940, 300, 80, 10, .45]])
+      + pods([[46, 252, 6], [300, 386, 5], [634, 356, 4]]);
+    if (o.cracks) s += K.crack('M120 120l18 30-12 22 20 34M880 70l-14 26 10 18-16 30M450 160l12 18 24 4');
+    return `<g class="veg" aria-hidden="true">${s}</g>`;
+  }
+
+  /* ---------- les étages ---------- */
+  // 1. La quarantaine : propre et blanche, comme avant (caisses de quarantaine, hublot de cryogénie)
+  function quarantaine() {
+    const K = kit();
+    return corridor(K, { d: 0 }) + vent(K, 0) + floor(K, 0) +
+      `<rect x="40" y="226" width="92" height="74" fill="#e8ebe7" stroke="#c3c9c4" stroke-width="3"/><path d="M40 226l92 74M132 226l-92 74" stroke="#c3c9c4" stroke-width="3"/><rect x="140" y="254" width="60" height="46" fill="#edefeb" stroke="#c3c9c4" stroke-width="3"/>
+      <rect x="846" y="100" width="92" height="196" rx="44" fill="#eef3f4" stroke="#a9cfda" stroke-width="4"/><rect x="866" y="130" width="52" height="120" rx="26" fill="#d4ecf3"/><path d="M878 146l10 30" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>` + veg(K, 1);
+  }
+
+  // 2. L'étable : enclos et paille, une auge ; la dégradation commence (néon qui grésille, coin de panneau décollé, un
+  // câble qui pend, la paille mouillée par une petite flaque luminescente)
+  function etable() {
+    const K = kit();
+    let s = corridor(K, { d: 1, lamp: 'buzz' });
+    s += K.peel(312, 150) + vent(K, 1);
+    s += floor(K, 1);
+    // la clôture et les bottes de foin (d'avant)
+    s += `${rep(11, k => `<rect x="${k * 100 - 5}" y="206" width="10" height="94" rx="2" fill="#cdbba0"/>`)}<rect x="0" y="226" width="1000" height="8" fill="#d8c8ae"/><rect x="0" y="260" width="1000" height="8" fill="#d8c8ae"/>
+      <rect x="40" y="240" width="130" height="60" rx="10" fill="#ead89a" stroke="#cdb66a" stroke-width="2"/><path d="M62 250v40M92 250v40M122 250v40M150 250v40" stroke="#cdb66a" stroke-width="3"/><rect x="820" y="230" width="150" height="70" rx="10" fill="#e4cf88" stroke="#c7ae5e" stroke-width="2"/><path d="M845 242v48M880 242v48M915 242v48M950 242v48" stroke="#c7ae5e" stroke-width="3"/>
+      <rect x="470" y="252" width="90" height="48" rx="9" fill="#ead89a" stroke="#cdb66a" stroke-width="2"/><path d="M490 260v32M515 260v32M540 260v32" stroke="#cdb66a" stroke-width="3"/>
+      ${rep(26, k => `<path d="M${k * 38 + 8} ${330 + (k % 4) * 22}l14 -6" stroke="#cfbb70" stroke-width="2"/>`)}`;
+    // une latte de la clôture cassée, qui pend
+    s += `<rect x="296" y="226" width="40" height="8" fill="#f8f9f6"/><path d="M296 226l14 4-4 6-10-2z" fill="#d8c8ae"/><path d="M314 230l28 30-6 4-26-28z" fill="#d8c8ae" stroke="#c4b293" stroke-width="1.5"/>`;
+    // l'auge, un seau renversé, la paille qui déborde
+    s += `<path d="M220 284h96l-8 20h-80z" fill="#c9cfca" stroke="#a3aaa5" stroke-width="2.5"/><path d="M226 286h84" stroke="#e9ece8" stroke-width="3"/><path d="M232 290q38 6 72 0" stroke="#8fc0b4" stroke-width="3" fill="none"/>`
+      + `<path d="M402 320l26-10 8 20-24 8z" fill="#b8c0c4" stroke="#8f989d" stroke-width="2"/><ellipse cx="434" cy="320" rx="6" ry="10" transform="rotate(-20 434 320)" fill="#7b858b"/>`
+      + `${rep(9, k => `<path d="M${384 + k * 7} ${334 + (k % 3) * 3}l${(k % 2 ? 1 : -1) * 6} -9" stroke="#d9c27a" stroke-width="2.2" stroke-linecap="round"/>`)}`;
+    // la petite flaque, sous le seau (elle se voit aussi au milieu de l'écran d'un téléphone)
+    s += K.puddle(470, 340, 34, 7, -1.2);
+    // un câble qui pend dans le creux, sans étincelle
+    s += K.cable(262, 50, 112, -10, '#3a4148', null);
+    return s + veg(K, 2);
+  }
+
+  // 3. La serre : la verrière (une vitre cassée), des bacs de terre dont un renversé, les lampes de culture violettes (une
+  // grésille), un panneau arraché d'où fuit l'arrosage, une flaque luminescente, la végétation qui a pris le dessus
+  function serre() {
+    const K = kit();
+    let s = corridor(K, { d: 2, noLamp: true });
+    // la verrière en appentis : des carreaux sur le haut de la paroi, l'un brisé (on voit l'espace)
+    s += `<rect x="0" y="0" width="1000" height="56" fill="#e4efe6"/><path d="M0 56H1000M167 0V56M333 0V56M500 0V56M667 0V56M833 0V56" stroke="#c3d2c6" stroke-width="3"/><path d="M100 0L76 56M610 0L586 56M940 0L964 56" stroke="#d2ddd4" stroke-width="2"/>`
+      + `<rect x="0" y="56" width="1000" height="76" fill="#edf5ee"/>${rep(8, k => `<path d="M${k * 125 + 62} 56V132" stroke="#c3d2c6" stroke-width="5"/><path d="M${k * 125 + 20} 60L${k * 125 - 10} 128M${k * 125 + 36} 60L${k * 125 + 8} 128" stroke="#ffffff" stroke-width="3" stroke-opacity=".8"/>`)}<path d="M0 132H1000" stroke="#c3d2c6" stroke-width="5"/>`
+      + `<path d="M214 60L288 60L284 82L270 76L262 96L250 84L236 100L228 80L214 90Z" fill="#141a2b"/><circle cx="238" cy="68" r="1.6" fill="#ffffff"/><circle cx="262" cy="74" r="1.2" fill="#ffffff"/><circle cx="272" cy="64" r="1" fill="#fff3c4"/>`
+      + `<path d="M214 60L288 60L284 82L270 76L262 96L250 84L236 100L228 80L214 90Z" fill="none" stroke="#b8c7bb" stroke-width="2" stroke-linejoin="round"/>`;
+    // la lumière qui tombe de la verrière, en biais
+    s += `<polygon points="700,132 780,132 850,300 720,300" fill="#f4faf3" fill-opacity=".5"/>`;
+    // le panneau arraché (irrigation à nu), d'où l'eau goutte dans une flaque
+    s += K.hole(204, 172, 86, 84, { led: '#c6ff5e', inner: `<path d="M204 210H290" stroke="#6e8f72" stroke-width="8"/><path d="M204 207.4H290" stroke="#94b398" stroke-width="2.2"/><path d="M262 210v10l6 4" stroke="#6e8f72" stroke-width="6" fill="none"/>` });
+    s += `<path d="M282 172l22 6 -4 56 -20 -8z" fill="#eef0ec" stroke="#c3c9c4" stroke-width="2.5" stroke-linejoin="round"/>`;
+    s += vent(K, 2) + K.slime(332, 130, 92);
+    s += floor(K, 2);
+    // les bacs de terre (le gauche déborde, le droit est fendu) et la terre renversée au sol, avec des pousses
+    s += `<rect x="30" y="262" width="150" height="38" rx="4" fill="#dfe3dd" stroke="#c3c9c4" stroke-width="2"/><rect x="820" y="262" width="150" height="38" rx="4" fill="#dfe3dd" stroke="#c3c9c4" stroke-width="2"/>`
+      + `<path d="M34 264q20-12 40-4t36-6 36 4 30-2v6H34z" fill="#7a5a3f"/><path d="M824 264q24-10 46-2t40-6 56 6v4H824z" fill="#6f523a"/><path d="M890 262l-6 18 8 6-4 14" stroke="#c3c9c4" stroke-width="2.5" fill="none"/>`
+      + `<path d="M172 300c22-6 40 4 60 0s34 8 52 6 36 6 30 14-40 6-66 4-50 4-72-4-14-16-4-20z" fill="#8a6a4b" fill-opacity=".85"/><path d="M200 306c10-2 20 2 30 0M248 312c10-1 18 2 26 1" stroke="#6f523a" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+      + `<path d="M222 304q-2-10 4-14M226 296q6-3 9 0M262 310q0-9 6-12M266 302q-5-4-9-1" stroke="#5c9246" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+      + `<path d="M420 318c18-4 34 2 52 0s30 4 44 2c-4 8-30 8-50 8s-40 0-46-10z" fill="#8a6a4b" fill-opacity=".45"/>`;
+    s += K.puddle(270, 334, 40, 8, -2) + `<circle cx="267" cy="226" r="3" fill="#bff3ff" stroke="#6fb4c9" stroke-width="1" class="sc-drop" style="--dy:96px;--d:-.6s"/>`;
+    s += K.puddle(432, 330, 30, 6, -.4);
+    // les lampes de culture violettes, au-dessus des bacs ; la droite grésille
+    const grow = (x, w, cls) => `<path d="M${x + 10} 132V152M${x + w - 10} 132V152" stroke="#9aa19c" stroke-width="2"/><rect x="${x}" y="150" width="${w}" height="10" rx="4" fill="#4a525a"/>`
+      + `<g class="${cls}"><rect x="${x + 4}" y="158" width="${w - 8}" height="5" rx="2.5" fill="#e3b8ff"/><polygon points="${x + 4},163 ${x + w - 4},163 ${x + w + 30},262 ${x - 30},262" fill="url(#${K.P}vc)"/><ellipse cx="${x + w / 2}" cy="262" rx="${w * .7}" ry="10" fill="url(#${K.P}vi)"/></g>`;
+    s += grow(48, 116, '') + grow(838, 116, 'sc-buzz');
+    // au milieu, la grande rampe de culture : sa lumière violette baigne le centre (c'est ce qu'on voit sur un téléphone)
+    s += `<polygon points="440,152 560,152 640,300 360,300" fill="#ead6fb" fill-opacity=".55"/><path d="M452 132V142M548 132V142" stroke="#9aa19c" stroke-width="2"/><rect x="436" y="140" width="128" height="10" rx="4" fill="#4a525a"/><rect x="440" y="148" width="120" height="5" rx="2.5" fill="#e3b8ff"/><ellipse cx="500" cy="300" rx="150" ry="14" fill="url(#${K.P}vi)"/>`;
+    // les plantes des bacs (d'avant)
+    s += `${K.vine('M60 262C56 236 66 214 60 196M100 262C108 232 96 210 112 188M150 262C146 240 156 222 150 206M850 262C846 236 858 214 852 194M910 262C918 232 904 208 920 186', 3.5, VG.stem2)}
+      ${K.leaves([[60, 200, -40, 1], [112, 192, 30, 1, 'c'], [150, 210, -20], [852, 198, 35, 1], [920, 190, -30, 1, 'b'], [70, 230, 30], [904, 226, -35, 0, 'c']])}`;
+    // des éclats de la vitre au sol, sous le carreau cassé
+    s += `<path d="M236 352l10-6 2 8zM258 360l8 2-6 5zM214 362l9-2-2 7z" fill="#e8f4f6" stroke="#a9c3c9" stroke-width="1.5" stroke-linejoin="round"/>`;
+    return s + veg(K, 3);
+  }
+
+  // 4. La ménagerie : les cages (celle de gauche forcée, barreaux tordus), le néon mort et un gyrophare rouge, un
+  // panneau du plafond qui pend, des câbles qui crépitent, des griffures, une grande flaque, la végétation partout
+  function menagerie() {
+    const K = kit();
+    let s = corridor(K, { d: 3, lamp: 'dead' });
+    // un panneau arraché entre les cages, et des griffures
+    s += K.hole(222, 146, 84, 88, {}) + K.claws(232, 246, 0.62);
+    s += vent(K, 3) + K.slime(332, 130, 120);
+    s += floor(K, 3);
+    // les cages : gauche forcée (porte arrachée, barreaux tordus), milieu et droite fermées, des yeux dans le noir
+    const cage = (a, b, broken) => `<rect x="${a}" y="118" width="${b - a}" height="182" fill="#3b4247"/><rect x="${a}" y="118" width="${b - a}" height="182" fill="url(#${K.P}cf)"/>`
+      + rep(Math.floor((b - a) / 22), k => {
+        const x = a + 8 + k * 22;
+        if (broken && k >= 3 && k <= 5) {
+          const bend = (k - 2) * 7 * (k === 4 ? 1.4 : 1);
+          return `<path d="M${x + 3} 112V170Q${x + 3 - bend * .4} 200 ${x + 3 - bend} 222" stroke="#c4cac5" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${x + 3} 300V282Q${x + 3 + bend * .3} 266 ${x + 3 + bend * .6} 256" stroke="#c4cac5" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+        }
+        return `<rect x="${x}" y="112" width="6" height="188" fill="#c4cac5"/>`;
+      }) + `<rect x="${a - 6}" y="106" width="${b - a + 12}" height="12" rx="3" fill="#d2d7d2"/>`;
+    s += cage(40, 210, true) + cage(420, 580) + cage(790, 960);
+    // la porte de la cage gauche, par terre, et une traînée de bave qui en sort
+    s += `<path d="M190 330l92 -14 10 26 -92 14z" fill="none" stroke="#b5bcb7" stroke-width="5" stroke-linejoin="round"/><path d="M212 327l10 26M234 324l10 26M256 320l10 26" stroke="#b5bcb7" stroke-width="4"/>`
+      + `<path d="M120 300c30 10 60 2 90 12s50 2 80 14 50 4 70 0" stroke="#c6ff5e" stroke-opacity=".45" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+    s += `<g filter="url(#${K.P}g)"><circle cx="110" cy="190" r="4" fill="#c6ff5e"/><circle cx="126" cy="190" r="4" fill="#c6ff5e"/><circle cx="868" cy="160" r="3.5" fill="#c6ff5e"/><circle cx="881" cy="160" r="3.5" fill="#c6ff5e"/><circle cx="474" cy="230" r="3.5" fill="#c6ff5e"/><circle cx="487" cy="230" r="3.5" fill="#c6ff5e"/><circle cx="920" cy="250" r="3" fill="#c6ff5e"/><circle cx="931" cy="250" r="3" fill="#c6ff5e"/><circle cx="540" cy="160" r="3" fill="#d9a3ff"/><circle cx="551" cy="161" r="3" fill="#d9a3ff"/><circle cx="545.5" cy="152" r="2.4" fill="#d9a3ff"/></g>`;
+    // le gyrophare rouge (le néon est mort), au-dessus du creux
+    s += `<ellipse cx="350" cy="214" rx="160" ry="118" fill="url(#${K.P}rd)" class="sc-alarm"/><rect x="336" y="178" width="28" height="10" rx="2" fill="#4a525a"/><path d="M339 178a11 12 0 0 1 22 0z" fill="#ff5a46" stroke="#b8322a" stroke-width="2"/><path d="M344 172a5 6 0 0 1 6-5" stroke="#ffd0c8" stroke-width="2" fill="none" class="sc-alarm"/>`;
+    // un panneau du plafond pend par un coin, des câbles qui crépitent
+    s += `<g class="sc-sway" style="transform-origin:420px 60px;--d:-2.4s"><path d="M420 60L436 64L412 150L396 140Z" fill="#e8ebe7" stroke="#b9c0ba" stroke-width="2.5" stroke-linejoin="round"/><path d="M414 82l12 3M408 104l12 3M402 126l12 3" stroke="#cdd2cb" stroke-width="2"/><circle cx="424" cy="66" r="2.6" fill="#9aa19c"/></g>`;
+    s += K.cable(300, 56, 120, 14, '#c4524a', -.4) + K.cable(612, 56, 96, -8, '#3a4148', -1.9, 3.4) + K.cable(980, 56, 150, -16, '#d9b23a', -1.1);
+    // une grande flaque au milieu, une autre devant la cage forcée, des débris
+    s += K.puddle(330, 338, 62, 10, -2.2) + K.puddle(458, 398, 40, 7, -.8) + K.debris([[440, 350, 1.2, 12], [610, 344, 1, -20], [180, 410, 1.3, 30], [720, 420, 1.1, -8]]);
+    return s + veg(K, 4);
+  }
+
+  // 5. L'arène de la finale : le spectacle d'ÉDEN tient encore (projecteurs, écran), mais la salle est à l'abandon
+  function arene() {
+    const K = kit();
+    let s = corridor(K, { d: 3, noLamp: true });
+    // les gradins (d'avant), avec des sièges manquants et cassés
+    const gone = new Set(['0:5', '0:6', '1:12', '1:13', '1:14', '2:3', '2:19', '3:9', '3:10', '0:17', '2:4']);
+    s += `${rep(4, k => `<rect x="${k * 22}" y="${150 + k * 34}" width="1000" height="${300 - 150 - k * 34}" fill="${['#eef0ec', '#e8ebe6', '#e2e5e0', '#dcdfda'][k]}"/>`)}`
+      + rep(4, r => rep(24, k => gone.has(`${r}:${k}`) ? `<rect x="${k * 42 + 18 + (r % 2) * 20}" y="${164 + r * 34}" width="6" height="4" fill="#bfc5bf"/>` : `<rect x="${k * 42 + 10 + (r % 2) * 20}" y="${158 + r * 34}" width="22" height="10" rx="3" fill="#cfd4cf"/>`))
+      // des sièges tombés sur la rangée du dessous
+      + `<rect x="258" y="196" width="22" height="10" rx="3" fill="#cfd4cf" transform="rotate(28 269 201)"/><rect x="560" y="232" width="22" height="10" rx="3" fill="#cfd4cf" transform="rotate(-36 571 237)"/><rect x="146" y="266" width="22" height="10" rx="3" fill="#cfd4cf" transform="rotate(64 157 271)"/>`;
+    // la bâche de la session de recrutement, déchirée, qui pend devant les gradins du haut
+    s += `<path d="M0 128h214v20l-22 10-12 -8-22 24-16-14-30 18-10-16-30 10-24-20-30 12-18-12z" fill="#2f6f86" fill-opacity=".9"/><path d="M0 128h214" stroke="#1d4a5a" stroke-width="4"/><path d="M214 128l8 -4" stroke="#1d4a5a" stroke-width="3"/>`
+      + `<polyline points="22,140 42,140 48,132 56,148 62,136 68,142 90,142" fill="none" stroke="#7fe7ff" stroke-width="2.5" stroke-linejoin="round"/><path d="M110 138h60M110 146h40" stroke="#cfeaf2" stroke-width="3" stroke-linecap="round"/>`;
+    // les projecteurs (celui de droite grésille) et l'écran d'ÉDEN (d'avant)
+    s += `<polygon points="150,30 196,30 440,300 20,300" fill="#fff1c9" fill-opacity=".45"/><polygon class="sc-buzz b2" points="804,30 850,30 980,300 560,300" fill="#fff1c9" fill-opacity=".45"/>
+      <rect x="140" y="8" width="66" height="26" rx="6" fill="#3a4148"/><rect x="794" y="8" width="66" height="26" rx="6" fill="#3a4148"/><circle cx="173" cy="30" r="8" fill="#fff3c4"/><circle cx="827" cy="30" r="8" fill="#fff3c4" class="sc-buzz b2"/>
+      <g class="eden-screen" transform="translate(-64 0)"><path d="M452 56V170M548 56V170" stroke="#c9cfcb" stroke-width="2"/><rect x="426" y="168" width="148" height="64" rx="10" fill="#161c22" stroke="#ffffff" stroke-width="4"/><rect x="424" y="166" width="152" height="68" rx="11" fill="none" stroke="#c9cfcb" stroke-width="1"/>
+      <polyline points="440,200 466,200 474,186 486,216 496,190 506,208 514,194 522,200 560,200" fill="none" stroke="#5fd3f3" stroke-width="3.5" stroke-linejoin="round"/><path d="M548 172l-10 22 8 4-6 18" stroke="#c9cfcb" stroke-width="1.5" fill="none"/></g>`;
+    s += floor(K, 3);
+    s += `<ellipse cx="500" cy="372" rx="440" ry="50" fill="none" stroke="#c7ccc6" stroke-width="3"/><ellipse cx="500" cy="372" rx="260" ry="28" fill="none" stroke="#c7ccc6" stroke-width="3"/>`;
+    s += K.puddle(300, 352, 50, 9, -1.5) + K.puddle(452, 404, 40, 7, -.3) + K.debris([[430, 330, 1.1, 18], [560, 410, 1.2, -14], [120, 400, 1, 40]]);
+    s += K.cable(250, 56, 104, 10, '#3a4148', -.9) + K.cable(612, 56, 92, -6, '#d9b23a', -1.6, 3.4) + K.cable(940, 56, 130, -12, '#c4524a', -2.1);
+    return s + veg(K, 4, { cracks: true });
+  }
+
+  window.SurbookingScenes = { quarantaine, etable, serre, menagerie, arene };
 })();
 
 /* ---- cardicons.js ---- */
@@ -8273,6 +8928,8 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const q = (root, s) => (root ? root.querySelector(s) : null);
   const phase = c => (c.run ? c.run.phase : 'title');
   const fl = c => c.E.floorOf(c.run);
+  // Ce qui est rangé dans un onglet fermé des écrans de jeu (0.84) : la bulle montre l'onglet à ouvrir
+  const inTab = (s, sel, tab) => { const el = q(s, sel); return el && el.closest('.gs-pane[hidden]') ? q(s, `.gs-tab[data-tab="${tab}"]`) || el : el; };
   const fight = c => phase(c) === 'combat' && c.run.combat && !c.run.combat.over;
   const foes = c => (c.run.combat ? c.run.combat.monsters : []);
   const STEPS = [
@@ -8284,13 +8941,13 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       text: () => 'En face, votre adversaire : vous l’affronterez juste après le draft. À gauche, votre voisine reçoit ce que vous laissez. La générosité se paie, parfois deux places plus loin.' },
     { id: 'draft-family', when: c => phase(c) === 'draft' && fl(c) === 1, at: s => q(s, '.cards .card .arch'), side: 'top',
       text: c => { const P = c.E.RARITY_POINTS || { blanche: 1, verte: 2 }; return `Chaque carte a une famille, écrite en haut. Elle rapporte des points : ${P.blanche} par blanche, ${P.verte} par verte, davantage pour les rares.`; } },
-    { id: 'draft-tiers', when: c => phase(c) === 'draft' && fl(c) === 1, at: s => q(s, '.specbox'), side: 'top',
+    { id: 'draft-tiers', when: c => phase(c) === 'draft' && fl(c) === 1, at: s => inTab(s, '.specbox', 'familles'), side: 'top',
       text: c => { const st = c.E.SPEC_STEPS || [4, 8, 16], m = c.E.SPEC_MAX || 2; return `À ${st[0]} points dans une famille, une spécialisation s’allume. Puis ${st[1]}, puis ${st[2]}. ${m === 2 ? 'Deux familles' : m + ' familles'} actives au maximum : les autres dorment.`; } },
     { id: 'draft-wheel', when: c => phase(c) === 'draft' && c.run.draft.pickNo === 5, at: s => [...s.querySelectorAll('.note')].find(n => /Wheel/.test(n.textContent)) || q(s, '.cards .card'), side: 'top',
       text: () => 'Votre premier booster est revenu. Ce qui manque vous dit ce que prennent vos voisines. Il reviendra encore au pick 9. Je dis ça, je ne dis rien.' },
     { id: 'keep', when: c => phase(c) === 'keep', at: s => q(s, '.keep-bar') || q(s, '.keep-cards .card'), side: 'top',
       text: () => 'Douze cartes, huit places. J’ai coché celles que je garderais. Changez ce que vous voulez : les quatre autres brûlent, et les paires gardées fusionnent.' },
-    { id: 'spec-on', when: c => ['draft', 'inventory'].includes(phase(c)), at: s => q(s, '.specbox li.on'), side: 'top',
+    { id: 'spec-on', when: c => ['draft', 'inventory'].includes(phase(c)), at: s => q(s, '.specbox li.on') && inTab(s, '.specbox li.on', 'familles'), side: 'top',
       text: c => `Une spécialisation active. Son effet joue à chaque combat, tant que la famille reste dans vos ${(c.E.SPEC_MAX || 2) === 2 ? 'deux' : c.E.SPEC_MAX} premières.` },
     { id: 'lowblow', when: c => phase(c) === 'draft', at: s => q(s, '.cards .card[data-arch="Coup bas"]'), side: 'top',
       text: () => 'Un coup bas. Faible contre un monstre, redoutable contre une postulante. Ce que vous laissez passer peut finir chez votre adversaire.' },
@@ -8457,13 +9114,15 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   function refresh() { if (lastCtx) update(lastCtx.screenEl, lastCtx); }
   // une fenêtre par-dessus le jeu (pioche, journal, pause, revisionnage) : la bulle se retire, elle pointerait à côté (0.82)
   const covered = screenEl => { const p = document.getElementById('pause'); return !!(screenEl.querySelector('.pileview') || document.querySelector('.cb-drawer.open, #rp-layer') || (p && !p.hidden)); };
+  // Un élément rangé dans un onglet fermé des écrans de jeu (0.84) : l'étape attend qu'on l'ouvre
+  const hiddenTab = el => !!el.closest('.gs-pane[hidden]') || (!!el.closest('.gs-side:not(.sheet-open) .gs-pane') && !!(window.matchMedia && window.matchMedia('(max-width: 999px)').matches));
   function update(screenEl, ctx) {
     if (!enabled() || state.done || !ctx.run || !screenEl || (window.Shop && window.Shop.isOpen && window.Shop.isOpen()) || covered(screenEl)) { hide(); return; }
     for (const step of STEPS) {
       if (state.seen.includes(step.id)) continue;
       let ok = false, el = null;
       try { ok = !!step.when(ctx); el = ok ? step.at(screenEl) : null; } catch (e) { ok = false; }
-      if (ok && el) { show(step, el, ctx); return; }
+      if (ok && el && !hiddenTab(el)) { show(step, el, ctx); return; }
     }
     hide();
   }
@@ -14217,13 +14876,13 @@ body.rp-on { overflow: hidden; }
       <p class="muted">${esc(C.pitch)}</p>
       <p class="cl-talent"><b>${C.drawback ? 'Avantage · ' : ''}${esc(C.talent.name)}</b> · ${esc(C.talent.text)}</p>
       ${C.drawback ? `<p class="cl-talent cl-drawback"><b>Inconvénient · ${esc(C.drawback.name)}</b> · ${esc(C.drawback.text)}</p>` : ''}
-      <div class="cards cl-cards">${[C.atk, C.def].map(id => cardHTML(id, { badge: '×4', noCombo: true })).join('')}</div>
+      <ul class="cl-base">${[C.atk, C.def].map(id => { const c = E.CARDS[id]; return `<li style="${famStyle('Base')}"><span class="dm-cost" title="Coût en énergie">${c.cost}</span><b>4 × ${esc(c.name)}</b><span class="muted">${esc(c.text)}</span></li>`; }).join('')}</ul>
       <p class="muted cl-hp">PV maximum : ${[1, 2, 3, 4].map(f => E.classHp(k, E.FLOOR_HP[f])).join(', ')} selon l’étage, ${hp[1]} en finale.</p>
       <div class="actions"><button type="button" class="${k === 'postulant' ? 'primary' : 'ghost'}" data-act="classe" data-cls="${k}">${k === 'postulant' ? 'Rester Postulant' : `Choisir ${esc(C.name)}`}</button></div>
     </li>`;
   }
   function renderClassPick() {
-    return `<section class="panel">
+    return `<div class="split gs gs-single classes"><section class="panel gs-main">
       <div class="phase-head">
         <div><span class="eyebrow">Avant le draft · votre ancien métier</span><h2>Choisissez votre classe</h2></div>
         <p class="muted">${esc(myName())} · quarantaine</p>
@@ -14231,8 +14890,8 @@ body.rp-on { overflow: hidden; }
       <p class="muted">Une classe remplace vos 8 cartes de base (4 d’attaque, 4 de défense), ajuste vos PV maximum à chaque étage et en finale, et donne un style de jeu : un avantage et un inconvénient de taille comparable, utiles avec n’importe quel deck. Aucune classe ne favorise une famille ou un type de carte, et les cartes de base ne comptent pour aucune famille. Les postulantes ont aussi une classe : elles jouent ses cartes de base.</p>
       ${silhouetteHTML()}
       ${turbHTML()}
-      <ul class="classgrid">${E.CLASS_IDS.map(classCardHTML).join('')}</ul>
-    </section>`;
+      <div class="gs-fit"><ul class="classgrid">${E.CLASS_IDS.map(classCardHTML).join('')}</ul></div>
+    </section></div>`;
   }
   // Turbulences (0.81) : les niveaux de difficulté, débloqués en gagnant la finale (dossier d'ÉDEN) ; en solo seulement
   const turbMax = () => { try { return window.Achievements && window.Achievements.turbMax ? window.Achievements.turbMax() : 0; } catch (e) { return 0; } };
@@ -14291,8 +14950,8 @@ body.rp-on { overflow: hidden; }
       const tag = c.fuse && n >= 2 ? `<span class="tag">fusion → ${esc(E.CARDS[c.fuse].name)}, si vous gardez les deux</span>` : '';
       return `<li class="r-${c.rarity}">${esc(c.name)}${n > 1 ? ` <b class="mono">×${n}</b>` : ''} ${tag}</li>`;
     }).join('');
-    return `<div class="split draft-split">
-      <section class="panel draft-main">
+    return `<div class="split draft-split gs">
+      <section class="panel draft-main gs-main">
         <div class="phase-head">
           <div><span class="eyebrow">Draft · étage ${fl} · pick ${d.pickNo} sur ${E.PICKS}</span><h2>Choisissez une carte</h2></div>
           <p class="muted">Booster ouvert par ${esc(opener)} · ${held.length} carte${held.length > 1 ? 's' : ''}</p>
@@ -14305,26 +14964,22 @@ body.rp-on { overflow: hidden; }
         ${d.pickNo === 1 ? `<p class="note">12 picks, puis vous gardez ${E.KEEP} cartes : les 4 autres partent à l’incinérateur. Les fusions attendent votre choix. Ce que vous laissez passe à ${voisine()}.</p>` : ''}
         ${LIVE && LIVE.waiting(run) ? '' : fouineBar()}
         ${boosterTrail(origin)}
-        <div class="cards">${cards}</div>
+        <div class="gs-fit"><div class="cards">${cards}</div></div>
         ${resetBar()}
       </section>
-      <aside class="draft-side">
-      <section class="panel dt-panel">
-        <h3>La table</h3>
+      ${gsSide('draft', [{ id: 'table', label: 'La table', html: `<div class="dt-panel">
         ${draftTable(origin, known)}
         <p class="muted dt-cap">Les boosters passent à gauche. En face, <b>${esc(RIV[E.DUEL_SEAT - 1])}</b> : votre adversaire en duel, juste après ce draft. ${isFem(RIV[E.DUEL_SEAT - 1]) ? 'Elle' : 'Il'} choisit avant vous dans deux boosters sur quatre, vous avant ${isFem(RIV[E.DUEL_SEAT - 1]) ? 'elle' : 'lui'} dans les deux autres.</p>
         <p class="muted dt-famcap">À côté de chaque joueur (vous compris), ses 4 familles les plus fournies, sur tout son deck${E.floorOf(run) > 1 ? ' (étages d’avant compris)' : ''} : ×3, trois cartes. Cerclée : la famille prise au tour précédent. Survolez une famille pour le détail.</p>
         ${famLegend()}
         ${pvpNote()}
-      </section>
-      <section class="panel">
+      </div>` },
+      { id: 'deck', label: 'Vos cartes', badge: d.picks[0].length, html: `
         <h3>Vos cartes · ${d.picks[0].length} sur ${E.PICKS + (d.doubles || 0)} · vous en garderez ${E.KEEP}</h3><p class="muted">${fl > 1 ? `S'ajoutent à votre deck de l'étage précédent : ${run.inventory.length} cartes.` : `S'ajoutent à vos ${run.baseCount || 0} cartes de base de ${esc(myClass().name)} : ${esc(baseNames())}.`}</p>
         ${picks ? `<ul class="pchips">${picks}</ul>` : '<p class="muted">Rien pour l’instant. Les cartes vertes sont plus fortes, et deux cartes identiques gardées fusionnent toutes seules.</p>'}
-        ${fusionList(d.fusions)}
-        ${outfitHTML(deckNow)}
-        ${specPanel(deckNow)}
-      </section>
-      </aside>
+        ${fusionList(d.fusions)}` },
+      { id: 'familles', label: 'Familles', html: specPanel(deckNow) },
+      { id: 'tenue', label: 'Tenue', html: outfitHTML(deckNow) }])}
     </div>`;
   }
   /* Garder 8 cartes (0.78) : après les 12 picks, vous choisissez les 8 cartes qui rejoignent votre deck ; les autres
@@ -14369,8 +15024,8 @@ body.rp-on { overflow: hidden; }
     const live = !!run.live;
     if (live) keepTimerOn(); else keepTimerOff();
     const left = live && ui.keepUntil ? Math.max(0, Math.ceil((ui.keepUntil - Date.now()) / 1000)) : null;
-    return `<div class="split draft-split">
-      <section class="panel draft-main keep-main">
+    return `<div class="split draft-split gs">
+      <section class="panel draft-main keep-main gs-main">
         <div class="phase-head">
           <div><span class="eyebrow">Draft · étage ${fl} · fin des picks</span><h2>Gardez ${want} cartes</h2></div>
           <p class="muted">${d.picks[0].length} cartes prises : ${want} rejoignent votre deck, les ${d.picks[0].length - want} autres partent à l’incinérateur.</p>
@@ -14383,17 +15038,16 @@ body.rp-on { overflow: hidden; }
           <button type="button" class="ghost" data-act="keepnone"${n ? '' : ' disabled'}>Tout écarter</button>
         </div>
         <p class="muted">Un clic garde ou écarte une carte. ÉDEN a présélectionné les ${want} qui servent le mieux votre deck${fl > 1 ? ' (étages d’avant compris)' : ''}.${live ? ' À la fin du chrono, votre sélection part telle quelle (complétée par ÉDEN s’il en manque).' : ''}</p>
-        <div class="cards keep-cards">${cards}</div>
+        <div class="gs-fit"><div class="cards keep-cards">${cards}</div></div>
         ${resetBar()}
       </section>
-      <aside class="draft-side">
-      <section class="panel">
+      ${gsSide('keep', [{ id: 'deck', label: 'Votre deck', html: `
         <h3>Votre deck avec ces ${n} cartes</h3>
         <p class="muted">${fusions ? `${fusions} fusion${fusions > 1 ? 's' : ''} à la validation. ` : ''}${fl > 1 ? `Elles s’ajoutent à votre deck de l’étage précédent (${run.inventory.length} cartes).` : `Elles s’ajoutent à vos ${run.baseCount || 0} cartes de base.`}</p>
-        ${outfitHTML(deckIds)}
-        ${specPanel(deckIds)}
-      </section>
-      </aside>
+        ${deckMini(deckIds.map(id => ({ id })))}
+      ` },
+      { id: 'familles', label: 'Familles', html: specPanel(deckIds) },
+      { id: 'tenue', label: 'Tenue', html: outfitHTML(deckIds) }])}
     </div>`;
   }
   /* Le draft visible (0.74) : ce que chacun a pris à cette table, dans l'ordre, et ce qui est déjà parti du booster que vous
@@ -14569,31 +15223,91 @@ body.rp-on { overflow: hidden; }
     const fl = E.floorOf(run), FI = E.floorInfo(run);
     const active = E.activeCards(run), bench = E.benchCards(run);
     const rivals = E.rivalsOf(run).map((n, i) => `<div><b>${esc(n)}</b>${rivalClassTag(E.rivalClassOf(run, i + 1), n) ? ` <span class="tag">${esc(rivalClassTag(E.rivalClassOf(run, i + 1), n))}</span>` : ''}${i + 1 === E.DUEL_SEAT ? ' <span class="tag">votre adversaire</span>' : ''}${specNames(run.draft.picks[i + 1].map(c => c.id)).map(x => ` <span class="chip spec">${esc(x)}</span>`).join('')}<ul>${group(run.draft.picks[i + 1]).map(({ id, n: k }) => `<li>${esc(E.CARDS[id].name)}${k > 1 ? ` ×${k}` : ''}${E.CARDS[id].rarity === 'verte' ? ' <span class="tag">verte</span>' : ''}</li>`).join('')}</ul></div>`).join('');
-    const encs = E.encountersOf(run).map(e => `<li><span>${esc(E.encName(run, e))}</span><span class="diff">${e.boss ? `${LIVE && LIVE.duelWanted(run) ? 'Duel en direct · ses PV d’étage, comme vous' : `${e.diff} · ${E.bossHpFor(run, e).hp} PV`}${rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]) ? `, ${esc(rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]).toLowerCase())}` : ''}, en face de vous, juste après le draft · ${fl > 2 ? `son deck des étages 1 à ${fl - 1} et ses cartes draftées` : fl > 1 ? 'son deck de l’étage 1 et ses cartes draftées' : 'ses cartes draftées et ses cartes de base'}${specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).length ? ', spécialisée ' + specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).join(' et ') : ''}` : e.monsters.length > 1 ? `${e.diff} · ${e.monsters[0].hp} PV chacun${e.monsters[0].thorns ? `, épines ${e.monsters[0].thorns}` : ''}${e.unstable ? ', instables' : ''}${e.monsters[0].clone ? `, se clonent tous les ${e.monsters[0].clone.every} tours` : ''}${mechTag(e.monsters[0], true)}` : `${e.diff} · ${e.monsters[0].hp} PV${e.monsters[0].clone ? `, se clone tous les ${e.monsters[0].clone.every} tours` : ''}${e.monsters[0].spawn ? `, engendre un rejeton de ${e.monsters[0].spawn.hp} PV ${e.monsters[0].spawn.every > 1 ? `tous les ${e.monsters[0].spawn.every} tours` : 'à chaque tour'}` : ''}${mechTag(e.monsters[0], false)}`}</span></li>`).join('');
-    return `<div class="split">${floorMap()}
+    const encs = E.encountersOf(run).map(e => `<li class="enc-tile ${e.boss && e.rivalSeat ? 'enc-duel' : e.chief ? 'enc-boss' : 'enc-mob'}">${encArt(e)}<span class="enc-k">${e.boss && e.rivalSeat ? 'Duel' : e.chief ? 'Boss d’étage' : 'Monstres'}</span><span class="enc-n">${esc(E.encName(run, e))}</span><span class="diff">${e.boss ? `${LIVE && LIVE.duelWanted(run) ? 'Duel en direct · ses PV d’étage, comme vous' : `${e.diff} · ${E.bossHpFor(run, e).hp} PV`}${rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]) ? `, ${esc(rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]).toLowerCase())}` : ''}, en face de vous, juste après le draft · ${fl > 2 ? `son deck des étages 1 à ${fl - 1} et ses cartes draftées` : fl > 1 ? 'son deck de l’étage 1 et ses cartes draftées' : 'ses cartes draftées et ses cartes de base'}${specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).length ? ', spécialisée ' + specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).join(' et ') : ''}` : e.monsters.length > 1 ? `${e.diff} · ${e.monsters[0].hp} PV chacun${e.monsters[0].thorns ? `, épines ${e.monsters[0].thorns}` : ''}${e.unstable ? ', instables' : ''}${e.monsters[0].clone ? `, se clonent tous les ${e.monsters[0].clone.every} tours` : ''}${mechTag(e.monsters[0], true)}` : `${e.diff} · ${e.monsters[0].hp} PV${e.monsters[0].clone ? `, se clone tous les ${e.monsters[0].clone.every} tours` : ''}${e.monsters[0].spawn ? `, engendre un rejeton de ${e.monsters[0].spawn.hp} PV ${e.monsters[0].spawn.every > 1 ? `tous les ${e.monsters[0].spawn.every} tours` : 'à chaque tour'}` : ''}${mechTag(e.monsters[0], false)}`}</span></li>`).join('');
+    const deckIds = active.map(c => c.id);
+    return `<div class="split gs prep">
+      <section class="gs-main prep-main">${floorMap()}
       <section class="panel floor-enter">
         <h3>${esc(FI.name)}</h3>
-        <ol class="encounters">${encs}</ol>
+        <div class="gs-fit"><ol class="encounters enc-tiles">${encs}</ol></div>
         ${LIVE && LIVE.duelWanted(run) ? LIVE.duelWaitHTML(run) : ''}
         <div class="actions"><button type="button" class="primary" data-act="enter"${LIVE && LIVE.duelWanted(run) && LIVE.duelReadySent(run) ? ' disabled' : ''}>${LIVE && LIVE.duelWanted(run) ? esc(LIVE.duelEnterLabel(run)) : ({ 1: 'Entrer en quarantaine', 2: 'Entrer dans l’étable', 3: 'Entrer dans la serre', 4: 'Entrer dans la ménagerie' })[fl] || 'Entrer'}</button></div>
         ${resetBar()}
       </section>
-      <section class="panel">
-        <div class="phase-head">
-          <div><span class="eyebrow">Inventaire</span><h2>${run.inventory.length} cartes</h2></div>
-          <p class="muted">Vous jouez toutes les cartes que vous possédez. Seules les fusions et le retrait payant de la boutique allègent le deck.</p>
-        </div>
-        <div class="cards">${group(run.inventory).map(({ id, n }) => cardHTML(id, { badge: n > 1 ? '×' + n : '', view: E.cardFor(run, id) })).join('')}</div>
       </section>
-      <section class="panel">${outfitHTML(active.map(c => c.id))}</section>
-      <section class="panel">${specPanel(active.map(c => c.id), { intro: 'Deux blanches valent autant de points qu’une verte, mais deux vertes (4 points) ne font qu’une bleue (3 points). ' })}</section>
-      <section class="panel">
-        <h3>Fusions automatiques${fz.length ? ` · ${fz.length} à ce draft` : ''}</h3>
-        ${fusionList(fz)}
-        <p class="muted">Dès que vous possédez deux cartes identiques, elles fusionnent : deux blanches donnent la verte de leur lignée, deux vertes la bleue, deux bleues la violette. La carte est plus forte, et le deck perd une carte.</p>
-      </section>
-      <details class="panel"><summary>Ce qu'ont drafté les autres postulants, dont votre boss</summary><div class="rivals">${rivals}</div></details>
+      ${gsSide('prep', [
+        { id: 'deck', label: 'Deck', badge: run.inventory.length, html: `<div class="phase-head"><div><span class="eyebrow">Inventaire</span><h2>${run.inventory.length} cartes</h2></div></div>
+          <p class="muted">Vous jouez toutes les cartes que vous possédez. Seules les fusions et le retrait payant de la boutique allègent le deck. Survolez une carte (ou touchez-la) pour son texte.</p>
+          ${deckMini(run.inventory)}
+          <details class="deck-full"><summary>Voir les cartes</summary><div class="cards">${group(run.inventory).map(({ id, n }) => cardHTML(id, { badge: n > 1 ? '×' + n : '', view: E.cardFor(run, id) })).join('')}</div></details>` },
+        { id: 'familles', label: 'Familles', html: specPanel(deckIds, { intro: 'Deux blanches valent autant de points qu’une verte, mais deux vertes (4 points) ne font qu’une bleue (3 points). ' }) },
+        { id: 'tenue', label: 'Tenue', html: outfitHTML(deckIds) },
+        { id: 'fusions', label: 'Fusions', badge: fz.length || '', html: `<h3>Fusions automatiques${fz.length ? ` · ${fz.length} à ce draft` : ''}</h3>
+          ${fusionList(fz)}
+          <p class="muted">Dès que vous possédez deux cartes identiques, elles fusionnent : deux blanches donnent la verte de leur lignée, deux vertes la bleue, deux bleues la violette. La carte est plus forte, et le deck perd une carte.</p>` },
+        { id: 'postulants', label: 'Postulants', html: `<h3>Ce qu'ont drafté les autres postulants, dont votre boss</h3><div class="rivals">${rivals}</div>` }])}
     </div>`;
+  }
+
+  /* ---------- Écrans de jeu à hauteur fixe (0.84, chantier A de l'audit des graphismes) : draft, garder 8, préparation de
+     l'étage, fin d'étage. La page ne défile plus : la colonne principale tient dans l'écran (les cartes rétrécissent un peu au
+     besoin, fitMain ; au-delà, seule cette colonne défile) et le reste (la table, votre deck, vos familles, votre tenue)
+     passe dans des onglets à droite ; sous 1000 px, dans un tiroir qui monte du bas. Tous les onglets sont dans la page
+     (les inactifs en hidden) : les tests et le tutoriel les trouvent. ---------- */
+  const GS_PHASES = new Set(['classe', 'draft', 'keep', 'inventory', 'end']);
+  const gsNarrow = () => !!(window.matchMedia && window.matchMedia('(max-width: 999px)').matches);
+  function gsSide(key, tabs) {
+    tabs = tabs.filter(t => t && t.html);
+    if (!tabs.length) return '';
+    ui.gsTab = ui.gsTab || {};
+    const cur = tabs.some(t => t.id === ui.gsTab[key]) ? ui.gsTab[key] : tabs[0].id, open = ui.gsSheet === key;
+    return `<aside class="gs-side panel${open ? ' sheet-open' : ''}" data-gs="${key}">
+      <div class="gs-tabs" role="tablist" aria-label="Informations">${tabs.map(t => `<button type="button" class="gs-tab" role="tab" data-act="gstab" data-k="${key}" data-tab="${t.id}" aria-selected="${t.id === cur}">${esc(t.label)}${t.badge != null && t.badge !== '' ? ` <b class="gs-badge">${esc(String(t.badge))}</b>` : ''}</button>`).join('')}<button type="button" class="gs-close ghost" data-act="gsclose" data-k="${key}" aria-label="Fermer">×</button></div>
+      ${tabs.map(t => `<div class="gs-pane" role="tabpanel" data-tab="${t.id}"${t.id === cur ? '' : ' hidden'}>${t.html}</div>`).join('')}
+    </aside>`;
+  }
+  // Un onglet : sur grand écran, il remplace le précédent ; sous 1000 px, il ouvre (ou referme) le tiroir. Sans nouveau rendu.
+  function gsTabAct(a, el) {
+    const side = el && el.closest('.gs-side'), key = (el && el.dataset.k) || (side && side.dataset.gs);
+    if (!side || !key) return;
+    ui.gsTab = ui.gsTab || {};
+    if (a === 'gsclose') ui.gsSheet = null;
+    else {
+      const tab = el.dataset.tab, was = ui.gsTab[key];
+      ui.gsTab[key] = tab;
+      ui.gsSheet = gsNarrow() ? (ui.gsSheet === key && was === tab ? null : key) : null;
+      side.querySelectorAll('.gs-tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+      side.querySelectorAll('.gs-pane').forEach(p => { p.hidden = p.dataset.tab !== tab; });
+    }
+    side.classList.toggle('sheet-open', ui.gsSheet === key);
+  }
+  // La colonne principale tient dans l'écran : la zone des cartes rétrécit (jusqu'à 80 %), puis la colonne défile
+  function fitMain() {
+    const m = screenEl.querySelector('.gs > .gs-main'), fit = m && m.querySelector('.gs-fit');
+    if (!fit) return;
+    fit.style.zoom = '';
+    if (gsNarrow() || !('zoom' in fit.style)) return;
+    const over = m.scrollHeight - m.clientHeight, h = fit.offsetHeight;
+    if (over <= 2 || !h) return;
+    fit.style.zoom = Math.max(0.8, Math.min(1, (h - over - 6) / h)).toFixed(3);
+  }
+
+  // La vignette d'une rencontre (préparation de l'étage, 0.84) : votre adversaire en duel, ou ses monstres
+  function encArt(e) {
+    let art = '';
+    try {
+      if (e.boss && e.rivalSeat) {
+        const seat = e.rivalSeat, name = E.rivalsOf(run)[seat - 1], cls = E.rivalClassOf(run, seat), ids = ((run.draft && run.draft.picks && run.draft.picks[seat]) || []).map(c => c.id);
+        art = AV ? AV.svg(AV.state(E, ids, cls || null), { cls: 'enc-av', classe: cls || null, body: isFem(name) ? 'f' : 'm' }) : '';
+      } else art = (e.monsters || []).slice(0, 3).map((m, k) => { const mm = Object.assign({ i: k, alive: true }, m), key = artKey(mm, e);
+        return SART && SART.has(key) ? SART.foe(key, SART.variantOf(mm, e, artCtx())) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[key] || ART.rejeton}</svg>`; }).join('');
+    } catch (x) { art = ''; }
+    return `<span class="enc-art" aria-hidden="true">${art}</span>`;
+  }
+  // Le deck en liste compacte (0.84) : famille, nom, coût, nombre ; le texte de la carte en info-bulle
+  function deckMini(list) {
+    return `<ul class="deckmini">${group(list).map(({ id, n }) => { const c = E.cardFor(run, id);
+      return `<li class="r-${c.rarity}" style="${famStyle(c.arch === 'Base' ? 'Base' : c.arch)}" data-tip="${esc(`${c.name} : ${c.text}${c.combo ? ` Combo : ${c.combo}` : ''}`)}" tabindex="0"><i class="dm-fam" aria-hidden="true">${famIcon(c.arch)}</i><span class="dm-name">${esc(c.name)}</span>${n > 1 ? `<b class="dm-n">×${n}</b>` : ''}<span class="dm-cost" title="Coût en énergie">${c.cost}</span></li>`; }).join('')}</ul>`;
   }
 
   /* Recommencer le draft de l'étage (outil de test) : tant qu'aucun combat de l'étage n'a commencé. Depuis la 0.82, seulement
@@ -14787,6 +15501,8 @@ body.rp-on { overflow: hidden; }
     if (sec === 'arene') s += CRACK('M120 120l18 30-12 22 20 34M880 70l-14 26 10 18-16 30M450 160l12 18 24 4');
     return `<g class="veg" aria-hidden="true">${s}</g>`;
   };
+  // La contamination des monstres suit l'étage (art.js, 0.84 : un peu à la serre, franchement à la ménagerie et en finale)
+  const artCtx = () => ({ floor: run ? E.floorOf(run) : 1, finale: !!(run && run.finale) });
   const SCENE = {
     quarantaine: () => CORRIDOR() + `<rect x="40" y="226" width="92" height="74" fill="#e8ebe7" stroke="#c3c9c4" stroke-width="3"/><path d="M40 226l92 74M132 226l-92 74" stroke="#c3c9c4" stroke-width="3"/><rect x="140" y="254" width="60" height="46" fill="#edefeb" stroke="#c3c9c4" stroke-width="3"/>
       <rect x="846" y="100" width="92" height="196" rx="44" fill="#eef3f4" stroke="#a9cfda" stroke-width="4"/><rect x="866" y="130" width="52" height="120" rx="26" fill="#d4ecf3"/><path d="M878 146l10 30" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>` + VEG(1),
@@ -14810,6 +15526,9 @@ body.rp-on { overflow: hidden; }
       <polyline points="440,200 466,200 474,186 486,216 496,190 506,208 514,194 522,200 560,200" fill="none" stroke="#5fd3f3" stroke-width="3.5" stroke-linejoin="round"/></g>
       <ellipse cx="500" cy="372" rx="440" ry="50" fill="none" stroke="#c7ccc6" stroke-width="3"/><ellipse cx="500" cy="372" rx="260" ry="28" fill="none" stroke="#c7ccc6" stroke-width="3"/>` + VEG(2, 'arene'),
   };
+  // Les décors abîmés étage par étage (scenes.js, 0.84) : chaque section remplacée si le module est là
+  if (window.SurbookingScenes) Object.keys(SCENE).forEach(sec => { if (typeof window.SurbookingScenes[sec] === 'function') SCENE[sec] = window.SurbookingScenes[sec]; });
+
   // Silhouettes provisoires, originales et simples (trait), tournées vers le joueur ; une vraie illustration
   // les remplacera : il suffira de remplir l'emplacement .foe-art[data-art="…"] (image de fond ou <img>).
   const ART = {
@@ -14965,7 +15684,7 @@ body.rp-on { overflow: hidden; }
       // robot muni d'un balai le jette dehors par un sas et ÉDEN tamponne sa candidature ; ÉDEN, battue en finale, grésille et s'éteint.
       const ko = m.duel && !m.alive ? (k === 'human' ? 'ko' : k === 'eden' ? 'ko-robot' : '') : '';
       const kind = k === 'robot' || k === 'eden' ? 'machine' : (TOXIC.has(k) || m.mutated || m.poison > 0 || m.variant === 'mute') ? 'toxic' : k === 'human' ? 'human' : '';
-      const avSt = k === 'human' && AV ? AV.state(E, m.deckIds || [], m.cls || null) : null, sbVar = !avSt && SART && SART.has(k) ? SART.variantOf(m, e) + (k === 'leviathan' && c.player.swallowed > 0 ? ' plein' : '') : null;
+      const avSt = k === 'human' && AV ? AV.state(E, m.deckIds || [], m.cls || null) : null, sbVar = !avSt && SART && SART.has(k) ? SART.variantOf(m, e, artCtx()) + (k === 'leviathan' && c.player.swallowed > 0 ? ' plein' : '') : null;
       const fig = () => (avSt ? AV.svg(avSt, { cls: 'avatar-stage foe-av', body: isFem(m.name) ? 'f' : 'm', classe: m.cls || null })
         : sbVar != null ? SART.foe(k, sbVar) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[k] || ART.rejeton}</svg>`);
       const figSig = [k, kind, avSt ? JSON.stringify(avSt) + isFem(m.name) + (m.cls || '') : sbVar, raging, ko, m.alive, falling].join('|');
@@ -15238,10 +15957,10 @@ body.rp-on { overflow: hidden; }
   function renderEnd() {
     const s = E.score(run);
     const rows = run.results.map(r => `<tr><td>${esc(r.name)}</td><td class="n">${r.turns} / ${r.par}</td><td class="n">${r.hpLoss}</td></tr>`).join('');
-    return `${floorMap()}<section class="panel has-stamp">
+    return `<div class="split gs endscreen"><section class="gs-main end-main">${floorMap()}<section class="panel has-stamp">
       <span class="stamp ok" aria-hidden="true">Admis</span>
       <span class="eyebrow">${esc(E.floorInfo(run).short)} validée · ${esc(myName())}</span>
-      <h2>Indice de compatibilité : ${s.total}</h2>
+      <h2>Indice de compatibilité : <b class="countup" data-to="${s.total}">${s.total}</b></h2>
       <div class="score-wrap"><table class="score">
         <tr><th>Critère</th><th>Détail</th><th class="n">Points</th></tr>
         <tr><td>PV restants</td><td>${run.hp} / ${E.maxHpOf(run)}</td><td class="n">${s.pv}</td></tr>
@@ -15249,20 +15968,6 @@ body.rp-on { overflow: hidden; }
         <tr><td>Rapidité</td><td>${s.turns} tour${s.turns > 1 ? 's' : ''} pour un objectif de ${s.par} · ${s.T} tour${s.T > 1 ? 's' : ''} d'avance × 5, 25 au maximum</td><td class="n">${s.rapidite}</td></tr>
         <tr class="total"><td>Total</td><td></td><td class="n">${s.total}</td></tr>
       </table></div>
-      <h3>Notes au dossier</h3>
-      ${succesList()}
-      <div class="score-wrap"><table class="score">
-        <tr><th>Rencontre</th><th class="n">Tours / objectif</th><th class="n">PV perdus</th></tr>${rows}
-      </table></div>
-      <p class="runpoints"><b>Points de run : ${(run.history || []).reduce((t, h) => t + h.score, 0) + s.total}</b>${(run.history || []).length ? ` <span class="muted">(${(run.history || []).map(h => `étage ${h.floor} : ${h.score}`).join(', ')}, étage ${E.floorOf(run)} : ${s.total})</span>` : ''} · versés au vestiaire d’ÉDEN à la fin du run, pour acheter des skins.</p>${shopLine()}
-      ${run.tableResult ? `<h3>Duels de votre table</h3>
-        <ul class="bracket">
-          <li class="win"><b>Vous</b> battez <b>${esc(run.tableResult.boss)}</b> en duel, puis ${esc((E.encountersOf(run)[E.encountersOf(run).length - 1] || {}).short || 'le boss de l’étage')} : vous passez.</li>
-          ${liveOther() ? `<li><b>${esc(E.rivalsOf(run)[0])}</b> et <b>${esc(E.rivalsOf(run)[2])}</b> jouent leur duel en direct, chacun de son côté.</li>`
-            : `<li><b>${esc(run.tableResult.winner.name)}</b> bat <b>${esc(run.tableResult.loser)}</b> (duel entre bots, simulé) : ${isFem(run.tableResult.winner.name) ? 'elle' : 'il'} passe aussi.</li>`}
-        </ul>
-        <p class="muted">La moitié de la table monte.${!E.FLOORS[E.floorOf(run) + 1] ? '' : run.live ? (run.live.code ? ` À l’étage ${E.floorOf(run) + 1}, la salle ${esc(run.live.code)} attend ceux de votre table encore en jeu : vous repartez ensemble.` : ` À l’étage ${E.floorOf(run) + 1}, votre table se formera dans la file d’attente : des postulants arrivés au même étage, d’ici ou d’une autre partie.`) : ` À l’étage ${E.floorOf(run) + 1}, ${esc(run.tableResult.winner.name)} sera à votre table, avec deux qualifiés d’une autre table.`}</p>` : ''}
-      ${LIVE ? LIVE.tableBlock(run) : ''}
       ${E.FLOORS[E.floorOf(run) + 1]
         ? `<p>Duel gagné, boss de l’étage battu : vous montez à l’étage ${E.floorOf(run) + 1}, ${esc(E.FLOORS[E.floorOf(run) + 1].name.toLowerCase())}. Vos PV seront restaurés et votre deck vous suit. Le score ne sert pas à éliminer : seuls les combats comptent.</p>
            <div class="actions"><button type="button" class="primary" data-act="nextfloor">Monter à l’étage ${E.floorOf(run) + 1}</button><button type="button" class="ghost" data-act="start">Rejouer un nouveau draft</button></div>`
@@ -15271,8 +15976,26 @@ body.rp-on { overflow: hidden; }
            <div class="actions"><button type="button" class="primary" data-act="finale">Entrer dans l’arène : la finale</button><button type="button" class="ghost" data-act="start">Rejouer un nouveau draft</button></div>`
           : `<p>L’étage ${E.floorOf(run) + 1} n’est pas encore construit. Vous faites partie des postulants qui monteront.</p>
            <div class="actions"><button type="button" class="primary" data-act="start">Rejouer un nouveau draft</button></div>`}
-    </section>`;
+    </section>
+      </section>
+      ${gsSide('end', [
+        { id: 'dossier', label: 'Notes au dossier', html: `<h3>Notes au dossier</h3>
+      ${succesList()}` },
+        { id: 'rencontres', label: 'Rencontres', html: `<div class="score-wrap"><table class="score">
+        <tr><th>Rencontre</th><th class="n">Tours / objectif</th><th class="n">PV perdus</th></tr>${rows}
+      </table></div>` },
+        { id: 'table', label: 'Votre table', html: `${run.tableResult ? `<h3>Duels de votre table</h3>
+        <ul class="bracket">
+          <li class="win"><b>Vous</b> battez <b>${esc(run.tableResult.boss)}</b> en duel, puis ${esc((E.encountersOf(run)[E.encountersOf(run).length - 1] || {}).short || 'le boss de l’étage')} : vous passez.</li>
+          ${liveOther() ? `<li><b>${esc(E.rivalsOf(run)[0])}</b> et <b>${esc(E.rivalsOf(run)[2])}</b> jouent leur duel en direct, chacun de son côté.</li>`
+            : `<li><b>${esc(run.tableResult.winner.name)}</b> bat <b>${esc(run.tableResult.loser)}</b> (duel entre bots, simulé) : ${isFem(run.tableResult.winner.name) ? 'elle' : 'il'} passe aussi.</li>`}
+        </ul>
+        <p class="muted">La moitié de la table monte.${!E.FLOORS[E.floorOf(run) + 1] ? '' : run.live ? (run.live.code ? ` À l’étage ${E.floorOf(run) + 1}, la salle ${esc(run.live.code)} attend ceux de votre table encore en jeu : vous repartez ensemble.` : ` À l’étage ${E.floorOf(run) + 1}, votre table se formera dans la file d’attente : des postulants arrivés au même étage, d’ici ou d’une autre partie.`) : ` À l’étage ${E.floorOf(run) + 1}, ${esc(run.tableResult.winner.name)} sera à votre table, avec deux qualifiés d’une autre table.`}</p>` : ''}
+      ${LIVE ? LIVE.tableBlock(run) : ''}` },
+        { id: 'points', label: 'Points', html: `<p class="runpoints"><b>Points de run : ${(run.history || []).reduce((t, h) => t + h.score, 0) + s.total}</b>${(run.history || []).length ? ` <span class="muted">(${(run.history || []).map(h => `étage ${h.floor} : ${h.score}`).join(', ')}, étage ${E.floorOf(run)} : ${s.total})</span>` : ''} · versés au vestiaire d’ÉDEN à la fin du run, pour acheter des skins.</p>${shopLine()}` }])}
+    </div>`;
   }
+
 
   function renderDefeat() {
     if (run.finale && run.finale.stage === 'lost') return renderFinaleLost();
@@ -15658,7 +16381,7 @@ body.rp-on { overflow: hidden; }
     Object.assign(bd.style, { inset: 'auto', left: `${Math.round((VW - 1000 * k) / 2 - sr.left)}px`, top: `${Math.round(floor - 300 * k)}px`, width: `${Math.ceil(1000 * k)}px`, height: `${Math.ceil(600 * k)}px` });
   }
   let bdRaf = 0;
-  window.addEventListener('resize', () => { uiScale(); cancelAnimationFrame(bdRaf); bdRaf = requestAnimationFrame(layoutBackdrop); });
+  window.addEventListener('resize', () => { uiScale(); cancelAnimationFrame(bdRaf); bdRaf = requestAnimationFrame(() => { layoutBackdrop(); fitMain(); }); });
   // Grand écran : l'interface (dessinée pour 1280 × 800) grandit avec la fenêtre, comme dans un jeu ; le décor, lui, couvre tout
   let UIZ = 1, UIZD = 1; // UIZD : la réduction du combat sur une petite fenêtre de bureau (0.82)
   function uiScale() {
@@ -15686,6 +16409,9 @@ body.rp-on { overflow: hidden; }
     const cockpit = !!(ui.cockpit && !ui.outro && !shop && phase === 'champion');
     if (cockpit && ui.cockpit.drawn && screenEl.querySelector('.cockpit')) return; // la scène du cockpit aussi
     document.body.classList.toggle('in-combat', (phase === 'combat' || outro) && !shop);
+    const gs = GS_PHASES.has(phase) && !shop && !outro && !cockpit && !(ST && ui.intro && run);
+    if (ui.gsPhase !== phase) { ui.gsPhase = phase; ui.gsSheet = null; } // le tiroir des onglets se referme d'un écran à l'autre
+    document.body.classList.toggle('gs', gs);
     document.body.dataset.veg = String(!run ? 1 : run.finale ? 2 : Math.min(3, E.floorOf(run) || 1)); // la végétation des mutations monte avec l'étage
     const clk = Math.floor((document.timeline && document.timeline.currentTime) || performance.now()); // l'horloge des animations : les boucles CSS reprennent où elles en étaient (0.83 ; voir alignLoops)
     screenEl.style.setProperty('--clk', `${(-clk / 1000).toFixed(3)}s`);
@@ -15699,6 +16425,15 @@ body.rp-on { overflow: hidden; }
     layoutBackdrop();
     breathe();
     alignLoops(clk);
+    if (gs) { fitMain(); countUp(); }
+  }
+  // Fin d'étage (0.84) : l'indice de compatibilité monte jusqu'à son total, une fois par étage
+  function countUp() {
+    const el = screenEl.querySelector('.countup'); if (!el || !canAnimate()) return;
+    const key = `${E.floorOf(run)}:${run.phase}:${el.dataset.to}`; if (ui.counted === key) return; ui.counted = key;
+    const to = +el.dataset.to || 0, t0 = performance.now(), dur = 900;
+    const step = now => { if (!el.isConnected) return; const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = String(Math.round(to * e)); if (k < 1) requestAnimationFrame(step); };
+    el.textContent = '0'; requestAnimationFrame(step);
   }
   // Les boucles CSS (halo, Radiation, rage, flocons…) ont un délai de -clk : en les démarrant exactement à clk, leur phase ne
   // dépend que de l'horloge de la page, pas de l'instant où le navigateur a repris le rendu (0.83.2 : plus d'à-coup)
@@ -16572,6 +17307,7 @@ body.rp-on { overflow: hidden; }
   function act(a, el) {
     if (a === 'menutab') { const k = (el && el.dataset.tab) || ''; setMenuTab(k && k === menuTab() ? '' : k, true); return; } // panneaux du menu principal : rien d'autre ne bouge
     if (a === 'cbdrawer') { setDrawer(!ui.drawer); return; } // le journal du combat, dans son tiroir
+    if (a === 'gstab' || a === 'gsclose') { gsTabAct(a, el); return; } // les onglets des écrans de jeu (0.84) : sans nouveau rendu
     const owner = MODS().find(m => m.handles && m.handles(a));
     if (owner) { try { owner.act(a, el, modCtx()); } catch (e) { console.error(e); } render(); return; }
     modCall('beforeAction', a, el, modCtx());
