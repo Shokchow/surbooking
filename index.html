@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.79.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.79.1';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -2652,7 +2652,7 @@ body.in-combat .pops { top: 150px; }
   // Version du protocole : seules les parties de même version se retrouvent à une table (mêmes cartes, mêmes règles)
   // À chaque changement du moteur (cartes, règles), on l'augmente : l'arbitre des duels n'a qu'un moteur, les tables ne
   // mélangent pas les versions (tools/build_edge.js le rappelle si on l'oublie)
-  const LIVE_VERSION = 11; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73)
+  const LIVE_VERSION = 12; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73)
   // Une carte telle que le serveur la garde : de quoi faire choisir un bot (valeur, famille, points, rareté)
   const liveCard = id => { const c = CARDS[id]; return { id, v: c.value || 0, a: ARCHS.includes(c.arch) ? c.arch : '', p: ptsOf(id), r: c.rarity }; };
   // Ce qu'un joueur apporte à la table : son nom, sa classe, sa silhouette, ses cartes d'avant ce draft (hors cartes de base)
@@ -3136,7 +3136,11 @@ body.in-combat .pops { top: 150px; }
 
   // PV des monstres par étage (0.78) : les decks du draft de 12 (on garde les 8 meilleures) sont plus forts ; les monstres
   // et les boss d'étage suivent, pour garder la même difficulté (réglé par simulation, tools/bots_bench.js)
-  let MOB_HP = { 1: 1.8, 2: 1.65, 3: 1.85, 4: 1.9 }; // 0.79 : relevés avec les PV d'étage ×1,5 (avant 1,5 / 1,4 / 1,55 / 1,6), même entonnoir (tools/bots_bench.js)
+  // PV des monstres et de leurs coups par étage (tools/bots_bench.js). 0.79.1, « un peu plus dur » : ~10 % de champions
+  // simulés (0.79 : 15 %, 0.78 : 13 %), des combats plus courts et plus dangereux. PV : 0.79 1,8 / 1,65 / 1,85 / 1,9 ;
+  // 0.78 1,5 / 1,4 / 1,55 / 1,6. Coups : ×1 avant la 0.79.1 (vos PV d'étage étaient 1,5 fois plus bas).
+  let MOB_HP = { 1: 1.6, 2: 1.5, 3: 1.65, 4: 1.7 };
+  let MOB_DMG = { 1: 1.25, 2: 1.35, 3: 1.35, 4: 1.35 };
   const mobHp = (run, hp) => (run.finale ? hp : Math.round(hp * (MOB_HP[floorOf(run)] || 1)));
   function startCombat(run) {
     dailySeed(run, floorOf(run) * 32 + (run.finale ? 30 : run.encounter + 1));
@@ -3225,6 +3229,10 @@ body.in-combat .pops { top: 150px; }
   function monsterAttackValue(run, m, act) {
     const c = run.combat, p = c.player;
     let d = act.dmg + m.force + (c.dark && m.dark ? m.dark : 0); // dans le noir, les chauves-souris frappent à l'écholocation
+    // 0.79.1 (Raphaël : « encore plus facile après le changement ») : les coups des monstres suivent vos PV d'étage ×1,5
+    // (affiché tel quel dans leur intention) ; pas en finale
+    const mul = run.finale ? 1 : (MOB_DMG[floorOf(run)] || 1);
+    if (mul !== 1) d = Math.round(d * mul);
     if (m.weak > 0) d = Math.floor(d * 0.75);
     // Pendant votre tour, l'intention tient compte de votre Vulnérabilité telle qu'elle sera au tour des monstres (elle baisse
     // d'un cran à la fin de votre tour)
@@ -4223,7 +4231,7 @@ body.in-combat .pops { top: 150px; }
   // on prend une carte, on passe à l'autre, 4 picks chacun), puis un seul duel. Les deux finalistes repartent à 50 PV :
   // pas d'avantage au mieux classé. L'adversaire est un bot qui joue le deck de l'autre finaliste.
   // Chaque booster de finale contient sa rouge (mythique) et une seule orange (légendaire) : voir ORANGES et ROUGES.
-  let FINALE_HP = 430; // 0.79 : 430 avec les duels d'étage plus longs (≈ 52 %)
+  let FINALE_HP = 445; // 0.79.1 : ≈ 49 % (0.79 : 430)
   // 0.78 : 412 ; // ≈ 52 % de victoires simulées (0.78 : le bot et le joueur automatique planifient tous deux leur tour ; 405 en 0.77). En vrai PvP, PV égaux.
   const FINALE_PICKS = 4, FINALE_WIN_POINTS = 100, FINALE_SECOND_POINTS = 50;
   const isLastFloor = run => !FLOORS[floorOf(run) + 1];
@@ -4691,7 +4699,7 @@ body.in-combat .pops { top: 150px; }
     setPvpPool, pvpValid, pvpRecord, get PVP_ALLOW_OWN() { return PVP_ALLOW_OWN; }, set PVP_ALLOW_OWN(v) { PVP_ALLOW_OWN = v; },
     get PVP_HP_FACTOR() { return PVP_HP_FACTOR; }, set PVP_HP_FACTOR(v) { PVP_HP_FACTOR = v; },
     newRun, startFinale: withSpecCheck(startFinale), finaleDraftPick: withSpecCheck(finaleDraftPick), startFinaleDuel, canStartFinale, isLastFloor, makeFinaleBooster,
-    currentEncounter: enc, currentEnc: enc, POSTULANTS, finalePoints, FINALE_PICKS, FINALE_WIN_POINTS, FINALE_SECOND_POINTS, get FINALE_HP() { return FINALE_HP; }, set FINALE_HP(v) { FINALE_HP = v; }, get MOB_HP() { return MOB_HP; }, set MOB_HP(v) { MOB_HP = v; }, get BOT_PLAN() { return BOT_PLAN; }, set BOT_PLAN(v) { BOT_PLAN = !!v; }, get BOT_DRAFT() { return BOT_DRAFT; }, set BOT_DRAFT(v) { BOT_DRAFT = !!v; },
+    currentEncounter: enc, currentEnc: enc, POSTULANTS, finalePoints, FINALE_PICKS, FINALE_WIN_POINTS, FINALE_SECOND_POINTS, get FINALE_HP() { return FINALE_HP; }, set FINALE_HP(v) { FINALE_HP = v; }, get MOB_HP() { return MOB_HP; }, set MOB_HP(v) { MOB_HP = v; }, get MOB_DMG() { return MOB_DMG; }, set MOB_DMG(v) { MOB_DMG = v; }, get BOT_PLAN() { return BOT_PLAN; }, set BOT_PLAN(v) { BOT_PLAN = !!v; }, get BOT_DRAFT() { return BOT_DRAFT; }, set BOT_DRAFT(v) { BOT_DRAFT = !!v; },
     isImpro, IMPROVISED, get IMPRO_CHANCE() { return IMPRO_CHANCE; }, set IMPRO_CHANCE(v) { IMPRO_CHANCE = v; },
     playCost, toucheOf, cardFor, familiesAt4, get TOUCHE_FAMILIES() { return TOUCHE_FAMILIES; }, set TOUCHE_FAMILIES(v) { TOUCHE_FAMILIES = v; },
     get TOUCHE_BONUS() { return TOUCHE_BONUS; }, set TOUCHE_BONUS(v) { TOUCHE_BONUS = v; }, get TOUCHE_SLOTS() { return TOUCHE_SLOTS; }, set TOUCHE_SLOTS(v) { TOUCHE_SLOTS = v; }, specRanking, tierFor, tierOf, get SPEC_TIERS() { return SPEC_TIERS; }, set SPEC_TIERS(v) { SPEC_TIERS = v; }, resetDraft, canResetDraft, encName, liveFinaleQueue, liveFinaleSolo, liveFinaleSetup, liveFinalePrep, get DUEL_FIRST_ENERGY() { return DUEL_FIRST_ENERGY; }, set DUEL_FIRST_ENERGY(v) { DUEL_FIRST_ENERGY = v; }, get DUEL_SECOND_ENERGY() { return DUEL_SECOND_ENERGY; }, set DUEL_SECOND_ENERGY(v) { DUEL_SECOND_ENERGY = v; }, get SOLO_DUEL_START() { return SOLO_DUEL_START; }, set SOLO_DUEL_START(v) { SOLO_DUEL_START = !!v; }, duelBuild, duelAct, duelWinner, duelMirror, duelView, duelEventsFor, duelToSolo, duelFinish, duelRedact, draftPick: withSpecCheck(draftPick), liveRound: withSpecCheck(liveRound), liveInstall, liveReplay: withSpecCheck(liveReplay), liveSetup, liveMe, liveCard, LIVE_VERSION, applyDraftRound, draftBurn: withSpecCheck((run, i) => draftPick(run, i, true)), draftDouble: withSpecCheck(draftDouble), keepCards: withSpecCheck(keepCards), keepAuto: withSpecCheck(keepAuto), aiKeepCards, get KEEP() { return KEEP; }, set KEEP(v) { KEEP = v; }, canDouble, doublesLeft, classMods, regenOf, fusables, fuse: withSpecCheck(fuse), autoFuse: withSpecCheck(autoFuse), startCombat, playCard, endTurn, nextEncounter, score,
@@ -4715,7 +4723,7 @@ body.in-combat .pops { top: 150px; }
   else root.Engine = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
-window.SURBOOKING_ENGINE_FP = '39373b50f698';
+window.SURBOOKING_ENGINE_FP = 'bb104c36d1aa';
 </script>
 <script>
 /* ---- outfit_costumes_1.js ---- */
@@ -12789,10 +12797,11 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       outfitEvent(ev, consider, flavor);
       switch (ev.type) {
         case 'draftStart': flavor('draftStart', 60, LINES.draftStart); break;
-        case 'duelStartRule': { // la règle de départ des duels solo (0.79) : ÉDEN l'explique aux deux premiers duels, le journal toujours
+        case 'duelStartRule': { // la règle de départ des duels solo (0.79) : le journal toujours ; ÉDEN l'explique deux fois, après
+          // la présentation de l'adversaire (dite une fois par étage, priorité 75) : compté seulement quand elle l'a vraiment dite
           log(`Duel : vous commencez, avec ${ev.first} énergie à ce premier tour. ${ev.name} en aura ${ev.second} au sien.`, 'warn');
-          let n = 0; try { n = +(window.localStorage.getItem('surbooking.duelRule') || 0); window.localStorage.setItem('surbooking.duelRule', String(n + 1)); } catch (e) { n = 0; }
-          consider(n < 2 ? 96 : 40, LINES.duelStart); break; }
+          let n = 0; try { n = +(window.localStorage.getItem('surbooking.duelRule') || 0); } catch (e) { n = 0; }
+          consider(n < 2 ? 74 : 40, LINES.duelStart); break; }
         case 'pick':
           if (ev.lowblow) flavor('lowblowPick', 34, foeLine('lowblowPick', duelFoeName()));
           else if (ev.green) flavor('pickGreen', 30, LINES.pickGreen);
@@ -12986,6 +12995,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     const held = run && run.phase === 'defeat' && run.combat && run.combat.over && run.combat.result !== 'victoire' && motionOK();
     if (held) { ui.held = { line: best, pops }; if (best) log(best, 'eden'); clearTimeout(heldTimer); heldTimer = setTimeout(releaseHeld, 12000); return; } // filet : jamais gardée plus de 12 s
     if (best) { say(best); log(ui.line, 'eden'); if (bestAmb && CH) CH.said(bestKey); }
+    if (best === LINES.duelStart) { try { window.localStorage.setItem('surbooking.duelRule', String(+(window.localStorage.getItem('surbooking.duelRule') || 0) + 1)); } catch (e) { /* stockage fermé */ } }
     showPops(pops);
   }
   function releaseHeld() { const h = ui.held; ui.held = null; clearTimeout(heldTimer); if (!h) return; if (h.line) say(h.line); showPops(h.pops || []); }
