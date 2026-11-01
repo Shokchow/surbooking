@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>window.SURBOOKING_DESKTOP = true;</script>
+<script>window.SURBOOKING_DESKTOP = true; window.SURBOOKING_ALT_URL = 'en.html';</script>
 <meta name="description" content="Surbooking : un jeu de draft et de deckbuilding à bord d’une arche. Jouable sur téléphone et ordinateur.">
 <meta name="theme-color" content="#e9ece7">
 <link rel="manifest" href="manifest.webmanifest">
@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.81.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.82.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -21,6 +21,7 @@
    SURBOOKING_ALT_URL : l'autre langue, posée par la page GitHub et la version Windows (tools/build_pages.js). Première visite
    sans choix enregistré : un navigateur qui n'est pas en français part vers la version anglaise. */
 window.SURBOOKING_LANG = 'fr';
+try { document.documentElement.lang = window.SURBOOKING_LANG; } catch (e) { /* rien */ }
 (function () {
   try {
     var alt = window.SURBOOKING_ALT_URL, L = window.SURBOOKING_LANG;
@@ -440,6 +441,7 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .fighter .hp-line { font-size: 12px; align-items: baseline; }
 .fighter .hp-line .eyebrow { font-size: 10px; letter-spacing: .08em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fighter .hp-line b { font-family: var(--font-display); font-size: 20px; }
+.fighter .hp-line > :not(.eyebrow) { white-space: nowrap; flex: none; } /* 0.82 : « PV » ne passe plus seul à la ligne */
 .chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .chip { font-size: 11.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
 .plate .chip { white-space: normal; max-width: 100%; box-sizing: border-box; border-radius: 11px; }
@@ -937,6 +939,7 @@ body.in-combat header.eden { height: 0; min-height: 0; padding: 0 18px; margin-b
 .statline dd { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1; font-variant-numeric: tabular-nums; }
 .score-wrap { overflow-x: auto; }
 table.score { border-collapse: collapse; width: 100%; max-width: 640px; font-size: 14px; }
+@media (max-width: 400px) { table.score { display: block; overflow-x: auto; } } /* 0.82 : la 4e colonne défile au lieu de sortir du cadre */
 table.score th, table.score td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
 table.score th { font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 table.score td.n { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
@@ -953,6 +956,7 @@ table.score tr.total td { font-weight: 700; border-bottom: 0; font-size: 16px; }
 .has-stamp { padding-right: 200px; }
 
 /* Les autocollants déjantés : moments forts, non bloquants */
+#screen > .chest-pop { max-width: none; margin: 0; } /* 0.82 : le voile du butin et des caisses du vestiaire couvre toute la largeur */
 .pops { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 16px; z-index: 50; width: min(330px, calc(100vw - 32px));
   display: flex; flex-direction: column; align-items: stretch; gap: 14px; pointer-events: none; }
 .pop { --rot: -2deg; pointer-events: none; position: relative; background: #ffffff; color: var(--pop-ink); border: 4px solid #000000; box-shadow: 6px 6px 0 #000000;
@@ -1452,7 +1456,7 @@ header.eden { position: relative; top: auto; min-height: 56px; }
 .floormap { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-radius: 14px; background: var(--screen); color: #ffffff; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #c9cfcb, 0 8px 18px -12px rgba(0, 0, 0, .6); overflow-x: auto; }
 .floormap + .panel { margin-top: 14px; }
 .fm-title { flex: none; font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); writing-mode: vertical-rl; transform: rotate(180deg); }
-.floormap ol { list-style: none; margin: 0; padding: 0; display: flex; flex: 1; min-width: 0; }
+.floormap ol { list-style: none; margin: 0; padding: 0; display: flex; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; } /* 0.82 : en 320 px, le dernier nœud défile au lieu d'être coupé */
 .fm-node { position: relative; flex: 1 1 0; min-width: 70px; display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
 .fm-node + .fm-node::before { content: ""; position: absolute; top: 19px; right: calc(50% + 22px); width: calc(100% - 44px); border-top: 3px dashed #4b5863; }
 .fm-node.done + .fm-node::before, .fm-node.done + .fm-node.cur::before { border-top-style: solid; border-color: var(--amber); }
@@ -1496,6 +1500,9 @@ header.eden { position: relative; top: auto; min-height: 56px; }
 
 /* Grand écran : toute l'interface est agrandie d'un même facteur (--ui, calculé par ui.js), comme dans un jeu */
 html.ui-scaled .app { width: calc(100vw / var(--ui)); height: calc(100vh / var(--ui)); height: calc(100dvh / var(--ui)); transform: scale(var(--ui)); transform-origin: 0 0; }
+/* Petite fenêtre de bureau (0.82) : le combat, pensé pour 1280×800, réduit d'un même facteur (--uid) au lieu de se chevaucher */
+html.ui-down body.in-combat { overflow: hidden; }
+html.ui-down body.in-combat .app { width: calc(100vw / var(--uid)); height: calc(100vh / var(--uid)); height: calc(100dvh / var(--uid)); transform: scale(var(--uid)); transform-origin: 0 0; }
 
 /* Le combat : la scène, de bord à bord ; le journal et les infos passent dans un tiroir */
 body.in-combat .app { padding: 0; grid-template-rows: 0 0 minmax(0, 1fr); }
@@ -1586,11 +1593,11 @@ body.in-combat header.eden { transform: translateY(84px); }
 
 /* Les autocollants (succès, fusions, paliers) : en haut à droite, sous les boutons, sans cacher la main */
 .pops { left: auto; right: max(16px, env(safe-area-inset-right, 0px)); top: 128px; bottom: auto; width: min(300px, calc(100vw - 32px)); }
-.pops .pop { animation: popIn .32s cubic-bezier(.2, .9, .3, 1.2) both; }
+.pops .pop { animation: popSlide .32s cubic-bezier(.2, .9, .3, 1.2) both, popOut .4s ease-in 6.1s forwards; } /* 0.82 : le fondu de sortie revient */
 .pops .pop:nth-last-child(n+3) { display: none; }
 .pop .pt { font-size: 19px; }
 .pop .px { font-size: 12.5px; }
-@keyframes popIn { from { opacity: 0; transform: translateX(40px) rotate(var(--rot)); } to { opacity: 1; transform: rotate(var(--rot)); } }
+@keyframes popSlide { from { opacity: 0; transform: translateX(40px) rotate(var(--rot)); } to { opacity: 1; transform: rotate(var(--rot)); } }
 body.in-combat .pops { top: 150px; }
 
 @media (max-width: 700px) {
@@ -1601,6 +1608,10 @@ body.in-combat .pops { top: 150px; }
   .pops .pop:not(:last-child) { display: none; }
   body.in-combat .pops { top: 168px; bottom: auto; }
   body.in-combat header.eden { transform: translateY(88px); padding: 0 10px; }
+  body.in-combat #dossier-btn, body.in-combat .snd-gear, body.in-combat #voice-btn { display: none; } /* en combat, ☰ et le son suffisent (0.82) : les intentions restent lisibles */
+  body.in-combat .pops { display: none; } /* les autocollants couvriraient la scène : leur texte reste dans le journal */
+  body.in-combat #eden-line { font-size: 13.5px; line-height: 1.35; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+
   body.in-combat .stage-head .sh-title > .eyebrow { display: none; } /* sur téléphone, la bannière de début de combat le dit déjà */
   .sh-noe { font-size: 10px; line-height: 1.3; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; } .sh-noe .noe-k { display: none; }
   .cb-journal-btn { min-height: 32px; padding: 3px 10px; }
@@ -1609,6 +1620,12 @@ body.in-combat .pops { top: 150px; }
   .cb-live:not(:has(.note)) { display: none; }
   .pause-box { padding: 18px 16px 20px; }
   .pause-box h2 { font-size: 38px; }
+}
+/* Téléphone à hauteur réelle (barres du navigateur comprises, ≈ 660 px visibles) : une scène plus compacte (0.82) */
+@media (max-width: 560px) and (max-height: 760px) {
+  body.in-combat .stage { --fh: 100px; --fs: 88px; padding-top: 150px; min-height: 0; }
+  body.in-combat .stage[style*="--foes:2"] { --fs: 80px; } body.in-combat .stage[style*="--foes:3"] { --fs: 66px; } body.in-combat .stage[style*="--foes:4"] { --fs: 56px; }
+  body.in-combat header.eden { transform: translateY(70px); }
 }
 @media (prefers-reduced-motion: reduce) { .sas.run { display: none; } .bn { animation-duration: 1.6s; animation-name: bnFade; } @keyframes bnFade { 0%, 100% { opacity: 0; } 10%, 85% { opacity: 1; } } }
 /* L'autre langue (0.82), en haut du menu principal */
@@ -1638,7 +1655,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Tickets</dt><dd>10 par combat gagné, plus 5 si vous gagnez sans dépasser l’objectif de tours (affiché en haut à droite pendant le combat), plus 5 sans perdre de PV. Ils ne comptent pas dans le score.</dd>
       <dt>Cartes de base</dt><dd>8 cartes données par votre classe : 4 d’attaque et 4 de défense (le Postulant : 4 Poings nus à 4 dégâts et 4 Esquives à 4 d'armure). On les possède dès le départ ; elles ne se draftent pas, ne fusionnent pas, ne comptent pour aucune famille et ne sont pas des coups bas.</dd>
       <dt>Turbulences</dt><dd>Les niveaux de difficulté, en solo seulement (le direct et la session du jour restent au niveau de base). Gagner la finale ouvre le niveau 1, puis chaque victoire au plus haut niveau ouvre le suivant, jusqu’à 10. Le niveau se choisit sur l’écran des classes ; chacun ajoute sa contrainte à celles d’avant (1 : monstres +10 % PV ; 2 : boss d’étage +15 % PV ; 3 : postulantes d’en face +10 % PV ; 4 : soins −25 % ; 5 : monstres +10 % de dégâts ; 6 : monstres +1 Force au début du combat ; 7 : une carte de moins au premier tour ; 8 : postulantes d’en face +1 Force ; 9 : chaque étage commence à 95 % des PV ; 10 : adversaire de finale +15 % PV) et rapporte 10 % de points du vestiaire en plus.</dd>
-      <dt>Classes</dt><dd>Avant le premier draft, vous choisissez votre ancien métier. Il fixe vos cartes de base, vos PV maximum (en proportion, à chaque étage et en finale) et un style de jeu : un avantage et un inconvénient de taille comparable, utiles avec n’importe quel deck. Aucune classe ne donne de bonus contre un type d’adversaire, ni sur une famille ou un type de carte : le draft reste ouvert. <b>Postulant</b> : la référence, 100 % des PV, Poing nu (4 dégâts) et Esquive (4 d'armure), ni talent ni inconvénient. <b>Vétérinaire</b> (le soigneur) : Fléchette tranquillisante (4 dégâts) et Premiers soins (3 d'armure, soigne 1 PV) ; Soigneur : au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1 (4 en finale) ; Fragile : PV maximum −8 %. <b>Mécano de l’arche</b> (le tempo) : Clé à molette (3 dégâts, 1 d'armure) et Tôle rivetée (4 d'armure, conservée au tour suivant) ; Démarrage à chaud : 1 énergie de plus au premier tour de chaque combat ; Surchauffe : 1 énergie de moins au deuxième tour. <b>Passager clandestin</b> (le fouineur de draft) : Coup en douce (1 dégât, pioche 1 carte) et Se planquer (0 énergie, 2 d'armure) ; Fouineur : une fois par draft, dès la quarantaine, prenez 2 cartes dans le même booster (pas au pick 4 ni au pick 8 ; le booster passé a une carte de moins) ; Mal réveillé : 1 carte de moins au premier tour de chaque combat, et PV maximum −2 %. <b>Bouche-trou</b> (le hasard) : Coup de valise (4 dégâts) et Gilet de sauvetage (4 d'armure) ; Surclassement : au début de chacun de vos tours, une carte au hasard de votre main coûte 0 ; Excédent de bagage : deux autres coûtent 1 de plus. <b>Unité de maintenance</b> (l’énergie en réserve) : Décharge (4 dégâts) et Mode veille (4 d'armure), PV maximum +8 % ; Batterie : 1 énergie non dépensée est gardée pour le tour suivant ; Carrosserie : les soins (cartes et salles) vous rendent moitié moins de PV. Les postulantes de la table ont aussi une classe, tirée au hasard : elles jouent ses cartes de base, avec son modificateur de PV, et ses effets en duel (récupération, énergie, pioche ; le Fouineur, qui sert au draft, est réservé au joueur). Les fantômes PvP gardent la classe de leur joueur.</dd>
+      <dt>Classes</dt><dd>Avant le premier draft, vous choisissez votre ancien métier. Il fixe vos cartes de base, vos PV maximum (en proportion, à chaque étage et en finale) et un style de jeu : un avantage et un inconvénient de taille comparable, utiles avec n’importe quel deck. Aucune classe ne donne de bonus contre un type d’adversaire, ni sur une famille ou un type de carte : le draft reste ouvert. <b>Postulant</b> : la référence, 100 % des PV, Poing nu (4 dégâts) et Esquive (4 d'armure), ni talent ni inconvénient. <b>Vétérinaire</b> (le soigneur) : Fléchette tranquillisante (4 dégâts) et Premiers soins (3 d'armure, soigne 1 PV) ; Soigneur : au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1 à la quarantaine, 2 aux étages suivants (4 en finale) ; Fragile : PV maximum −8 %. <b>Mécano de l’arche</b> (le tempo) : Clé à molette (3 dégâts, 1 d'armure) et Tôle rivetée (4 d'armure, conservée au tour suivant) ; Démarrage à chaud : 1 énergie de plus au premier tour de chaque combat ; Surchauffe : 1 énergie de moins au deuxième tour. <b>Passager clandestin</b> (le fouineur de draft) : Coup en douce (1 dégât, pioche 1 carte) et Se planquer (0 énergie, 2 d'armure) ; Fouineur : une fois par draft, dès la quarantaine, prenez 2 cartes dans le même booster (pas au pick 4 ni au pick 8 ; le booster passé a une carte de moins) ; Mal réveillé : 1 carte de moins au premier tour de chaque combat. <b>Bouche-trou</b> (le hasard) : Coup de valise (4 dégâts) et Gilet de sauvetage (4 d'armure) ; Surclassement : au début de chacun de vos tours, une carte au hasard de votre main coûte 0 ; Excédent de bagage : deux autres coûtent 1 de plus. <b>Unité de maintenance</b> (l’énergie en réserve) : Décharge (4 dégâts) et Mode veille (4 d'armure), PV maximum +8 % ; Batterie : 1 énergie non dépensée est gardée pour le tour suivant ; Carrosserie : les soins (cartes et salles) vous rendent moitié moins de PV. Les postulantes de la table ont aussi une classe, tirée au hasard : elles jouent ses cartes de base, avec son modificateur de PV, et ses effets en duel (récupération, énergie, pioche ; le Fouineur, qui sert au draft, est réservé au joueur). Les fantômes PvP gardent la classe de leur joueur.</dd>
       <dt>Draft</dt><dd>4 boosters de 12 cartes : une tête d'affiche (verte 1 fois sur 4, sinon blanche) et 11 blanches à la quarantaine (aux étages suivants, deux têtes d'affiche et 10 cartes de remplissage). Prenez une carte, passez le reste à gauche : 12 picks. Aux picks 5 et 9, votre premier booster revient : c'est le wheel.</dd>
       <dt>Garder 8</dt><dd>Après le 12e pick, vous gardez 8 de vos cartes (ÉDEN en présélectionne 8, vous changez ce que vous voulez) ; les 4 autres partent à l'incinérateur. Les fusions attendent ce choix : une paire gardée fusionne, une paire écartée non. Toutes les cartes que vous possédez sont jouées : le deck grossit de 8 cartes à chaque étage.</dd>
       <dt>Fusion</dt><dd>Automatique : dès que vous possédez 2 cartes identiques, elles fusionnent, en chaîne si besoin. 2 blanches identiques donnent la verte de leur lignée, 2 vertes identiques donnent la bleue, 2 bleues identiques donnent la violette, que les cartes viennent du draft (pendant le draft, dès le pick), d'un coffre, de la boutique ou d'un événement. Le deck perd une carte à chaque fusion, mais jamais de points de famille : la carte fusionnée garde les points de ses deux cartes. 2 blanches (2 points) donnent une verte (2 points) ; 2 vertes (4 points) donnent une bleue qui compte 4 points au lieu de 3 ; 2 bleues donnent une violette qui compte 6, 7 ou 8 points (au lieu de 4) selon les bleues fusionnées. Ces points sont écrits sur la carte, à côté de sa famille, et partent avec elle si elle quitte le deck. Une fusion est donc toujours avantageuse. Les cartes de base, les violettes, les orange et les rouges ne fusionnent pas. Les postulantes fusionnent leurs paires de la même façon.</dd>
@@ -1647,7 +1664,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Coups bas</dt><dd>À la serre et à la ménagerie, quelques cartes vertes sans famille se glissent dans les boosters : Coup de coude, Croche-pied, Faux témoignage, Pot-de-vin. Faibles contre un monstre, elles sont fortes contre un postulant, en duel et en finale. Elles ne comptent pour aucune famille. Les postulantes les draftent aussi, et les jouent contre vous. Plusieurs coups bas se renforcent, hors de la limite des deux familles : à 2, Sournois (un coup bas est dans votre main au premier tour de chaque duel et de la finale) ; à 3, Fourbe (ils ne coûtent rien contre un postulant) ; à 5, Crapule (leur effet est doublé contre un postulant).</dd>
       <dt>Orange et rouge</dt><dd>Deux raretés qui n’existent qu’en finale : l’orange est légendaire, la rouge mythique. Une de chaque par famille. Elles ne fusionnent pas, et comptent 5 et 6 points de famille pour les paliers : une seule peut débloquer un palier juste avant le duel.</dd>
       <dt>Boss de finale</dt><dd>Le deck vient toujours de l’autre finaliste, mais la finale a quatre visages, tirés au hasard et annoncés avant le draft final. Le postulant (4 fois sur 10) : le gagnant de l’autre duel, tel quel. Le postulant muté (une fois sur 4) : à la fin de chacun de ses tours, sa carte la plus chère se duplique dans sa main ; gelé, il ne prolifère pas. Le monstre échappé (une fois sur 4) : la Mère, avec le deck de l’autre finaliste et des cartes animales ; elle engendre un rejeton tous les deux tours, ses rejetons la suivent en cryogénie, mais chaque rejeton abattu la met en furie. ÉDEN (une fois sur 10) : elle disqualifie l’autre finaliste, garde son deck et remplace ses cartes de base par des protocoles qui vous retirent de l’énergie, vous font défausser ou inventent une règle en plein combat (Austérité, Taxe, Quota, Tarif unique), dès le premier tour.</dd>
-      <dt>Finale</dt><dd>Après le dernier étage, il reste deux postulants : vous, et le gagnant de l’autre duel de votre table. D’abord un draft face à face : chacun ouvre un booster de 4 cartes (sa rouge, une orange, une violette et une bleue, de quatre familles différentes), prend une carte et passe le reste à l’autre, jusqu’à 4 picks chacun. Votre adversaire est annoncé avant ce draft : ce que vous lui laissez, il le jouera. Puis un seul duel, PV restaurés. Pour l’instant l’adversaire est un bot qui joue le deck de l’autre finaliste, avec 395 PV contre vos 280 (pour un Postulant ; les deux chiffres suivent le modificateur de classe) pour compenser qu’il joue moins bien qu’un humain. Le gagnant prend la dernière place ; le perdant finit deuxième.</dd>
+      <dt>Finale</dt><dd>Après le dernier étage, il reste deux postulants : vous, et le gagnant de l’autre duel de votre table. D’abord un draft face à face : chacun ouvre un booster de 4 cartes (sa rouge, une orange, une violette et une bleue, de quatre familles différentes), prend une carte et passe le reste à l’autre, jusqu’à 4 picks chacun. Votre adversaire est annoncé avant ce draft : ce que vous lui laissez, il le jouera. Puis un seul duel, PV restaurés. Pour l’instant l’adversaire est un bot qui joue le deck de l’autre finaliste, avec 445 PV contre vos 280 (pour un Postulant ; les deux chiffres suivent le modificateur de classe) pour compenser qu’il joue moins bien qu’un humain. Le gagnant prend la dernière place ; le perdant finit deuxième.</dd>
       <dt>Touche-à-tout</dt><dd>Avec 6 familles à 4 points ou plus, actives ou en sommeil, une troisième famille devient active (la plus fournie après vos deux premières), et vos cartes de base gagnent +2 (Poings nus 6 dégâts, Esquives 6 d’armure ; de même pour les cartes de base des autres classes). À 7 familles, une quatrième famille devient active. C’est le rattrapage de ceux qui s’éparpillent : rare par hasard, atteignable à la serre si on le vise, courant à la ménagerie pour qui drafte sans plan. Les postulantes y ont droit aussi.</dd>
       <dt>Tour</dt><dd>3 énergie et 5 cartes piochées. La main est défaussée en fin de tour.</dd>
       <dt>Armure</dt><dd>Absorbe les dégâts. Disparaît au début de votre tour, sauf avec la Barricade de caisses ou le Sas de confinement (ou à moitié avec Carapace).</dd>
@@ -1661,14 +1678,14 @@ body.in-combat .pops { top: 150px; }
       <dt>Épines</dt><dd>Chaque coup porté à un crapaud-cactus vous inflige ses épines en dégâts. Les attaques à plusieurs coups en souffrent.</dd>
       <dt>Instables</dt><dd>Dans la serre, quand un membre du couple part en cryo, l'autre mute au lieu d'entrer en furie : +10 PV et un effet plus fort. Gelé, il ne mute pas.</dd>
       <dt>Duel</dt><dd>La première rencontre de chaque étage, juste après le draft, contre votre vis-à-vis, assis en face, avec les cartes qu'il vient de drafter, ses cartes de base et son deck des étages précédents. Il arrive avec tous ses PV, comme vous. Ses intentions sont cachées. Vous commencez, avec 4 cartes et 2 énergie au premier tour ; lui en a 4 à son premier tour (la même règle qu’en direct, pour que commencer ne décide pas du duel).</dd>
-      <dt>Boss d’étage</dt><dd>La dernière rencontre de chaque étage, un monstre seul aux intentions visibles. Quarantaine : le <b>bouc émissaire</b>, qui mâchonne votre carte la plus chère (défaussée au début de votre tour), ou Gaston le taureau, qui annonce sa charge. Étable : <b>Dolly</b>, la brebis irradiée qui se clone, ou l’unité d’entretien RX-7. Serre : la <b>dionée géante</b>, dont les lianes vous retirent 1 énergie et qui digère pour se soigner (bloqué par la Radiation ou le Gel), ou Nounours l’ours mutant. Ménagerie : <b>la Mère</b>, ou la Chimère. Il faut le battre pour monter.</dd>
+      <dt>Boss d’étage</dt><dd>La dernière rencontre de chaque étage, un monstre seul aux intentions visibles. Quarantaine : le <b>bouc émissaire</b>, qui mâchonne votre carte la plus chère (défaussée au début de votre tour), ou Gaston le taureau, qui annonce sa charge. Étable : <b>Dolly</b>, la brebis irradiée qui se clone, ou l’unité d’entretien RX-7. Serre : la <b>dionée géante</b>, dont les lianes vous retirent 1 énergie et qui digère pour se soigner (bloqué par la Radiation ou le Gel), ou Nounours l’ours mutant, ou le Serpent, qui vous tend une pomme. Ménagerie : <b>la Mère</b>, la Chimère, ou le Léviathan des cuves, qui vous avale. Il faut le battre pour monter.</dd>
       <dt>Jalousie</dt><dd>Le premier coup de la prochaine attaque de la cible frappe son partenaire au lieu de vous. Seule (le boss, ou le dernier d'un couple), elle se frappe elle-même, à moitié (en entier avec Rancune, palier 16 de Zizanie). La Jalousie disparaît à la fin du tour de la cible.</dd>
       <dt>Sacrifice</dt><dd>Certaines cartes coûtent des PV. Elles ne peuvent pas vous tuer : on ne peut pas les jouer si on n'a pas assez de PV.</dd>
       <dt>Faiblesse</dt><dd>Inflige 25 % de dégâts en moins.</dd>
       <dt>Vulnérabilité</dt><dd>Subit 50 % de dégâts en plus.</dd>
       <dt>Furie</dt><dd>Quand un membre du couple part en cryo, l'autre gagne des dégâts. Les oies attaquent aussitôt.</dd>
       <dt>Dépressurisation</dt><dd>15 tours maximum par combat. Au-delà, la candidature est rejetée.</dd>
-      <dt>Score</dt><dd>N'élimine personne : additionné sur les étages franchis, il donne les points de run, qui achèteront des skins. 100 × PV restants / 50, plus 10 par succès, plus 5 par tour d'avance sur l'objectif de l'étage, la somme des objectifs de ses trois combats (25 au maximum).</dd>
+      <dt>Score</dt><dd>N'élimine personne : additionné sur les étages franchis, il donne les points de run, qui achèteront des skins. 100 × PV restants / PV maximum, plus 10 par succès, plus 5 par tour d'avance sur l'objectif de l'étage, la somme des objectifs de ses trois combats (25 au maximum).</dd>
       <dt>Boutique de skins</dt><dd>À la fin d'un run (élimination, finale, ou nouveau draft lancé après un étage validé), ses points de run sont versés au vestiaire d'ÉDEN. On y ouvre des caisses (fret, 200 points ; commandant, 450 points, rare et plus) : chacune donne au hasard un skin qu'on n'a pas encore, de cartes (cadres, teintes de famille, dos) ou de personnage (cheveux, feuille, tenue, accessoire). Les chances sont affichées. Purement cosmétique : aucun skin ne change le jeu.</dd>
       <dt>Tenue</dt><dd>Dès 4 points dans une famille, votre spécialisation principale vous habille d'un costume (le manchot pour la Cryogénie, la poule mouillée pour la Panique…) et la secondaire vous met un accessoire dans la main ; avec Touche-à-tout, la troisième occupe l'autre main. Les mêmes objets pour toutes les classes. Au palier 16, l'objet brille. Les familles en sommeil ne se portent pas.</dd>
       <dt>Crédits</dt><dd>Monstres, personnages et décors : dessinés en SVG pour ce prototype. Vignettes des cartes : icônes de <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>, par Lorc, Delapouite et leurs contributeurs (ici : Delapouite, Lorc, Skoll, Sbed, Carl Olsen, Cathelineau, DarkZaitzev, Felbrigg et Priorblue), sous licence <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">Creative Commons BY 3.0</a> ; couleurs modifiées pour le jeu.</dd>
@@ -6603,7 +6620,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     return n.secret;
   }
   function cleanName(s) {
-    const t = String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 20).trim();
+    const t = String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>&"]/g, '').replace(/\s+/g, ' ').trim().slice(0, 20).trim();
     return /[\p{L}\p{N}]/u.test(t) ? t : '';
   }
   const pseudo = () => cleanName(load().pseudo);
@@ -8377,8 +8394,10 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     if (lastCtx && lastCtx.say) { try { lastCtx.say('Très bien. Je note au dossier : autonome. Ce n’est pas toujours un compliment.'); } catch (e) { /* rien */ } }
   }
   function refresh() { if (lastCtx) update(lastCtx.screenEl, lastCtx); }
+  // une fenêtre par-dessus le jeu (pioche, journal, pause, revisionnage) : la bulle se retire, elle pointerait à côté (0.82)
+  const covered = screenEl => { const p = document.getElementById('pause'); return !!(screenEl.querySelector('.pileview') || document.querySelector('.cb-drawer.open, #rp-layer') || (p && !p.hidden)); };
   function update(screenEl, ctx) {
-    if (!enabled() || state.done || !ctx.run || !screenEl || (window.Shop && window.Shop.isOpen && window.Shop.isOpen())) { hide(); return; }
+    if (!enabled() || state.done || !ctx.run || !screenEl || (window.Shop && window.Shop.isOpen && window.Shop.isOpen()) || covered(screenEl)) { hide(); return; }
     for (const step of STEPS) {
       if (state.seen.includes(step.id)) continue;
       let ok = false, el = null;
@@ -11958,6 +11977,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const PUBLIC = 'https://shokchow.github.io/surbooking/';
   const CODE_RE = /^[0-9a-f]{12}$/;
   let E = null, last = null, layer = null;
+  let inerted = []; // les éléments de la page rendus inertes pendant le revisionnage
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
   /* ---------- les duels gardés sur l'appareil ---------- */
@@ -12091,6 +12111,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   function close() {
     stop(); view.open = false; view.d = null; view.frames = [];
     if (layer) { layer.remove(); layer = null; }
+    inerted.forEach(x => x.removeAttribute('inert')); inerted = [];
     try { document.body.classList.remove('rp-on'); } catch (e) { /* rien */ }
     if (view.fromLink) { try { const u = new URL(window.location.href); u.searchParams.delete('duel'); window.history.replaceState(null, '', u.toString()); } catch (e) { /* rien */ } }
   }
@@ -12145,9 +12166,21 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       layer = document.createElement('div');
       layer.id = 'rp-layer'; layer.className = 'rp-layer'; layer.setAttribute('role', 'dialog'); layer.setAttribute('aria-modal', 'true'); layer.setAttribute('aria-label', 'Revoir un duel');
       layer.addEventListener('click', ev => { const b = ev.target.closest('[data-rp]'); if (b && !b.disabled) act(b.dataset.rp); });
+      // Clavier (0.82) : Échap ferme la fenêtre, Tab reste dedans, et le jeu derrière est inerte (ni clic ni focus)
+      layer.addEventListener('keydown', ev => {
+        if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); act('close'); return; }
+        if (ev.key !== 'Tab') return;
+        const f = [...layer.querySelectorAll('button:not([disabled]), input')].filter(x => !x.closest('[inert]'));
+        if (!f.length) return;
+        const i = f.indexOf(document.activeElement), j = ev.shiftKey ? (i <= 0 ? f.length - 1 : i - 1) : (i < 0 || i === f.length - 1 ? 0 : i + 1);
+        ev.preventDefault(); f[j].focus();
+      });
       document.body.appendChild(layer);
       document.body.classList.add('rp-on');
+      inerted = [...document.body.children].filter(x => x !== layer && !x.hasAttribute('inert') && x.tagName !== 'SCRIPT');
+      inerted.forEach(x => x.setAttribute('inert', ''));
     }
+    const focused = layer.contains(document.activeElement) && document.activeElement.dataset ? document.activeElement.dataset.rp : null;
     const d = view.d, fr = view.frames[view.k], n = view.frames.length;
     const meName = d.me || 'Postulant';
     let stage = '';
@@ -12175,6 +12208,9 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       <ul class="rp-log" aria-live="polite">${L.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="muted">Le duel commence.</li>'}</ul>
       <div class="rp-stage" inert aria-hidden="true">${stage}</div>
     </div>`;
+    // le focus suit le bouton d'une image à l'autre (lecture ↔ pause), sinon il va sur « Fermer »
+    const want = layer.querySelector(`[data-rp="${focused === 'play' ? 'pause' : focused === 'pause' ? 'play' : focused || 'close'}"]:not([disabled])`) || layer.querySelector('[data-rp="close"]');
+    if (want && (focused || !layer.contains(document.activeElement))) { try { want.focus({ preventScroll: true }); } catch (e) { /* rien */ } }
   }
   function act(k) {
     if (k === 'close') { close(); return; }
@@ -12249,6 +12285,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
 
   const CSS = `
 .rp-layer { position: fixed; inset: 0; z-index: 90; overflow: auto; background: var(--bg, #f4f1ea); padding: 12px; }
+.rp-stage [data-act="endturn"], .rp-stage .hand, .rp-stage .handbar, .rp-stage .actions { filter: grayscale(.85); opacity: .55; }
 body.rp-on { overflow: hidden; }
 .rp-box { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
 .rp-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 10px; }
@@ -12845,7 +12882,8 @@ body.rp-on { overflow: hidden; }
   let playing = [], token = 0, endAt = 0, chain = Promise.resolve(), heard = false, lastCtx = null;
   const spokenStory = new Set();
   const fetchOK = () => typeof root.fetch === 'function';
-  const available = () => !!AC && fetchOK() && !failed && root.SURBOOKING_VOICE !== false;
+  // la version anglaise (0.82) n'a pas encore de voix enregistrée : la synthèse du navigateur, en anglais, prend le relais
+  const available = () => !!AC && fetchOK() && !failed && root.SURBOOKING_VOICE !== false && root.SURBOOKING_LANG !== 'en';
   // Première interaction : le contexte audio est créé (ou relancé) pendant le geste, comme l'exigent Safari et Chrome
   ['pointerdown', 'keydown', 'click'].forEach(t => { try { root.document.addEventListener(t, () => { heard = true; if (available()) audio(); }, { capture: true, once: true }); } catch (e) { /* rien */ } });
   function audio() {
@@ -13026,7 +13064,9 @@ body.rp-on { overflow: hidden; }
       if (saveFinished(run)) { ls.removeItem(SAVE_KEY); return; }
       ls.setItem(SAVE_KEY, JSON.stringify({ v: 1, fp: window.SURBOOKING_ENGINE_FP || '', at: Date.now(),
         run: Object.assign({}, run, { events: [] }), ui: { log: ui.log, num: ui.num, line: ui.line } }));
-    } catch (e) { /* stockage plein ou refusé : la partie continue, sans sauvegarde */ }
+    } catch (e) { // stockage plein ou refusé : la partie continue, sans sauvegarde ; l'ancienne est retirée (0.82), pour ne
+      try { ls.removeItem(SAVE_KEY); } catch (e2) { /* rien */ } // pas reprendre plus tard une partie qui n'est plus la bonne
+    }
   }
   function saveSoon() { if (!SAVE.timer && !SAVE.off) SAVE.timer = setTimeout(saveNow, SAVE_MS); }
   function saveLoad() {
@@ -13384,7 +13424,7 @@ body.rp-on { overflow: hidden; }
   function log(text, kind) { ui.log.unshift({ text, kind: kind || '' }); ui.log = ui.log.slice(0, 40); }
 
   // « d’Instinct », « de Blindage » : le complément de famille, élidé devant une voyelle
-  const deFam = a => (/^[AEIOUYÉÈÊ]/i.test(a || '') ? `d’${a}` : `de ${a}`);
+  const deFam = a => (LANG === 'en' ? a : /^[AEIOUYÉÈÊ]/i.test(a || '') ? `d’${a}` : `de ${a}`); // en anglais : « 4 Armor points »
   /* ---------- autocollants des moments forts (non bloquants) ---------- */
   function popFor(ev) {
     switch (ev.type) {
@@ -13396,8 +13436,7 @@ body.rp-on { overflow: hidden; }
       case 'succes': return ev.dossier ? null : { tag: 'Note au dossier', title: ev.name, text: (E.SUCCES[ev.key] || {}).text || '' }; // ev.dossier : achievements.js affiche le succès à la place
       case 'floorCleared': return { kind: 'ok', tag: 'Admis', title: `${(E.FLOORS[ev.floor] || {}).short || 'Étage'} validée`, text: E.canStartFinale(run) ? 'Direction l’arène : la finale.' : 'Vous montez à l’étage suivant.' };
       case 'finaleWon': return { kind: 'ok', tag: 'Succès débloqué', title: 'Dernier passager', text: 'Le siège du copilote est à vous.' };
-      case 'death': return { kind: 'ko', tag: 'Candidature rejetée', title: ev.finale ? 'Finale perdue' : 'Tombé à 0 PV', text: '' };
-      case 'depressurized': return { kind: 'ko', tag: 'Candidature rejetée', title: 'Section dépressurisée', text: '' };
+      case 'death': case 'depressurized': return null; // 0.82 : la bannière, le tampon et le titre de l'écran le disent déjà
     }
     return null;
   }
@@ -13769,7 +13808,7 @@ body.rp-on { overflow: hidden; }
     'Coup bas': 'M5 19l7-14 7 14M8 13h8',
   };
   const famIcon = a => FAM_ICON[a] ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${FAM_ICON[a]}"></path></svg>` : '';
-  const CABIN = { base: 'Bagage cabine', blanche: 'Éco', verte: 'Éco +', bleue: 'Premium', violette: 'Affaires', orange: 'Première', rouge: 'Cockpit' };
+  const CABIN = { base: 'Cabine', blanche: 'Éco', verte: 'Éco +', bleue: 'Premium', violette: 'Affaires', orange: 'Première', rouge: 'Cockpit' };
   // L'illustration de la carte (cardart.js : le décor de sa famille, son objet tiré de cardicons.js, icônes game-icons.net
   // CC BY 3.0), dans la fenêtre du billet, avec la famille écrite en bas à gauche
   const CI = window.SurbookingCardIcons || null, CA = window.SurbookingCardArt || null;
@@ -14035,7 +14074,7 @@ body.rp-on { overflow: hidden; }
       <div class="menu-block"><h3>Une partie, étape par étape</h3>
       <ol class="steps">
         <li><b>Classe.</b> Avant le premier draft, choisissez votre ancien métier : ${E.CLASS_IDS.map(k => E.CLASSES[k].name).join(', ').replace(/, ([^,]*)$/, ' ou $1')}. Il fixe vos 8 cartes de base, vos PV, et un talent qui vient avec son inconvénient (le Postulant n’a ni l’un ni l’autre). Aucune classe ne favorise une famille : le draft reste ouvert.</li>
-        <li><b>Draft.</b> Vous arrivez tout nu, avec 8 cartes de base (le Postulant : 4 Poings nus et 4 Esquives). Draftez-en 8 de plus dans quatre boosters de 8 cartes (une tête d’affiche, verte 1 fois sur 4, et 7 blanches) : gardez une carte, passez le reste à gauche. Au pick 5, votre premier booster revient.</li>
+        <li><b>Draft.</b> Vous arrivez tout nu, avec 8 cartes de base (le Postulant : 4 Poings nus et 4 Esquives). Draftez dans quatre boosters de 12 cartes (une tête d’affiche, verte 1 fois sur 4, et 11 blanches) : prenez une carte, passez le reste à gauche, 12 picks ; aux picks 5 et 9, votre premier booster revient. À la fin, gardez-en 8.</li>
         <li><b>Combos.</b> Les cartes appartiennent à 8 familles (Instinct, Mutation, Cryogénie…), et celles d’une même famille se répondent. Une famille débloque un bonus à ${E.SPEC_STEPS[0]}, ${E.SPEC_STEPS[1]} et ${E.SPEC_STEPS[2]} points (blanche 1, verte 2, bleue 3, violette 4), et un dernier, rare, à ${E.SPEC_STEPS[3]}. Seules vos deux familles les plus fournies sont actives, trois si vous en avez ${E.TOUCHE_FAMILIES} à ${E.SPEC_THRESHOLD} points (Touche-à-tout).</li>
         <li><b>Fusion.</b> Automatique : dès que vous avez deux cartes identiques, elles fusionnent. Deux blanches donnent la verte de leur lignée, deux vertes la bleue. Un doublon pris au draft, trouvé dans un coffre, à la boutique ou dans un événement compte aussi.</li>
         <li><b>Duels.</b> Juste après le draft, à chaque table, deux duels : vous contre votre vis-à-vis, assis en face, et les deux autres entre eux. En face, personne n’est avantagé : chacun choisit avant l’autre dans deux boosters sur quatre. Les perdants sont éliminés.</li>
@@ -14094,6 +14133,9 @@ body.rp-on { overflow: hidden; }
   const foeLine = (key, n) => (foeMale(n) && LINES[key + '_m']) || LINES[key];
   const foeF = n => (foeMale(n) ? '' : 'e');
   const duelFoeName = () => { const bm = run && run.combat && run.combat.monsters.find(m => m.duel); return bm ? bm.name : run && run.draft ? (E.rivalsOf(run) || [])[E.DUEL_SEAT - 1] : ''; };
+  // Seuil du Zéro absolu : 8 PV, 25 au palier 36 de la Cryogénie (Ère glaciaire) — 0.82, l'écran disait toujours 8
+  const zeroHpOf = sp => ((sp || {})['Cryogénie'] >= 4 ? (E.ZERO_HP4 || 25) : 8);
+  const duelFoeSpec = () => { const bm = run && run.combat && run.combat.monsters.find(m => m.duel || m.finale); return bm ? bm.spec : null; };
   const voisine = () => (isFem((E.rivalsOf(run) || [])[0] || 'Ève') ? 'votre voisine' : 'votre voisin');
   // Étiquette de classe d'une postulante ; vide pour le Postulant (son nom le dit déjà)
   const rivalClassTag = (k, name) => (k && k !== 'postulant' ? E.className(k, isFem(name)) : '');
@@ -14186,7 +14228,7 @@ body.rp-on { overflow: hidden; }
       <section class="panel draft-main">
         <div class="phase-head">
           <div><span class="eyebrow">Draft · étage ${fl} · pick ${d.pickNo} sur ${E.PICKS}</span><h2>Choisissez une carte</h2></div>
-          <p class="muted">Booster ouvert par ${opener} · ${held.length} carte${held.length > 1 ? 's' : ''}</p>
+          <p class="muted">Booster ouvert par ${esc(opener)} · ${held.length} carte${held.length > 1 ? 's' : ''}</p>
         </div>
         ${LIVE && run.live ? LIVE.draftBar(run) : ''}
         ${fl === 2 ? `<p class="note">Étage 2 : chaque booster a deux têtes d’affiche de familles différentes. La A est verte, et bleue une fois sur dix. Prendre l’une, c’est laisser l’autre à ${voisine()}.</p>` : ''}
@@ -14459,7 +14501,7 @@ body.rp-on { overflow: hidden; }
     const fz = (run.draft && run.draft.fusions) || [];
     const fl = E.floorOf(run), FI = E.floorInfo(run);
     const active = E.activeCards(run), bench = E.benchCards(run);
-    const rivals = E.rivalsOf(run).map((n, i) => `<div><b>${n}</b>${rivalClassTag(E.rivalClassOf(run, i + 1), n) ? ` <span class="tag">${esc(rivalClassTag(E.rivalClassOf(run, i + 1), n))}</span>` : ''}${i + 1 === E.DUEL_SEAT ? ' <span class="tag">votre adversaire</span>' : ''}${specNames(run.draft.picks[i + 1].map(c => c.id)).map(x => ` <span class="chip spec">${esc(x)}</span>`).join('')}<ul>${group(run.draft.picks[i + 1]).map(({ id, n: k }) => `<li>${esc(E.CARDS[id].name)}${k > 1 ? ` ×${k}` : ''}${E.CARDS[id].rarity === 'verte' ? ' <span class="tag">verte</span>' : ''}</li>`).join('')}</ul></div>`).join('');
+    const rivals = E.rivalsOf(run).map((n, i) => `<div><b>${esc(n)}</b>${rivalClassTag(E.rivalClassOf(run, i + 1), n) ? ` <span class="tag">${esc(rivalClassTag(E.rivalClassOf(run, i + 1), n))}</span>` : ''}${i + 1 === E.DUEL_SEAT ? ' <span class="tag">votre adversaire</span>' : ''}${specNames(run.draft.picks[i + 1].map(c => c.id)).map(x => ` <span class="chip spec">${esc(x)}</span>`).join('')}<ul>${group(run.draft.picks[i + 1]).map(({ id, n: k }) => `<li>${esc(E.CARDS[id].name)}${k > 1 ? ` ×${k}` : ''}${E.CARDS[id].rarity === 'verte' ? ' <span class="tag">verte</span>' : ''}</li>`).join('')}</ul></div>`).join('');
     const encs = E.encountersOf(run).map(e => `<li><span>${esc(E.encName(run, e))}</span><span class="diff">${e.boss ? `${LIVE && LIVE.duelWanted(run) ? 'Duel en direct · ses PV d’étage, comme vous' : `${e.diff} · ${E.bossHpFor(run, e).hp} PV`}${rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]) ? `, ${esc(rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]).toLowerCase())}` : ''}, en face de vous, juste après le draft · ${fl > 2 ? `son deck des étages 1 à ${fl - 1} et ses cartes draftées` : fl > 1 ? 'son deck de l’étage 1 et ses cartes draftées' : 'ses cartes draftées et ses cartes de base'}${specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).length ? ', spécialisée ' + specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).join(' et ') : ''}` : e.monsters.length > 1 ? `${e.diff} · ${e.monsters[0].hp} PV chacun${e.monsters[0].thorns ? `, épines ${e.monsters[0].thorns}` : ''}${e.unstable ? ', instables' : ''}${e.monsters[0].clone ? `, se clonent tous les ${e.monsters[0].clone.every} tours` : ''}${mechTag(e.monsters[0], true)}` : `${e.diff} · ${e.monsters[0].hp} PV${e.monsters[0].clone ? `, se clone tous les ${e.monsters[0].clone.every} tours` : ''}${e.monsters[0].spawn ? `, engendre un rejeton de ${e.monsters[0].spawn.hp} PV ${e.monsters[0].spawn.every > 1 ? `tous les ${e.monsters[0].spawn.every} tours` : 'à chaque tour'}` : ''}${mechTag(e.monsters[0], false)}`}</span></li>`).join('');
     return `<div class="split">${floorMap()}
       <section class="panel floor-enter">
@@ -14487,9 +14529,12 @@ body.rp-on { overflow: hidden; }
     </div>`;
   }
 
-  /* Recommencer le draft de l'étage (outil de test) : tant qu'aucun combat de l'étage n'a commencé */
+  /* Recommencer le draft de l'étage (outil de test) : tant qu'aucun combat de l'étage n'a commencé. Depuis la 0.82, seulement
+     en mode développeur (window.SURBOOKING_DEV, ou surbooking.dev = 1 dans le stockage), et jamais en session du jour */
+  const DEV = (() => { try { return window.SURBOOKING_DEV === true || window.localStorage.getItem('surbooking.dev') === '1'; } catch (e) { return window.SURBOOKING_DEV === true; } })();
+  const resetOK = () => DEV && run && !run.daily && E.canResetDraft(run);
   function resetBar() {
-    if (!E.canResetDraft(run)) return '';
+    if (!resetOK()) return '';
     const fl = E.floorOf(run), lost = run.phase === 'inventory' ? 'vos picks et vos fusions de cet étage sont annulés' : 'vos picks de cet étage sont annulés';
     if (ui.confirmReset) {
       const fresh = ui.confirmReset === 'fresh';
@@ -14544,7 +14589,7 @@ body.rp-on { overflow: hidden; }
 
   // « Arrive entamée : −9 PV contre les rats, −6 contre les capybaras »
   function preLossText(m) {
-    if (m.finale) return `${m.variant && m.variant !== 'postulant' ? `${esc(E.FINALE_VARIANTS[m.variant].label)} · ` : 'Finaliste : '}${m.deckIds.length} cartes, ${m.maxHp} PV (le bot joue moins bien qu’un humain, il a plus de PV)${m.prolifCount ? ` · ${m.prolifCount} carte${m.prolifCount > 1 ? 's' : ''} dupliquée${m.prolifCount > 1 ? 's' : ''}` : ''}`;
+    if (m.finale) return `${m.variant && m.variant !== 'postulant' ? `${esc(E.FINALE_VARIANTS[m.variant].label)} · ` : 'Finaliste : '}${m.deckIds.length} cartes, ${m.maxHp} PV${m.prolifCount ? ` · ${m.prolifCount} carte${m.prolifCount > 1 ? 's' : ''} dupliquée${m.prolifCount > 1 ? 's' : ''}` : ''}`;
     const hurt = m.preLoss.filter(x => x.loss > 0);
     return hurt.length ? `Arrive entamée : ${hurt.map(x => `−${x.loss} PV contre ${esc(x.name)}`).join(', ')}` : 'Arrive sans une égratignure';
   }
@@ -14887,7 +14932,7 @@ body.rp-on { overflow: hidden; }
       ${c.edenRule ? `<p class="hazard"><span>Règle d’ÉDEN en vigueur : <b>${esc(E.EDEN_RULES[c.edenRule].name)}</b>. ${esc(E.EDEN_RULES[c.edenRule].text)}${c.edenRule === 'quota' ? ` Cartes jouées ce tour : ${c.played} sur 3.` : ''}</span></p>` : ''}
       <div class="pstats">
         ${p.stunned ? `<span class="chip fury" data-tip="Au prochain tour, vous perdez ${E.STUN_PLAYER} énergie. Ensuite, un tour de répit : pas de nouvelle tétanie.">Tétanisé : −${E.STUN_PLAYER} énergie au prochain tour</span>` : ''}
-        ${boss && (boss.spec || {})['Cryogénie'] >= 3 && p.frozen > 0 ? `<span class="chip gel">Zéro absolu : gelé à ${8} PV ou moins, vous êtes renvoyé en cryogénie</span>` : ''}
+        ${boss && (boss.spec || {})['Cryogénie'] >= 3 && p.frozen > 0 ? `<span class="chip gel">Zéro absolu : gelé à ${zeroHpOf(boss.spec)} PV ou moins, vous êtes renvoyé en cryogénie</span>` : ''}
         ${E.tierOf(c.spec, 'Sacrifice') >= 3 ? `<span class="chip block">${c.lastBreath ? 'Dernier souffle utilisé' : 'Dernier souffle prêt'}</span>` : ''}
         ${run.perks && run.perks.startBlock ? `<span class="chip block">Capybara : +${run.perks.startBlock} d'armure au départ</span>` : ''}
         ${p.keepBlock && p.block > 0 ? '<span class="chip block">Armure conservée au tour suivant</span>' : ''}
@@ -15110,7 +15155,7 @@ body.rp-on { overflow: hidden; }
       <h2>${run.defeat === 'mort' ? `Vous êtes tombé${eF()} à 0 PV` : run.defeat === 'cryo' ? `Renvoyé${eF()} en cryogénie` : run.defeat === 'abandon' ? (run.liveDuelDone && run.liveDuelDone.why === 'forfait' ? 'Duel perdu par forfait' : 'Duel abandonné') : 'Section dépressurisée'}</h2>
       ${storyEnd()}
       ${run.liveDuelDone && !run.liveDuelDone.won ? `<p><b>${esc(run.liveDuelDone.vs || '')}</b> vous bat en duel, en direct${run.liveDuelDone.why === 'abandon' ? ', par abandon' : run.liveDuelDone.why === 'forfait' ? ', par forfait (connexion perdue)' : run.liveDuelDone.why === 'temps' ? ', aux PV restants quand la section a été dépressurisée' : ''} : à chaque table, seuls les gagnants des duels peuvent monter.</p>` : e.boss && run.live && run.tableBots && !run.tableBots[e.rivalSeat - 1] ? `<p>Vous perdez votre duel contre le deck de <b>${esc(E.rivalsOf(run)[e.rivalSeat - 1])}</b>, joué par ÉDEN : à chaque table, seuls les gagnants des duels peuvent monter.</p>` : e.boss ? `<p><b>${esc(E.rivalsOf(run)[e.rivalSeat - 1])}</b> gagne le duel et continue l’étage à votre place : à chaque table, seuls les gagnants des deux duels peuvent monter.</p>` : run.encounter > 0 ? `<p>Vous aviez gagné votre duel. Mais pour monter, il faut aussi survivre à l’étage, jusqu’à son boss.</p>` : ''}
-      <p>${esc(E.encName(run, e))}, tour ${run.combat.turn}. ${run.defeat === 'cryo' ? `Son Zéro absolu : gelé${eF()} à 8 PV ou moins, vous êtes éliminé${eF()}. Gardez une marge de PV quand ${foeMale(duelFoeName()) ? 'il' : 'elle'} vous gèle.` : run.defeat === 'abandon' ? (run.liveDuelDone && run.liveDuelDone.why === 'forfait' ? 'Sans nouvelles du serveur pendant une minute, un duel en direct est perdu par forfait : l’autre joueur l’emporte.' : 'Un duel en direct se joue jusqu’au bout : partir, c’est laisser la place.') : run.liveDuelDone && run.defeat === 'depressurisation' ? 'Au bout du dernier tour, le duel se décide aux PV restants, en part de leur maximum.' : run.defeat !== 'mort' ? `Votre deck manquait de dégâts pour finir en ${E.MAX_TURNS} tours.` : e.id === 'gaston' ? 'Gaston annonce sa charge un tour à l’avance : gelez-le avant qu’il charge, ou gardez de l’armure pour ce tour-là.' : e.id === 'rx7' ? 'RX-7 frappe en quatre petits coups : l’armure les absorbe tous. Un Gel lui fait perdre un tour entier.' : e.id === 'nounours' ? 'Nounours se régénère tant qu’il n’est ni irradié, ni gelé, ni vulnérable : coupez-lui la régénération avant de frapper.' : e.id === 'chimere' ? 'La Chimère se divise tous les trois tours : gelez-la pour l’en empêcher, et gardez des attaques sur tous les ennemis pour ses doubles.' : e.boss ? (foeMale(duelFoeName()) ? 'Il jouait les cartes qu’il venait de drafter en face de vous : au draft, regardez aussi ce qu’il prend, et gardez de quoi lui répondre.' : 'Elle jouait les cartes qu’elle venait de drafter en face de vous : au draft, regardez aussi ce qu’elle prend, et gardez de quoi lui répondre.') : e.id === 'drones' ? 'Le corbeau est impossible à viser un tour sur deux : gelez-le pour qu’il ne décolle pas, ou abattez la colombe pendant sa patrouille (gelée ou irradiée, elle ne répare plus rien).' : e.id === 'sauterelles' ? 'L’essaim mange une carte de votre pioche et grossit à chaque tour : les attaques sur tous les ennemis le balaient, et gelées, elles ne mangent plus.' : e.id === 'chauves' ? 'Un tour sur deux, la lumière s’éteint : leurs intentions sont cachées et chaque coup fait +3. Gardez de l’armure pour les tours dans le noir, ou gelez les deux chauves-souris avant la fin d’un tour éclairé : la lumière tiendra.' : e.id === 'leviathan' ? 'Quand il vous avale, frappez fort : de l’intérieur, vos coups font double et son armure ne compte pas. Gardez de l’armure pour sa sortie (il vous recrache), et gelez-le avant qu’il ouvre la gueule.' : e.id === 'serpent' ? 'Le Serpent tend une pomme à chaque tour : croquez-la quand il n’attaque pas, la honte ne dure qu’un tour. À la moitié de ses PV, il mue (armure, statuts effacés) : gelé, il ne peut pas.' : e.id === 'bouc' ? 'Le bouc mâchonne votre carte la plus chère : jouez vos grosses cartes avant son tour, et gardez de l’armure pour ses cornes.' : e.id === 'dionee' ? 'La dionée se soigne en digérant : irradiée ou gelée, elle digère mal. Ses lianes vous volent de l’énergie, gardez des cartes pas chères.' : e.id === 'dolly' ? 'Chaque clone ajoute une ruade. Gelez Dolly pour bloquer le clonage, ou abattez-la vite.' : e.id === 'lapins' ? 'Les lapins se clonent tous les deux tours, et le survivant se clone dès qu’il perd son partenaire. Les attaques sur tous les ennemis et le Gel les tiennent en respect.' : e.id === 'mere' ? 'Visez la Mère : ses rejetons la suivent en cryogénie. Gelée, elle n’engendre plus, et ses rejetons sont fragiles face aux attaques sur tous les ennemis.' : e.id === 'crapauds' ? 'Les épines punissent les attaques à plusieurs coups : préférez les gros coups uniques, la Radiation ou la Zizanie.' : e.id === 'phalenes' ? 'La Radiation ignore l’armure : contre les phalènes, il faut finir vite.' : 'Pensez à l’armure quand les attaques annoncées sont lourdes, et à geler le partenaire avant d’abattre le premier.'}</p>
+      <p>${esc(E.encName(run, e))}, tour ${run.combat.turn}. ${run.defeat === 'cryo' ? `Son Zéro absolu : gelé${eF()} à ${zeroHpOf(duelFoeSpec())} PV ou moins, vous êtes éliminé${eF()}. Gardez une marge de PV quand ${foeMale(duelFoeName()) ? 'il' : 'elle'} vous gèle.` : run.defeat === 'abandon' ? (run.liveDuelDone && run.liveDuelDone.why === 'forfait' ? 'Sans nouvelles du serveur pendant une minute, un duel en direct est perdu par forfait : l’autre joueur l’emporte.' : 'Un duel en direct se joue jusqu’au bout : partir, c’est laisser la place.') : run.liveDuelDone && run.defeat === 'depressurisation' ? 'Au bout du dernier tour, le duel se décide aux PV restants, en part de leur maximum.' : run.defeat !== 'mort' ? `Votre deck manquait de dégâts pour finir en ${E.MAX_TURNS} tours.` : e.id === 'gaston' ? 'Gaston annonce sa charge un tour à l’avance : gelez-le avant qu’il charge, ou gardez de l’armure pour ce tour-là.' : e.id === 'rx7' ? 'RX-7 frappe en quatre petits coups : l’armure les absorbe tous. Un Gel lui fait perdre un tour entier.' : e.id === 'nounours' ? 'Nounours se régénère tant qu’il n’est ni irradié, ni gelé, ni vulnérable : coupez-lui la régénération avant de frapper.' : e.id === 'chimere' ? 'La Chimère se divise tous les trois tours : gelez-la pour l’en empêcher, et gardez des attaques sur tous les ennemis pour ses doubles.' : e.boss ? (foeMale(duelFoeName()) ? 'Il jouait les cartes qu’il venait de drafter en face de vous : au draft, regardez aussi ce qu’il prend, et gardez de quoi lui répondre.' : 'Elle jouait les cartes qu’elle venait de drafter en face de vous : au draft, regardez aussi ce qu’elle prend, et gardez de quoi lui répondre.') : e.id === 'drones' ? 'Le corbeau est impossible à viser un tour sur deux : gelez-le pour qu’il ne décolle pas, ou abattez la colombe pendant sa patrouille (gelée ou irradiée, elle ne répare plus rien).' : e.id === 'sauterelles' ? 'L’essaim mange une carte de votre pioche et grossit à chaque tour : les attaques sur tous les ennemis le balaient, et gelées, elles ne mangent plus.' : e.id === 'chauves' ? 'Un tour sur deux, la lumière s’éteint : leurs intentions sont cachées et chaque coup fait +3. Gardez de l’armure pour les tours dans le noir, ou gelez les deux chauves-souris avant la fin d’un tour éclairé : la lumière tiendra.' : e.id === 'leviathan' ? 'Quand il vous avale, frappez fort : de l’intérieur, vos coups font double et son armure ne compte pas. Gardez de l’armure pour sa sortie (il vous recrache), et gelez-le avant qu’il ouvre la gueule.' : e.id === 'serpent' ? 'Le Serpent tend une pomme à chaque tour : croquez-la quand il n’attaque pas, la honte ne dure qu’un tour. À la moitié de ses PV, il mue (armure, statuts effacés) : gelé, il ne peut pas.' : e.id === 'bouc' ? 'Le bouc mâchonne votre carte la plus chère : jouez vos grosses cartes avant son tour, et gardez de l’armure pour ses cornes.' : e.id === 'dionee' ? 'La dionée se soigne en digérant : irradiée ou gelée, elle digère mal. Ses lianes vous volent de l’énergie, gardez des cartes pas chères.' : e.id === 'dolly' ? 'Chaque clone ajoute une ruade. Gelez Dolly pour bloquer le clonage, ou abattez-la vite.' : e.id === 'lapins' ? 'Les lapins se clonent tous les deux tours, et le survivant se clone dès qu’il perd son partenaire. Les attaques sur tous les ennemis et le Gel les tiennent en respect.' : e.id === 'mere' ? 'Visez la Mère : ses rejetons la suivent en cryogénie. Gelée, elle n’engendre plus, et ses rejetons sont fragiles face aux attaques sur tous les ennemis.' : e.id === 'crapauds' ? 'Les épines punissent les attaques à plusieurs coups : préférez les gros coups uniques, la Radiation ou la Zizanie.' : e.id === 'phalenes' ? 'La Radiation ignore l’armure : contre les phalènes, il faut finir vite.' : 'Pensez à l’armure quand les attaques annoncées sont lourdes, et à geler le partenaire avant d’abattre le premier.'}</p>
       ${succesList()}
       ${(run.history || []).length ? `<p class="runpoints"><b>Points de run gagnés : ${(run.history || []).reduce((t, h) => t + h.score, 0)}</b> <span class="muted">(étages franchis uniquement)</span></p>` : ''}${shopLine()}
       ${pvpSaveLine()}
@@ -15477,7 +15522,7 @@ body.rp-on { overflow: hidden; }
     const W = st.clientWidth, H = st.clientHeight;
     if (!W || !H) return;
     // Mesures de la fenêtre ramenées à l'échelle de l'interface (UIZ > 1 sur grand écran)
-    const z = UIZ || 1, srv = st.getBoundingClientRect(), sr = { left: srv.left / z, top: srv.top / z }, fig = st.querySelector('.me-side .fig'), feet = (pl.getBoundingClientRect().top - srv.top) / z - 6;
+    const z = (document.body.classList.contains('in-combat') && UIZD < 1 ? UIZD : UIZ) || 1, srv = st.getBoundingClientRect(), sr = { left: srv.left / z, top: srv.top / z }, fig = st.querySelector('.me-side .fig'), feet = (pl.getBoundingClientRect().top - srv.top) / z - 6;
     const floor = Math.max(60, Math.min(H - 30, feet - Math.round(.18 * ((fig && fig.offsetHeight) || 180))));
     // Version jeu : le décor déborde de la scène jusqu'aux bords de la fenêtre (la scène est centrée, le décor la prolonge)
     const VW = Math.max(W, (window.innerWidth || 0) / z), VH = Math.max(H, (window.innerHeight || 0) / z), top0 = Math.max(0, sr.top), bottom0 = Math.max(H - floor, VH - (sr.top + floor));
@@ -15487,15 +15532,18 @@ body.rp-on { overflow: hidden; }
   let bdRaf = 0;
   window.addEventListener('resize', () => { uiScale(); cancelAnimationFrame(bdRaf); bdRaf = requestAnimationFrame(layoutBackdrop); });
   // Grand écran : l'interface (dessinée pour 1280 × 800) grandit avec la fenêtre, comme dans un jeu ; le décor, lui, couvre tout
-  let UIZ = 1;
+  let UIZ = 1, UIZD = 1; // UIZD : la réduction du combat sur une petite fenêtre de bureau (0.82)
   function uiScale() {
     const W = window.innerWidth || 0, H = window.innerHeight || 0;
-    let z = W && H ? Math.min(W / 1280, H / 800) : 1;
-    z = z < 1.08 ? 1 : Math.min(1.8, Math.round(z * 100) / 100);
-    if (z === UIZ && document.documentElement.classList.contains('ui-scaled') === (z > 1)) return;
-    UIZ = z;
-    document.documentElement.style.setProperty('--ui', String(z));
-    document.documentElement.classList.toggle('ui-scaled', z > 1);
+    const r = W && H ? Math.min(W / 1280, H / 800) : 1;
+    const z = r < 1.08 ? 1 : Math.min(1.8, Math.round(r * 100) / 100);
+    // Fenêtre plus petite que 1280×800 en bureau (portable : ≈ 1366×650 utiles) : le combat réduit, jusqu'à 0,72 (0.82)
+    const zd = W >= 900 && r < 0.97 ? Math.max(0.72, Math.round(r * 100) / 100) : 1;
+    const el = document.documentElement;
+    if (z === UIZ && zd === UIZD && el.classList.contains('ui-scaled') === (z > 1)) return;
+    UIZ = z; UIZD = zd;
+    el.style.setProperty('--ui', String(z)); el.style.setProperty('--uid', String(zd));
+    el.classList.toggle('ui-scaled', z > 1); el.classList.toggle('ui-down', zd < 1);
   }
   uiScale();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layoutBackdrop()).catch(() => {});
@@ -16369,9 +16417,10 @@ body.rp-on { overflow: hidden; }
       case 'keepeden': if (run.phase === 'keep') run.draft.keep = E.aiKeepCards(run, 0, run.draft.picks[0]).map(c => c.uid); break;
       case 'keepnone': if (run.phase === 'keep') run.draft.keep = []; break;
       case 'keepok': if (run.phase === 'keep' && E.keepCards(run, keptUids())) { keepTimerOff(); processEvents(); toTop(); } break;
-      case 'resetask': ui.confirmReset = el.dataset.fresh === '1' ? 'fresh' : 'same'; break;
+      case 'resetask': if (!resetOK()) break; ui.confirmReset = el.dataset.fresh === '1' ? 'fresh' : 'same'; break;
       case 'resetcancel': ui.confirmReset = null; break;
       case 'resetdraft':
+        if (!resetOK()) break;
         ui.confirmReset = null; ui.burnMode = false; ui.log = []; ui.targeting = null;
         E.resetDraft(run, el.dataset.fresh === '1'); processEvents(); toTop(); break;
       case 'fuse': E.fuse(run, el.dataset.id); processEvents(); break;
@@ -16463,12 +16512,25 @@ body.rp-on { overflow: hidden; }
     }
   }
 
+  // Double clic (0.82) : le premier clic redessine l'écran, le second tomberait sur ce qui est désormais sous la souris
+  // (la carte suivante du booster, la carte suivante de la main, le nouveau « Fin du tour ») : un double clic vaut un seul
+  // choix. Le 2e clic d'un double clic (detail > 1) est ignoré sur les actions de choix, et un vrai clic qui suit de moins
+  // de 280 ms une action de choix aussi (les clics de script, ceux des tests, ne sont pas concernés).
+  const DBL_GUARD = new Set(['pick', 'fpick', 'classe', 'card', 'target', 'endturn', 'enter', 'next', 'door', 'continue', 'nextfloor', 'finale', 'arena',
+    'keepok', 'start', 'vestbox', 'vestboxclose', 'achclaim', 'achlootclose', 'chestpick', 'giftpick', 'buy', 'remove', 'deal', 'gift']);
+  let lastChoiceAt = 0;
   screenEl.addEventListener('click', ev => {
     if (ui.outro) { endOutro(); return; } // la scène de victoire se passe d'un clic
     if (ui.pileView && ev.target.classList && ev.target.classList.contains('pileview')) { ui.pileView = null; render(); return; } // clic à côté de la fenêtre
     const el = ev.target.closest('[data-act]');
     if (!el || el.disabled) return;
-    act(el.dataset.act, el);
+    const a = el.dataset.act;
+    if (DBL_GUARD.has(a)) {
+      const now = performance.now(), wait = /close$/.test(a) ? 420 : 280; // une caisse qui vient de s'ouvrir ne se referme pas au 2e clic
+      if (ev.detail > 1 || (ev.isTrusted && now - lastChoiceAt < wait)) return;
+      lastChoiceAt = now;
+    }
+    act(a, el);
   });
   // Clavier ou souris : les bulles qui s'ouvrent au survol s'ouvrent aussi au focus, mais seulement au clavier
   document.addEventListener('keydown', ev => { if (ev.key === 'Tab') document.body.classList.add('kbd'); }, true);
@@ -16481,6 +16543,7 @@ body.rp-on { overflow: hidden; }
       const j = (i + (ev.key === 'ArrowDown' ? 1 : list.length - 1)) % list.length;
       ev.preventDefault(); list[j].focus(); return;
     }
+    if (ev.key === 'Escape' && window.SurbookingReplay && window.SurbookingReplay.isOpen()) { ev.preventDefault(); window.SurbookingReplay.close(); return; } // « Revoir le duel » : Échap le ferme (0.82)
     if (ev.key === 'Escape' && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap passe l'animation
     if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"], .bxp .bxp-actions [data-act="achlootclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
     if (ev.key === 'Escape' && !pause.open && run == null && menuTab()) { ev.preventDefault(); setMenuTab('', true); return; } // un panneau du menu : retour aux boutons
