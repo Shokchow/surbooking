@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.83.1';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.83.2';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -424,6 +424,17 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .foe.targetable:hover .fig { transform: translateY(-4px); }
 .fig { position: relative; display: flex; align-items: flex-end; justify-content: center; transition: transform .15s ease; }
 .stage .fig { transform-origin: 50% 100%; } /* 0.83 : la respiration (ui.js, breathe) part des pieds */
+/* 0.83.2 : effets continus à côté de la figure (ui.js, pfxHTML), calés sur l'horloge de la page (--clk) */
+.pfx { position: absolute; left: 50%; bottom: 0; translate: -50% 0; pointer-events: none; z-index: 3; }
+.foe .pfx { width: var(--fs); height: calc(var(--fs) * 1.05); } .fighter .pfx { width: calc(var(--fh) * .55); height: var(--fh); }
+.pfx i { position: absolute; left: var(--x); width: var(--w); height: var(--w); border-radius: 50%; opacity: 0; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+.pfx.frost i { top: 0; background: #ffffff; box-shadow: 0 0 0 1.5px #5fb4d6, 0 0 6px #9fe3f2; animation: pfxFlake 3.2s linear infinite; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+.pfx.rad i { bottom: 0; background: #d8ff6e; box-shadow: 0 0 0 1.5px #2f7a12, 0 0 8px #8fff2e; animation: pfxMote 2.6s ease-out infinite; animation-delay: calc(var(--clk, 0s) + var(--d, 0s)); }
+@keyframes pfxFlake { 0% { top: 0; opacity: 0; translate: 0 0; } 15% { opacity: .95; } 50% { translate: 7px 0; } 85% { opacity: .85; } 100% { top: 92%; opacity: 0; translate: -5px 0; } }
+@keyframes pfxMote { 0% { bottom: 0; opacity: 0; scale: .6; } 20% { opacity: .9; } 70% { opacity: .7; } 100% { bottom: 88%; opacity: 0; scale: 1.1; } }
+/* en furie, le monstre gonfle (0.83.2) */
+.foe.furious:not(.cryo) .fig > .foe-svg, .foe.furious:not(.cryo) .fig > .avatar { scale: 1.1; transform-origin: 50% 100%; }
+.foe.furious:not(.cryo):not(.irradiated) .fig > .foe-svg { filter: drop-shadow(0 0 5px rgba(224, 38, 43, .55)); }
 /* Tous les personnages ont les pieds sur la même ligne : la scène a trois rangées (personnages, plaques, main) et chaque
    colonne de personnage en épouse les deux premières (subgrid) ; la plaque la plus haute ne soulève plus personne. */
 .stand { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -1241,7 +1252,7 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .float, .fly-card, .ghost-card, .ghost-intent, .seq-fx, .seq-float, .floats .crack, .hp-trail { display: none !important; }
+  .float, .fly-card, .ghost-card, .ghost-intent, .seq-fx, .seq-float, .floats .crack, .hp-trail, .pfx { display: none !important; }
   .foe.trapfall .fig > svg, .foe.trapfall .fig > .avatar, .rage .steam, .confetti, .ko-back, .ko-arm, .ko-whoosh, .ko-puff, .ko-stars, .ko-sparks, .ko-smoke { visibility: hidden; }
   .foe.ko .fig > .avatar { rotate: 84deg; translate: 22% 2%; } .ko-stamp { opacity: 1; }
   .fighter.victory .avatar .av-arm-l { transform: rotate(146deg); } .fighter.victory .avatar .av-arm-r { transform: rotate(-146deg); }
@@ -14928,6 +14939,45 @@ body.rp-on { overflow: hidden; }
   const floatsHTML = t => t && t.floats.length ? `<span class="floats" aria-hidden="true">${t.floats.slice(0, 4).map((f, k) => f.kind === 'crack' ? `<span class="crack">${SVG_CRACK}</span>`
     : `<span class="float ${f.kind}${floatN(f) >= 20 ? ' big' : ''}" style="--k:${k};--s:${dmgScale(floatN(f)).toFixed(2)}">${esc(f.txt)}</span>`).join('')}</span>` : '';
 
+  /* La scène persistante (0.83.2) : les figures (vous, les monstres) et le décor du combat ne sont plus refaits à chaque rendu.
+     Leur balisage est comparé à celui du rendu précédent ; s'il n'a pas changé, le rendu pose un emplacement vide (keep-slot)
+     et keepSwap y remet l'ancien nœud. Moins de SVG à analyser à chaque clic, et ce qui tourne en script sur ces nœuds (la
+     respiration) continue sans à-coup. Les animations CSS d'un nœud remis repartent, mais les boucles suivent l'horloge de la
+     page (--clk) ; les animations en script finies (secousse, éclair) sont retirées. Seulement pour l'écran du jeu (KEEP.on,
+     posé par renderCore) : le revisionnage (renderCombatFor) reçoit le balisage complet. */
+  const KEEP = { on: false, map: new Map(), used: new Set() };
+  // sig : ce dont dépend le balisage (le dessin a des identifiants uniques à chaque appel, on ne compare donc pas le texte) ;
+  // make : fabrique le balisage, appelée seulement s'il faut un nouveau nœud
+  function keepNode(key, sig, make) {
+    if (!KEEP.on) return make();
+    KEEP.used.add(key);
+    const k = KEEP.map.get(key);
+    if (k && k.sig === sig && k.node) return `<i class="keep-slot" data-keep="${key}" hidden></i>`;
+    KEEP.map.set(key, { sig, node: null });
+    return make().replace(/^\s*<([a-z]+)/, `<$1 data-keep-new="${key}"`);
+  }
+  const scriptAnim = a => !(typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation) && !(typeof CSSTransition !== 'undefined' && a instanceof CSSTransition);
+  function keepSwap() {
+    screenEl.querySelectorAll('[data-keep-new]').forEach(el => { const k = KEEP.map.get(el.getAttribute('data-keep-new')); el.removeAttribute('data-keep-new'); if (k) k.node = el; });
+    screenEl.querySelectorAll('.keep-slot').forEach(slot => {
+      const k = KEEP.map.get(slot.dataset.keep), n = k && k.node;
+      if (!n) { slot.remove(); return; }
+      if (!n.classList.contains('backdrop')) n.removeAttribute('style'); // un délai d'animation posé après un rendu ne doit pas rester (le décor, lui, est replacé par layoutBackdrop)
+      try { if (n.getAnimations) n.getAnimations({ subtree: true }).forEach(a => { if (!a.__keep && scriptAnim(a)) a.cancel(); }); } catch (e) { /* navigateur sans getAnimations */ }
+      slot.replaceWith(n);
+    });
+    for (const key of [...KEEP.map.keys()]) if (!KEEP.used.has(key)) KEEP.map.delete(key);
+    KEEP.used.clear();
+  }
+  // Effets continus posés à côté de la figure (0.83.2) : flocons sur un gelé, particules vertes qui montent d'un irradié.
+  // Des boucles CSS calées sur --clk : d'un rendu à l'autre, elles continuent sans repartir de zéro.
+  function pfxHTML(o) {
+    if (!o || o.alive === false || o.away) return '';
+    const out = [];
+    if (o.frozen > 0) out.push(`<span class="pfx frost" aria-hidden="true">${[8, 26, 44, 62, 80, 35, 70].map((x, k) => `<i style="--x:${x}%;--d:${(-k * 0.53).toFixed(2)}s;--w:${6 + (k * 3) % 5}px"></i>`).join('')}</span>`);
+    if (o.poison > 0) { const n = Math.min(9, 3 + Math.floor(o.poison / 3)); out.push(`<span class="pfx rad" aria-hidden="true">${Array.from({ length: n }, (_, k) => `<i style="--x:${10 + (k * 37) % 78}%;--d:${(-k * 0.41).toFixed(2)}s;--w:${6 + (k * 5) % 4}px"></i>`).join('')}</span>`); }
+    return out.join('');
+  }
   // Revoir un duel (replay.js, 0.81) : l'écran de combat d'un instant du duel, rendu sans toucher à la partie en cours
   // (la partie, le journal et la sélection sont remis en place tout de suite après)
   function renderCombatFor(r, o) {
@@ -14951,17 +15001,19 @@ body.rp-on { overflow: hidden; }
       // robot muni d'un balai le jette dehors par un sas et ÉDEN tamponne sa candidature ; ÉDEN, battue en finale, grésille et s'éteint.
       const ko = m.duel && !m.alive ? (k === 'human' ? 'ko' : k === 'eden' ? 'ko-robot' : '') : '';
       const kind = k === 'robot' || k === 'eden' ? 'machine' : (TOXIC.has(k) || m.mutated || m.poison > 0 || m.variant === 'mute') ? 'toxic' : k === 'human' ? 'human' : '';
-      const fig = k === 'human' && AV ? AV.svg(AV.state(E, m.deckIds || [], m.cls || null), { cls: 'avatar-stage foe-av', body: isFem(m.name) ? 'f' : 'm', classe: m.cls || null })
-        : SART && SART.has(k) ? SART.foe(k, SART.variantOf(m, e) + (k === 'leviathan' && c.player.swallowed > 0 ? ' plein' : '')) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[k] || ART.rejeton}</svg>`;
+      const avSt = k === 'human' && AV ? AV.state(E, m.deckIds || [], m.cls || null) : null, sbVar = !avSt && SART && SART.has(k) ? SART.variantOf(m, e) + (k === 'leviathan' && c.player.swallowed > 0 ? ' plein' : '') : null;
+      const fig = () => (avSt ? AV.svg(avSt, { cls: 'avatar-stage foe-av', body: isFem(m.name) ? 'f' : 'm', classe: m.cls || null })
+        : sbVar != null ? SART.foe(k, sbVar) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[k] || ART.rejeton}</svg>`);
+      const figSig = [k, kind, avSt ? JSON.stringify(avSt) + isFem(m.name) + (m.cls || '') : sbVar, raging, ko, m.alive, falling].join('|');
       const sg = statusChips(m, false, !!m.duel, true);
       const cls = ['monster', 'foe', m.alive ? '' : 'cryo', can ? 'targetable' : '', m.alive && m.away ? 'away' : '', m.alive && m.frozen > 0 ? 'frozen' : '', m.alive && m.poison > 0 ? 'irradiated' : '', raging ? 'furious' : '', flash.monsters.includes(m.i) ? 'hit' : '', ko].concat(fx ? [...fx.cls] : []).filter(x => x && !(ko && x === 'trapfall'));
       return `<button type="button" class="${[...new Set(cls)].join(' ')}" data-act="target" data-i="${m.i}" ${can ? '' : 'disabled'} aria-label="${esc(m.name)}${can ? ', target' : ''}">
         <span class="stand"><span class="foe-intent">${m.alive ? (m.duel ? duelHud(m) : intentHTML(m)) : `<span class="cryo-label">${ko === 'ko' ? 'Application rejected' : ko ? 'Out of order' : 'In cryosleep'}</span>`}</span>
-        ${floatsHTML(fx)}
-        <span class="fig foe-art ${kind}" data-art="${k}">${ko && KO_BACK[ko] ? KO_BACK[ko] : ''}${fig}${raging ? RAGE_HTML : ''}${ko ? KO_HTML[ko] : !m.alive || falling ? TRAP_HTML : ''}</span></span>
+        ${floatsHTML(fx)}${pfxHTML(m)}
+        ${keepNode(`foe:${m.i}`, figSig, () => `<span class="fig foe-art ${kind}" data-art="${k}">${ko && KO_BACK[ko] ? KO_BACK[ko] : ''}${fig()}${raging ? RAGE_HTML : ''}${ko ? KO_HTML[ko] : !m.alive || falling ? TRAP_HTML : ''}</span>`)}</span>
         <span class="plate">
           <span class="m-head"><span class="m-name">${esc(m.name)}</span><span class="m-species">${esc(m.species || e.species)}${m.duel && !['eden', 'echappe'].includes(m.variant) && rivalClassTag(m.cls, m.name) ? ` · ${esc(rivalClassTag(m.cls, m.name))}` : ''}</span></span>
-          <span class="hp-line"><span>HP</span><span>${m.hp} / ${m.maxHp}</span></span>
+          <span class="hp-line"><span>PV</span><span>${m.hp} / ${m.maxHp}</span></span>
           <span class="bar"><span style="width:${Math.round(100 * m.hp / m.maxHp)}%"></span></span>
           ${fxRows(armorBadge(m) + sg.buff, sg.debuff, m.duel ? specChips(m.spec, true) + (m.touche ? '<span class="chip spec">Jack-of-all-trades</span>' : '') + (m.lowTier ? `<span class="chip spec" title="${esc(E.LOWBLOW_TIERS.slice(0, m.lowTier).map(t => t.name + ' : ' + t.text).join(' · '))}">${esc(E.LOWBLOW_TIERS[m.lowTier - 1].name)}</span>` : '') : '')}
           ${m.duel && m.finale ? `<span class="preloss">${preLossText(m)}</span>` : ''}
@@ -14990,23 +15042,24 @@ body.rp-on { overflow: hidden; }
     let nEv = 0;
     const logItems = ui.log.filter(l => l.kind === 'eden' ? nEv < 9 : nEv++ < 9).map(l => `<li class="${l.kind}">${esc(l.text)}</li>`).join('');
     const lost = !!(ui.outro && ui.outro.kind === 'defeat'), me = FX.me, meCls = ['fighter', 'me', 'player', flash.player ? 'hit' : '', c.player.swallowed > 0 ? 'swallowed' : '', ui.outro ? (lost ? 'ko-me' : 'victory') : ''].concat([...me.cls]).filter(Boolean);
-    const myFig = AV ? AV.svg(outfitState(E.activeCards(run).map(x => x.id)), { cls: 'avatar-stage', classe: myClassKey(), body: myBody() }) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="26" r="12"/><path d="M26 90c2-24 12-40 24-40s22 16 24 40"/></svg>`;
+    const mySt = AV ? outfitState(E.activeCards(run).map(x => x.id)) : null;
+    const myFig = () => (AV ? AV.svg(mySt, { cls: 'avatar-stage', classe: myClassKey(), body: myBody() }) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="26" r="12"/><path d="M26 90c2-24 12-40 24-40s22 16 24 40"/></svg>`);
     const out = !!ui.outro; // fin de combat gagné : la scène reste un instant, rien n'est cliquable
     const hint = targeting ? `<div class="target-hint note"><span>Choose a target for <b>${esc(E.CARDS[targeting.id].name)}</b>.</span><button type="button" class="ghost" data-act="cancel">Cancel</button></div>` : '';
     return `<div class="split fight${out ? ' outro' : ''}"><section class="panel combat-panel">
       <div class="stage st-${SECTION()}${c.dark ? ' lights-out' : ''}" style="--foes:${shown.length}">
-        <svg class="backdrop" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${(SCENE[SECTION()] || SCENE.quarantaine)()}</svg>
+        ${keepNode('backdrop', SECTION(), () => `<svg class="backdrop" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${(SCENE[SECTION()] || SCENE.quarantaine)()}</svg>`)}
         <div class="combat-head stage-head">
           <div class="sh-title"><span class="eyebrow">${e.finale ? 'Arena · final · a single duel' : `${esc(E.floorInfo(run).short)} · encounter ${run.encounter + 1} of 3 · ${e.diff}${E.turbOf(run) ? ` · Turbulence ${E.turbOf(run)}` : ''}`}</span><div class="sh-line"><h2>${esc(E.encName(run, e))}</h2>
-            <div class="sh-tools"><button type="button" class="ghost cb-journal-btn" data-act="cbdrawer" aria-expanded="${!!ui.drawer}" aria-controls="cb-drawer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 10h8M8 14h8M8 18h5"></path></svg>Log</button>${cbPills(c, p)}</div></div>${noeOf(e) ? `<p class="sh-noe" title="Noah’s manifest: ${esc(noeOf(e))}"><span class="noe-k">Noah’s manifest</span> ${esc(noeOf(e))}</p>` : ''}</div>
-          <div class="turns${left <= 3 ? ' alert' : ''}"><b class="mono">Turn ${c.turn} / ${E.MAX_TURNS}</b><span>Depressurization in ${left} turn${left > 1 ? 's' : ''}</span>${goalHTML(e, c)}</div>
+            <div class="sh-tools"><button type="button" class="ghost cb-journal-btn" data-act="cbdrawer" aria-expanded="${!!ui.drawer}" aria-controls="cb-drawer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 10h8M8 14h8M8 18h5"></path></svg>Journal</button>${cbPills(c, p)}</div></div>${noeOf(e) ? `<p class="sh-noe" title="Noah’s manifest: ${esc(noeOf(e))}"><span class="noe-k">Noah’s manifest</span> ${esc(noeOf(e))}</p>` : ''}</div>
+          <div class="turns${left <= 3 ? ' alert' : ''}"><b class="mono">Tour ${c.turn} / ${E.MAX_TURNS}</b><span>Dépressurisation dans ${left} tour${left > 1 ? 's' : ''}</span>${goalHTML(e, c)}</div>
         </div>
         <div class="side me-side">
           <div class="${[...new Set(meCls)].join(' ')}">
-            <span class="stand">${floatsHTML(me)}
-            <span class="fig">${myFig}${lost ? ME_KO_HTML : out ? CONFETTI_HTML : ''}</span></span>
+            <span class="stand">${floatsHTML(me)}${pfxHTML({ frozen: p.frozen, poison: p.poison })}
+            ${keepNode('me', [JSON.stringify(mySt), myClassKey(), myBody(), lost, out].join('|'), () => `<span class="fig">${myFig()}${lost ? ME_KO_HTML : out ? CONFETTI_HTML : ''}</span>`)}</span>
             <span class="plate">
-              <span class="hp-big"><span class="hp-line"><span class="eyebrow">${esc(myName())}${E.classOf(run) !== 'postulant' ? ` · ${esc(E.className(E.classOf(run), myBody() === 'f'))}` : ''}</span><span><b>${run.hp}</b> / ${E.maxHpOf(run)} HP</span></span>
+              <span class="hp-big"><span class="hp-line"><span class="eyebrow">${esc(myName())}${E.classOf(run) !== 'postulant' ? ` · ${esc(E.className(E.classOf(run), myBody() === 'f'))}` : ''}</span><span><b>${run.hp}</b> / ${E.maxHpOf(run)} PV</span></span>
                 <span class="bar"><span style="width:${Math.round(100 * run.hp / E.maxHpOf(run))}%"></span></span></span>
               ${(g => fxRows(armorBadge(p) + g.buff, g.debuff, mySpecChips(c)))(statusChips(p, true, true, true))}
             </span>
@@ -15014,23 +15067,23 @@ body.rp-on { overflow: hidden; }
         </div>
         <div class="side foes monsters" data-n="${shown.length}">${monsters}</div>
         ${LIVE && LIVE.inDuel(run) ? `<div class="cb-live">${LIVE.duelInfo(run)}</div>` : ''}
-        <div class="handbar" aria-label="Your hand">
+        <div class="handbar" aria-label="Votre main">
           <div class="hb-side hb-left">
-            <div class="energy"><span class="lbl">Energy</span><span class="orb"><b>${p.energy}</b><span>/${E.ENERGY}</span></span><span class="pips">${pips}</span></div>
-            <button type="button" class="pile draw" data-act="pileview" data-pile="draw" title="View draw pile"${out ? ' disabled' : ''}><span class="pile-back" aria-hidden="true"></span><span class="pile-k">Draw</span><b class="mono">${c.draw.length}</b></button>
+            <div class="energy"><span class="lbl">Énergie</span><span class="orb"><b>${p.energy}</b><span>/${E.ENERGY}</span></span><span class="pips">${pips}</span></div>
+            <button type="button" class="pile draw" data-act="pileview" data-pile="draw" title="Voir la pioche"${out ? ' disabled' : ''}><span class="pile-back" aria-hidden="true"></span><span class="pile-k">Pioche</span><b class="mono">${c.draw.length}</b></button>
           </div>
           <div class="cards hand fan" style="--ov:${ov}px">${hand || `<p class="muted">${duelWait ? `${esc(LIVE.duelTurnLabel(run))}: you’ll draw at the start of your turn.` : 'Empty hand. End your turn.'}</p>`}</div>
           <div class="hb-side hb-right">
             ${hint}
-            <button type="button" class="pile discard" data-act="pileview" data-pile="discard" title="View discard pile"${out ? ' disabled' : ''}><span class="pile-back" aria-hidden="true"></span><span class="pile-k">Discard${c.exhausted.length ? ` · ${c.exhausted.length} card${c.exhausted.length > 1 ? 's' : ''} exhausted` : ''}</span><b class="mono">${c.discard.length}</b></button>
+            <button type="button" class="pile discard" data-act="pileview" data-pile="discard" title="Voir la défausse"${out ? ' disabled' : ''}><span class="pile-back" aria-hidden="true"></span><span class="pile-k">Défausse${c.exhausted.length ? ` · ${c.exhausted.length} card${c.exhausted.length > 1 ? 's' : ''} exhausted` : ''}</span><b class="mono">${c.discard.length}</b></button>
             ${LIVE && LIVE.inDuel(run) ? LIVE.duelClock(run) : ''}
             <button type="button" class="primary endturn" data-act="endturn"${out || duelWait ? ' disabled' : ''}>${duelWait ? esc(LIVE.duelTurnLabel(run)) : 'End turn'}</button>
           </div>
         </div>
       </div>
     </section>
-    <aside class="cb-drawer${ui.drawer ? ' open' : ''}" id="cb-drawer" aria-label="Combat log and details" aria-hidden="${!ui.drawer}">
-    <div class="cb-drawer-head"><h3>Combat log</h3><button type="button" class="ghost cb-drawer-x" data-act="cbdrawer">Close</button></div>
+    <aside class="cb-drawer${ui.drawer ? ' open' : ''}" id="cb-drawer" aria-label="Journal et détails du combat" aria-hidden="${!ui.drawer}">
+    <div class="cb-drawer-head"><h3>Journal du combat</h3><button type="button" class="ghost cb-drawer-x" data-act="cbdrawer">Fermer</button></div>
     <section class="panel combat-info">
       ${left <= 3 ? `<p class="hazard">Alert: this section will be depressurized ${left > 1 ? `in ${left} turns` : 'at the end of this turn'}.</p>` : ''}
       ${c.edenRule ? `<p class="hazard"><span>EDEN’s rule in effect: <b>${esc(E.EDEN_RULES[c.edenRule].name)}</b>. ${esc(E.EDEN_RULES[c.edenRule].text)}${c.edenRule === 'quota' ? ` Cards played this turn: ${c.played} of 3.` : ''}</span></p>` : ''}
@@ -15045,7 +15098,7 @@ body.rp-on { overflow: hidden; }
       ${Object.keys(c.spec || {}).length || c.touche ? `<p class="specline">${[specLines(c.spec), c.touche ? `<b>Jack-of-all-trades</b>: a third family is active, and your basic cards gain +${E.TOUCHE_BONUS} (${esc(E.CARDS[myClass().atk].name)}: ${E.cardFor(run, myClass().atk).dmg} damage, ${esc(E.CARDS[myClass().def].name)}: ${E.cardFor(run, myClass().def).block} Block).` : ''].filter(Boolean).join('<br>')}</p>` : ''}
       ${bossDeck}
     </section>
-    <section class="panel journal"><h3>Log</h3><ol class="log">${logItems}</ol></section></aside>${pileViewHTML(c)}</div>`;
+    <section class="panel journal"><h3>Journal</h3><ol class="log">${logItems}</ol></section></aside>${pileViewHTML(c)}</div>`;
   }
   // Sous le titre du combat : ce qui change les règles maintenant (règle d'ÉDEN, tétanie), en pastilles
   function cbPills(c, p) {
@@ -15670,12 +15723,24 @@ body.rp-on { overflow: hidden; }
     if (cockpit && ui.cockpit.drawn && screenEl.querySelector('.cockpit')) return; // la scène du cockpit aussi
     document.body.classList.toggle('in-combat', (phase === 'combat' || outro) && !shop);
     document.body.dataset.veg = String(!run ? 1 : run.finale ? 2 : Math.min(3, E.floorOf(run) || 1)); // la végétation des mutations monte avec l'étage
-    screenEl.style.setProperty('--clk', `${(-performance.now() / 1000).toFixed(2)}s`); // les boucles CSS reprennent où elles en étaient (0.83)
-    screenEl.innerHTML = shop ? window.Shop.render(shopCtx) : outro ? renderCombat() : cockpit ? renderCockpit() : ST && ui.intro && run ? renderIntro() : storyTop() + VIEWS[phase]();
+    const clk = Math.floor((document.timeline && document.timeline.currentTime) || performance.now()); // l'horloge des animations : les boucles CSS reprennent où elles en étaient (0.83 ; voir alignLoops)
+    screenEl.style.setProperty('--clk', `${(-clk / 1000).toFixed(3)}s`);
+    KEEP.on = true;
+    let html;
+    try { html = shop ? window.Shop.render(shopCtx) : outro ? renderCombat() : cockpit ? renderCockpit() : ST && ui.intro && run ? renderIntro() : storyTop() + VIEWS[phase](); } finally { KEEP.on = false; }
+    screenEl.innerHTML = html;
+    keepSwap();
     if (outro) ui.outro.drawn = true;
     if (cockpit && !ui.cockpit.drawn) { ui.cockpit.drawn = true; startCockpit(); }
     layoutBackdrop();
     breathe();
+    alignLoops(clk);
+  }
+  // Les boucles CSS (halo, Radiation, rage, flocons…) ont un délai de -clk : en les démarrant exactement à clk, leur phase ne
+  // dépend que de l'horloge de la page, pas de l'instant où le navigateur a repris le rendu (0.83.2 : plus d'à-coup)
+  function alignLoops(clk) {
+    if (!screenEl.getAnimations || typeof CSSAnimation === 'undefined') return;
+    try { screenEl.getAnimations({ subtree: true }).forEach(a => { if (a instanceof CSSAnimation && a.effect && a.effect.getTiming().iterations === Infinity) a.startTime = clk; }); } catch (e) { /* rien de grave */ }
   }
   // Au repos, personnages et monstres respirent (0.83) : une lente montée, décalée d'une figure à l'autre, calée sur
   // l'horloge de la page pour ne pas repartir de zéro à chaque rendu ; plus vite en furie ou à bout de souffle.
@@ -15689,8 +15754,18 @@ body.rp-on { overflow: hidden; }
       const m = el.classList.contains('foe') ? run.combat.monsters.find(x => String(x.i) === el.dataset.i) : null;
       if (m && m.stunned) return;
       const fast = el.classList.contains('furious') || (!m && lowMe), period = fast ? 1500 : 3200, amp = fast ? 1.035 : 1.02;
+      const had = fig.getAnimations ? fig.getAnimations().find(a => a.__breath) : null;
+      if (had && had.__breath === period) return; // figure gardée d'un rendu à l'autre : elle respire déjà au bon rythme
+      if (had) had.cancel();
       const a = fig.animate([{ scale: '1 1' }, { scale: `${(2 - amp).toFixed(3)} ${amp}`, offset: .5 }, { scale: '1 1' }], { duration: period, iterations: Infinity, easing: 'ease-in-out' });
       a.startTime = -(k * 731); // la même phase d'un rendu à l'autre, décalée d'une figure à l'autre
+      a.__breath = period; a.__keep = true;
+    });
+    // les figures qui ne doivent plus respirer (gelées, tétanisées, parties) s'arrêtent
+    screenEl.querySelectorAll('.stage .fig').forEach(fig => {
+      const el = fig.closest('.fighter, .foe'); if (!el) return;
+      const m = el.classList.contains('foe') ? run.combat.monsters.find(x => String(x.i) === el.dataset.i) : null;
+      if (el.matches('.cryo, .away, .frozen, .swallowed, .ko, .ko-robot, .ko-me, .trapfall') || (m && m.stunned)) (fig.getAnimations ? fig.getAnimations() : []).forEach(a => { if (a.__breath) a.cancel(); });
     });
   }
 
