@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.82.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.83.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -312,6 +312,12 @@ header.eden { position: sticky; top: 8px; z-index: 40; pointer-events: none; dis
 .card.luck-extra .cost { background: #ffb1a8; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #c0392b; }
 .badge.luck-free { background: #1d8a55; color: #ffffff; } .badge.luck-extra { background: #c0392b; color: #ffffff; }
 .card.burnable { box-shadow: 0 0 0 3px var(--ko); }
+/* 0.83 : sur téléphone, les bulles longues (« Fusion → Nuage de retombées », « Débloque Touche-à-tout ») passent sur deux
+   lignes, vers le haut, au lieu d'être coupées */
+@media (max-width: 700px) {
+  .badges { top: auto; bottom: calc(100% + 2px); align-items: flex-end; }
+  .badges .badge { white-space: normal; line-height: 1.15; text-align: center; overflow: visible; text-overflow: clip; }
+}
 .card.burnable .badge { background: var(--ko); color: #16101e; }
 .pchips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .pchips li { display: flex; align-items: center; gap: 6px; border: 1.5px solid #b9c3cd; border-radius: 8px; padding: 4px 10px; font-size: 14px; background: #ffffff; }
@@ -482,7 +488,7 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .chip { font-size: 11.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
 .plate .chip { white-space: normal; max-width: 100%; box-sizing: border-box; border-radius: 11px; }
 .chip.block { color: var(--block); } .chip.poison { color: var(--poison); } .chip.gel { color: var(--gel); }
-.chip.weak { color: var(--weak); } .chip.vuln { color: var(--vuln); } .chip.fury { color: var(--hp); } .chip.jealous { color: var(--jealous); }
+.chip.weak { color: var(--weak); } .chip.vuln { color: var(--vuln); } .chip.fury { color: var(--hp); } .chip.jealous { color: var(--jealous); } .chip.grief { color: var(--jealous); font-weight: 700; }
 .preloss { font-size: 11.5px; color: var(--muted); }
 .clone-line { font-family: var(--font-mono); font-size: 10.5px; color: var(--poison); border: 1.5px dashed currentColor; border-radius: 8px; padding: 2px 6px; align-self: flex-start; }
 .clone-line.blocked { color: var(--gel); }
@@ -1691,13 +1697,13 @@ body.in-combat .pops { top: 150px; }
       <dt>Tickets</dt><dd>10 per combat won, plus 5 if you win within the turn target (shown top right during combat), plus 5 if you lose no HP. They don't count toward the score.</dd>
       <dt>Basic cards</dt><dd>8 cards given by your class: 4 attacks and 4 defenses (Candidate: 4 Bare Fists for 4 damage and 4 Dodges for 4 Block). You own them from the start; they can't be drafted, don't fuse, count toward no family and aren't low blows.</dd>
       <dt>Turbulence</dt><dd>Difficulty levels, solo only (live play and the daily session stay at base level). Winning the final unlocks level 1, then each win at your highest level unlocks the next, up to 10. You pick the level on the class screen; each one adds its constraint to the previous ones (1: monsters +10% HP; 2: floor bosses +15% HP; 3: candidates across from you +10% HP; 4: healing −25%; 5: monsters +10% damage; 6: monsters +1 Strength at the start of combat; 7: one fewer card on turn one; 8: candidates across from you +1 Strength; 9: each floor starts at 95% HP; 10: final opponent +15% HP) and earns 10% more wardrobe points.</dd>
-      <dt>Classes</dt><dd>Before the first draft, you choose your former job. It sets your basic cards, your max HP (proportionally, on every floor and in the final) and a playstyle: an upside and a downside of similar size, useful with any deck. No class gets a bonus against a type of opponent, or for a family or card type: the draft stays open. <b>Candidate</b>: the baseline, 100% HP, Bare Fist (4 damage) and Dodge (4 Block), no talent and no drawback. <b>Veterinarian</b> (the healer): Tranquilizer Dart (4 damage) and First Aid (3 Block, heal 1 HP); Healer: at the start of each of your turns, if you have lost HP, you recover 1 in Quarantine, 2 on later floors (4 in the final); Fragile: max HP −8%. <b>Ark Mechanic</b> (the tempo): Wrench (3 damage, 1 Block) and Riveted Plate (4 Block, carries over to next turn); Hot Start: 1 extra energy on the first turn of each combat; Overheat: 1 less energy on the second turn. <b>Stowaway</b> (the draft snoop): Sucker Punch (1 damage, draw 1 card) and Take Cover (0 energy, 2 Block); Snoop: once per draft, from Quarantine on, take 2 cards from the same pack (not at pick 4 or pick 8; the pack you pass has one card fewer); Groggy: 1 fewer card on the first turn of each combat. <b>Stand-in</b> (the gamble): Suitcase Swing (4 damage) and Life Vest (4 Block); Upgrade: at the start of each of your turns, a random card in your hand costs 0; Excess Baggage: two others cost 1 more. <b>Maintenance Unit</b> (stored energy): Discharge (4 damage) and Standby Mode (4 Block), max HP +8%; Battery: 1 unspent energy is kept for the next turn; Bodywork: healing (cards and rooms) restores half as much HP. The other candidates at the table also have a class, drawn at random: they play its basic cards, with its HP modifier and its duel effects (recovery, energy, draw; Snoop, which only matters in the draft, is for the player alone). PvP ghosts keep their player's class.</dd>
+      <dt>Classes</dt><dd>Before the first draft, you choose your former job. It sets your basic cards, your max HP (proportionally, on every floor and in the final) and a playstyle: an upside and a downside of similar size, useful with any deck. No class gets a bonus against a type of opponent, or for a family or card type: the draft stays open. <b>Candidate</b>: the baseline, 100% HP, Bare Fist (4 damage) and Dodge (4 Block), no talent and no drawback. <b>Veterinarian</b> (the healer): Tranquilizer Dart (4 damage) and First Aid (3 Block, heal 1 HP); Healer: at the start of each of your turns, if you have lost HP, you recover 1 in Quarantine, 2 on later floors (4 in the final); Fragile: max HP −8%. <b>Ark Mechanic</b> (the tempo): Wrench (3 damage, 1 Block) and Riveted Plate (4 Block, carries over to next turn); Hot Start: 1 extra energy on the first turn of each combat; Overheat: 1 less energy on the second turn. <b>Stowaway</b> (the draft snoop): Sucker Punch (1 damage, draw 1 card) and Take Cover (0 energy, 2 Block); Snoop: once per draft, from Quarantine on, take 2 cards from the same pack (not at pick 4 or pick 8; the pack you pass has one card fewer); Groggy: 1 fewer card on the first turn of each combat. <b>Stand-in</b> (the gamble): Suitcase Swing (4 damage) and Life Vest (4 Block); Upgrade: at the start of each of your turns, a random card in your hand costs 0; Excess Baggage: two others cost 1 more. <b>Maintenance Unit</b> (stored energy): Discharge (4 damage) and Standby Mode (4 Block), max HP +4%; Battery: 1 unspent energy is kept for the next turn; Bodywork: healing (cards and rooms) restores a quarter less HP. The other candidates at the table also have a class, drawn at random: they play its basic cards, with its HP modifier and its duel effects (recovery, energy, draw; Snoop, which only matters in the draft, is for the player alone). PvP ghosts keep their player's class.</dd>
       <dt>Draft</dt><dd>4 booster packs of 12 cards: one headliner (green 1 time in 4, otherwise white) and 11 whites in Quarantine (on later floors, two headliners and 10 filler cards). Take a card, pass the rest to the left: 12 picks. At picks 5 and 9, your first pack comes back around: that's the wheel.</dd>
       <dt>Keep 8</dt><dd>After the 12th pick, you keep 8 of your cards (EDEN preselects 8; change whatever you like); the other 4 go to the incinerator. Fusions wait for this choice: a kept pair fuses, a discarded pair doesn't. Every card you own goes into your deck: it grows by 8 cards each floor.</dd>
       <dt>Fusion</dt><dd>Automatic: as soon as you own 2 identical cards, they fuse, chaining if needed. 2 identical whites make the green of their line, 2 identical greens make the blue, 2 identical blues make the purple, whether the cards come from the draft (during the draft, as soon as you pick), a chest, the shop or an event. Your deck loses a card with each fusion, but never any family points: the fused card keeps the points of both its cards. 2 whites (2 points) make a green (2 points); 2 greens (4 points) make a blue worth 4 points instead of 3; 2 blues make a purple worth 6, 7 or 8 points (instead of 4) depending on the blues fused. These points are written on the card, next to its family, and leave with it if it leaves the deck. So a fusion always pays off. Basic cards, purples, oranges and reds don't fuse. The other candidates fuse their pairs the same way.</dd>
       <dt>Families</dt><dd>Every card belongs to a family (Instinct, Armor, Scrounge, Mutation, Cryo, Panic, Discord, Sacrifice). A card's “Combo” line tells you what it combines with.</dd>
       <dt>Specialization</dt><dd>White 1 point, green 2, blue 3, purple 4 (in the final: orange 5, red 6); a fused card keeps the points of both its cards (see Fusion). Each family has three tiers, at 4, 8 and 16 points, which stack: the first is a small bonus, the third changes how you play. A fourth, at 36 points, is for the most stubborn: it takes a deck almost entirely from one family, and is mostly reached in the final. Only your two strongest families are active (main and secondary); a third family stays dormant until it overtakes them. Rivals specialize too: your boss uses it against you.</dd>
-      <dt>Low blows</dt><dd>In the Greenhouse and the Menagerie, a few green cards with no family slip into the booster packs: Elbow Jab, Trip, False Witness, Bribe. Weak against a monster, they are strong against a candidate, in duels and in the final. They count toward no family. The other candidates draft them too, and play them against you. Several low blows grow stronger, outside the two-family limit: at 2, Sneaky (a low blow is in your hand on the first turn of each duel and of the final); at 3, Devious (they cost nothing against a candidate); at 5, Scoundrel (their effect is doubled against a candidate).</dd>
+      <dt>Low blows</dt><dd>In the Greenhouse and the Menagerie, a few green cards with no family slip into the booster packs: Elbow Jab, Trip, False Testimony, Bribe. Weak against a monster, they are strong against a candidate, in duels and in the final. They count toward no family. The other candidates draft them too, and play them against you. Several low blows grow stronger, outside the two-family limit: at 2, Sneaky (a low blow is in your hand on the first turn of each duel and of the final); at 3, Devious (your first low blow each turn costs nothing against a candidate); at 5, Scoundrel (their effect is doubled against a candidate).</dd>
       <dt>Orange and red</dt><dd>Two rarities found only in the final: orange is legendary, red is mythic. One of each per family. They don't fuse, and count for 5 and 6 family points toward tiers: a single one can unlock a tier right before the duel.</dd>
       <dt>Final boss</dt><dd>The deck always comes from the other finalist, but the final has four faces, drawn at random and announced before the final draft. The candidate (4 times in 10): the winner of the other duel, as is. The mutated candidate (1 time in 4): at the end of each of their turns, their most expensive card duplicates into their hand; Frozen, they don't proliferate. The escaped monster (1 time in 4): the Mother, with the other finalist's deck and animal cards; she spawns an offspring every two turns, her offspring follow her into cryo, but each offspring killed sends her into a fury. EDEN (1 time in 10): she disqualifies the other finalist, keeps their deck and replaces its basic cards with protocols that drain your energy, make you discard or invent a rule mid-combat (Austerity, Tax, Quota, Flat Rate), from turn one.</dd>
       <dt>Final</dt><dd>After the last floor, two candidates remain: you, and the winner of the other duel at your table. First, a head-to-head draft: each of you opens a 4-card pack (your red, an orange, a purple and a blue, from four different families), takes a card and passes the rest to the other, up to 4 picks each. Your opponent is announced before this draft: whatever you leave them, they will play. Then a single duel, with HP restored. For now the opponent is a bot playing the other finalist's deck, with 445 HP against your 280 (for a Candidate; both numbers follow the class modifier) to make up for playing worse than a human. The winner takes the last seat; the loser finishes second.</dd>
@@ -1705,7 +1711,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Turn</dt><dd>3 energy and 5 cards drawn. Your hand is discarded at end of turn.</dd>
       <dt>Block</dt><dd>Absorbs damage. Expires at the start of your turn, except with Crate Barricade or Containment Airlock (or half of it with Shell).</dd>
       <dt>Strength</dt><dd>Each attack deals X more damage, until the end of combat.</dd>
-      <dt>Radiation</dt><dd>The target (monster or candidate: the moths give you some) loses X HP at the start of its turn, ignoring Block, then X drops by 1 (except with the Mutant specialization). Accelerated Mutation doubles it, Runaway Mutation triples it. Clones are born with the Radiation of whoever spawned them.</dd>
+      <dt>Radiation</dt><dd>The target (monster or candidate: the moths give you some) loses X HP at the start of its turn, ignoring Block, then X drops by 1 (except with the Mutant specialization). In a duel, against a candidate, X is halved every turn (except with Exposed Reactor). Accelerated Mutation doubles it, Runaway Mutation triples it. Clones are born with the Radiation of whoever spawned them.</dd>
       <dt>Freeze</dt><dd>Freeze X: for X turns, a Frozen monster can't fly into a fury, and a Frozen candidate loses 1 energy on their next turn (once per Freeze, whatever its duration). Ice Pick and its line deal double damage to a Frozen target.</dd>
       <dt>Encounters</dt><dd>Each floor: the duel, right after the draft, then a monster fight, then the floor boss, with a room between fights. The monster fight changes from run to run (shown in the floor's encounter list): in Quarantine, the <b>capybaras</b> (every third turn, Hector sits on you: 7 damage, watch the intents), <b>cargo rats</b> or <b>cockroaches</b> that get back up once (7 HP) unless Frozen or irradiated; in the Stable, <b>guard geese</b>, <b>greedy pigs</b> that eat if they haven't been hit since their last turn (+8 HP, +1 Strength, unless Frozen) or an <b>irradiated brood</b> of four chicks that grow into hens after three turns (unless Frozen); in the Greenhouse, <b>moths</b>, <b>cactus toads</b> or <b>puffballs</b> that burst when sent to cryo (4 Radiation on you, unless Frozen); in the Menagerie, <b>mutant rabbits</b> or <b>Schrödinger's cat</b>, in its box every other turn, where your hits deal only half (Frozen, it is observed and takes everything).</dd>
       <dt>Floors</dt><dd>At each table, right after the draft, two duels: you against the candidate sitting across from you, and the other two against each other (simulated). Across the table, nobody has the edge: each of you picks before the other in two packs out of four. Losers are eliminated. Then you must survive the floor up to its boss, with the HP left after the duel. After that, HP goes back to max, the deck is kept, and a new draft is played at a new table.</dd>
@@ -1713,9 +1719,10 @@ body.in-combat .pops { top: 150px; }
       <dt>The Mother</dt><dd>Boss of the Menagerie. At the end of each turn she spawns a 17 HP offspring on her own, four at most, unless she is Frozen. When she goes into cryo, her offspring follow her: you can take her down and ignore them.</dd>
       <dt>Thorns</dt><dd>Each hit you land on a cactus toad deals its thorns to you as damage. Multi-hit attacks suffer for it.</dd>
       <dt>Unstable</dt><dd>In the Greenhouse, when one member of a couple goes into cryo, the other mutates instead of flying into a fury: +10 HP and a stronger effect. Frozen, it doesn't mutate.</dd>
-      <dt>Duel</dt><dd>The first encounter of each floor, right after the draft, against the candidate sitting across from you, with the cards they just drafted, their basic cards and their deck from earlier floors. They arrive at full HP, like you. Their intents are hidden. You go first, with 4 cards and 2 energy on turn one; they get 4 cards on their first turn (the same rule as live play, so going first doesn't decide the duel).</dd>
+      <dt>Duel</dt><dd>The first encounter of each floor, right after the draft, against the candidate sitting across from you, with the cards they just drafted, their basic cards and their deck from earlier floors. They arrive at full HP, like you. Their intents are hidden. You go first, with 4 cards and 2 energy on turn one; they get 4 cards on their first turn (the same rule as live play, so going first doesn't decide the duel). After the 15th turn, whoever has lost the larger share of their max HP loses. Winning a duel restores 25% of your max HP.</dd>
       <dt>Floor boss</dt><dd>The last encounter of each floor: a lone monster with visible intents. Quarantine: the <b>scapegoat</b>, which chews up your most expensive card (discarded at the start of your turn), or Gaston the bull, who telegraphs his charge. Stable: <b>Dolly</b>, the irradiated ewe who clones herself, or the cleaning unit RX-7. Greenhouse: the <b>giant flytrap</b>, whose vines drain 1 energy from you and which digests to heal (blocked by Radiation or Freeze), or Teddy the mutant bear, or the Serpent, who offers you an apple. Menagerie: <b>the Mother</b>, the Chimera, or the Tank Leviathan, which swallows you. You must beat it to move up.</dd>
-      <dt>Jealousy</dt><dd>The first hit of the target's next attack strikes its partner instead of you. Alone (the boss, or the last of a couple), it hits itself, for half (in full with Grudge, Discord tier 16). Jealousy wears off at the end of the target's turn.</dd>
+      <dt>Jealousy</dt><dd>The first hit of the target's next attack strikes its partner instead of you. A monster on its own (the boss, or the last of a couple) hits itself, for half (in full with Grudge, Discord tier 16). A candidate, in a duel or the final, always hits themselves in full. Jealousy wears off at the end of the target's turn.</dd>
+      <dt>Grievances</dt><dd>Discord keeps score. Every HP an opponent knocks off you with a hit (monster or candidate; not Block, not Radiation, not your own cards) gives you 1 Grievance, and Jealousy cards add more. Fuel to the Fire and Domestic Spat add a third of your Grievances to their damage; Quickie Divorce, Settling Scores and Dirty Laundry, half. Then your Grievances drop to zero. They don't carry over from one fight to the next. The candidate across from you keeps their own, with the same rules.</dd>
       <dt>Sacrifice</dt><dd>Some cards cost HP. They can't kill you: you can't play them without enough HP.</dd>
       <dt>Weak</dt><dd>Deals 25% less damage.</dd>
       <dt>Vulnerable</dt><dd>Takes 50% more damage.</dd>
@@ -1783,8 +1790,8 @@ body.in-combat .pops { top: 150px; }
     extincteur: { name: 'Extinguisher', rarity: 'verte', cost: 2, arch: 'Cryogénie', target: 'all', freeze: 2, dmg: 5, fuse: 'chambrefroide', value: 10, text: 'Freeze all enemies for 2 turns, then deal 5 damage to all.', combo: 'Ice Pick hits double on a Frozen target.' },
     cri:        { name: 'Panic Cry', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'all', weak: 1, fuse: 'alarme', value: 3, text: 'Apply 1 Weak to all enemies.', combo: 'Reduces damage from both members of a couple.' },
     alarme:     { name: 'Fire Alarm', rarity: 'verte', cost: 1, arch: 'Panique', target: 'all', weak: 2, vuln: 1, fuse: 'sirene', value: 10, text: 'Apply 2 Weak and 1 Vulnerable to all enemies.', combo: 'Vulnerable boosts every hit of multi-hit attacks.' },
-    rumeur:     { name: 'Hallway Rumor', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, fuse: 'ragot', value: 5, text: 'Apply Jealousy: the first hit of the target\'s next attack strikes its partner.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
-    ragot:      { name: 'Venomous Gossip', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, draw: 1, fuse: 'scandale', value: 10, text: 'Apply Jealousy. Draw 1 card.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
+    rumeur:     { name: 'Hallway Rumor', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, grudgeGain: 4, fuse: 'ragot', value: 5, text: 'Jealousy: the first hit of the target\'s next attack strikes its partner. +4 Grievances.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
+    ragot:      { name: 'Venomous Gossip', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, draw: 1, grudgeGain: 4, fuse: 'scandale', value: 10, text: 'Jealousy on the target, draw 1 card. +4 Grievances.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
     coupsang:   { name: 'Blood Rush', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 12, fuse: 'coupfolie', value: 5, text: 'Lose 2 HP, then deal 12 damage.', combo: "Bandages refund the HP you sacrifice." },
     coupfolie:  { name: 'Mad Rush', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 17, fuse: 'baroud', value: 10, text: 'Lose 2 HP, then deal 17 damage.', combo: "Bandages refund the HP you sacrifice." },
     enchainement: { name: "Wolverine Frenzy", rarity: 'bleue', fuse: 'grizzli', cost: 1, arch: 'Instinct', target: 'enemy', dmg: 3, hits: 5, value: 15, text: 'Deal 3 damage five times.', combo: 'Every hit benefits from Strength and Vulnerable.' },
@@ -1793,7 +1800,7 @@ body.in-combat .pops { top: 150px; }
     bidon: { name: "Runaway Mutation", rarity: 'bleue', fuse: 'massecritique', cost: 1, arch: 'Mutation', target: 'enemy', poisonMult: 3, poison: 3, value: 15, text: "Triple the target's Radiation, then apply 3 Radiation.", combo: "Play it on an already irradiated target." },
     chambrefroide: { name: "Cryo Pod", rarity: 'bleue', fuse: 'hiver', cost: 2, arch: 'Cryogénie', target: 'all', freeze: 3, dmg: 8, value: 15, text: 'Freeze all enemies for 3 turns, then deal 8 damage to all.', combo: 'Ice Pick hits double on a Frozen target.' },
     sirene:        { name: "Evacuation Siren", rarity: 'bleue', fuse: 'alerte', cost: 1, arch: 'Panique', target: 'all', weak: 2, vuln: 2, value: 15, text: 'Apply 2 Weak and 2 Vulnerable to all enemies.', combo: 'Vulnerable boosts every hit of multi-hit attacks.' },
-    scandale:      { name: 'Public Scandal', rarity: 'bleue', fuse: 'crise', cost: 1, arch: 'Zizanie', target: 'all', jealous: true, draw: 1, value: 15, text: 'Apply Jealousy to all enemies. Draw 1 card.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
+    scandale:      { name: 'Public Scandal', rarity: 'bleue', fuse: 'crise', cost: 1, arch: 'Zizanie', target: 'all', jealous: true, draw: 1, grudgeGain: 6, value: 15, text: 'Jealousy on all enemies, draw 1 card. +6 Grievances.', combo: "Play it when the target intends to attack. Fuel to the Fire doubles the redirected hit." },
     baroud:        { name: 'Last Stand', rarity: 'bleue', fuse: 'toutpourplace', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 24, value: 15, text: 'Lose 2 HP, then deal 24 damage.', combo: "Bandages refund the HP you sacrifice." },
     // --- 8 nouvelles lignées : 2 par archétype, pour raréfier les paires et donner de la profondeur sans classe ---
     echauffement: { name: "Primal Scream", rarity: 'blanche', cost: 1, arch: 'Instinct', target: 'self', force: 2, fuse: 'adrenaline', value: 4, text: 'Gain 2 Strength this combat.', combo: 'Multi-hit cards benefit on every hit.' },
@@ -1814,9 +1821,9 @@ body.in-combat .pops { top: 150px; }
     insulte:       { name: 'Insult', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'enemy', vuln: 1, dmg: 5, fuse: 'moquerie', value: 5, text: 'Apply 1 Vulnerable, then deal 5 damage.', combo: 'Multi-hit cards benefit on every hit.' },
     moquerie:      { name: 'Cruel Mockery', rarity: 'verte', cost: 1, arch: 'Panique', target: 'enemy', vuln: 2, dmg: 9, fuse: 'humiliation', value: 10, text: 'Apply 2 Vulnerable, then deal 9 damage.', combo: 'Multi-hit cards benefit on every hit.' },
     humiliation:   { name: 'Public Humiliation', rarity: 'bleue', fuse: 'endirect', cost: 1, arch: 'Panique', target: 'enemy', vuln: 3, dmg: 15, value: 15, text: 'Apply 3 Vulnerable, then deal 15 damage.', combo: 'Multi-hit cards benefit on every hit.' },
-    huile:         { name: 'Fuel to the Fire', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 5, jealousBoost: true, fuse: 'scene', value: 5, text: 'Deal 5 damage. If the target is Jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
-    scene:         { name: 'Domestic Spat', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 10, jealousBoost: true, fuse: 'divorce', value: 10, text: 'Deal 10 damage. If the target is Jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
-    divorce:       { name: 'Quickie Divorce', rarity: 'bleue', fuse: 'reglement', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 14, jealousBoost: true, value: 15, text: 'Deal 14 damage. If the target is Jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
+    huile:         { name: 'Fuel to the Fire', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 5, grudgeK: 1 / 3, jealousBoost: true, fuse: 'scene', value: 5, text: '5 damage, plus a third of your Grievances (which are cleared). If the target is jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
+    scene:         { name: 'Domestic Spat', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 10, grudgeK: 1 / 3, jealousBoost: true, fuse: 'divorce', value: 10, text: '10 damage, plus a third of your Grievances (which are cleared). If the target is jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
+    divorce:       { name: 'Quickie Divorce', rarity: 'bleue', fuse: 'reglement', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 14, grudgeK: 0.5, jealousBoost: true, value: 15, text: '14 damage, plus half your Grievances (which are cleared). If the target is jealous, its redirected hit is doubled.', combo: "After a Rumor or a Gossip, the redirected hit is doubled." },
     pansement:     { name: 'Makeshift Bandage', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'self', block: 4, heal: 3, fuse: 'bandage', value: 4, text: "Gain 4 Block. Heal 3 HP.", combo: "Refunds the HP from Blood Rush. With Medic, healing also grants Block." },
     bandage:       { name: 'Tight Bandage', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'self', block: 6, heal: 4, fuse: 'kit', value: 10, text: "Gain 6 Block. Heal 4 HP.", combo: "Refunds the HP from Blood Rush. With Medic, healing also grants Block." },
     kit:           { name: 'Survival Kit', rarity: 'bleue', fuse: 'transfusion', cost: 1, arch: 'Sacrifice', target: 'self', block: 8, heal: 6, value: 15, text: "Gain 8 Block. Heal 6 HP.", combo: "Refunds the HP from Blood Rush. With Medic, healing also grants Block." },
@@ -1834,8 +1841,8 @@ body.in-combat .pops { top: 150px; }
     congere:     { name: 'Snowdrift', rarity: 'verte', cost: 1, arch: 'Cryogénie', target: 'all', freeze: 1, dmg: 4, fuse: 'chambrefroide', value: 10, text: 'Freeze all enemies for 1 turn, then deal 4 damage to all.', combo: 'Freezes a whole brood: no cloning or growing this turn.' },
     bousculade:  { name: 'Jostle', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'enemy', weak: 1, dmg: 4, fuse: 'mouvement', value: 4, text: 'Apply 1 Weak, then deal 4 damage.', combo: 'Weak reduces the target\'s intended attack.' },
     mouvement:   { name: 'Crowd Surge', rarity: 'verte', cost: 1, arch: 'Panique', target: 'all', weak: 1, dmg: 4, fuse: 'sirene', value: 10, text: 'Apply 1 Weak to all enemies, then deal 4 damage to all.', combo: 'Against a group, it weakens everyone at once.' },
-    lettre:      { name: 'Anonymous Letter', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 3, fuse: 'dossier', value: 3, text: 'Apply Jealousy, then deal 3 damage.', combo: 'Its next hit goes to its partner. Fuel to the Fire makes it hurt more.' },
-    dossier:     { name: 'Compromising File', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 5, fuse: 'scandale', value: 8, text: 'Apply Jealousy, then deal 5 damage.', combo: 'Its next hit goes to its partner. Fuel to the Fire makes it hurt more.' },
+    lettre:      { name: 'Anonymous Letter', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 3, grudgeGain: 2, fuse: 'dossier', value: 3, text: 'Jealousy on the target, then 3 damage. +2 Grievances.', combo: 'Its next hit goes to its partner. Fuel to the Fire makes it hurt more.' },
+    dossier:     { name: 'Compromising File', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 5, grudgeGain: 3, fuse: 'scandale', value: 8, text: 'Jealousy on the target, then 5 damage. +3 Grievances.', combo: 'Its next hit goes to its partner. Fuel to the Fire makes it hurt more.' },
     prisesang:   { name: 'Blood Draw', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'self', selfHp: 1, draw: 2, fuse: 'saignee', value: 6, text: 'Lose 1 HP. Draw 2 cards.', combo: 'With Tourniquet, it costs no HP at all.' },
     saignee:     { name: 'Bloodletting', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'self', selfHp: 2, draw: 2, energy: 1, fuse: 'baroud', value: 12, text: 'Lose 2 HP. Draw 2 cards. Gain 1 energy.', combo: 'Healing cards refund the HP you lose.' },
     // Violettes : fusion de 2 bleues identiques, ou tête d'affiche aux étages 3 et 4.
@@ -1851,8 +1858,8 @@ body.in-combat .pops { top: 150px; }
     eclat: { name: "Pod Shard", rarity: 'violette', arch: 'Cryogénie', cost: 1, target: 'enemy', dmg: 14, bonusFrozen: 3, value: 22, text: "Deal 14 damage, tripled if the target is Frozen.", combo: "Freeze the target first." },
     alerte: { name: "Red Alert", rarity: 'violette', arch: 'Panique', cost: 1, target: 'all', weak: 3, vuln: 3, draw: 1, value: 22, text: "Apply 3 Weak and 3 Vulnerable to all enemies. Draw 1 card.", combo: "Multi-hit attacks benefit on every hit." },
     endirect: { name: "Live Humiliation", rarity: 'violette', arch: 'Panique', cost: 1, target: 'enemy', vuln: 4, dmg: 18, vulnLock: true, value: 22, text: "Apply 4 Vulnerable, then deal 18 damage. The target's Vulnerable no longer decreases.", combo: "EDEN is broadcasting it: the target stays Vulnerable all combat." },
-    crise: { name: "Fit of Jealousy", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'all', jealous: 'full', value: 22, text: "Apply Jealousy to all enemies: their entire next attack is redirected.", combo: "Against a couple, each one hits the other with its full attack." },
-    reglement: { name: "Settling Scores", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'enemy', dmg: 18, jealousBoost: 3, value: 22, text: "Deal 18 damage. If the target is Jealous, its redirected hit is tripled.", combo: "After a Rumor or a Fit of Jealousy." },
+    crise: { name: "Fit of Jealousy", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'all', jealous: 'full', grudgeGain: 4, value: 22, text: "Jealousy on all enemies: their whole next attack is redirected. +4 Grievances.", combo: "Against a couple, each one hits the other with its full attack." },
+    reglement: { name: "Settling Scores", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'enemy', dmg: 18, grudgeK: 0.5, jealousBoost: 3, value: 22, text: "18 damage, plus half your Grievances (which are cleared). If the target is jealous, its redirected hit is tripled.", combo: "After a Rumor or a Fit of Jealousy, or after taking a beating." },
     toutpourplace: { name: "All for the Seat", rarity: 'violette', arch: 'Sacrifice', cost: 1, target: 'enemy', selfHalf: true, halfCap: 20, halfMult: 3, refundHalf: true, value: 22, text: "Lose half your HP (20 at most), then deal triple that as damage. You get it back if you win the combat.", combo: "Emergency Transfusion refunds the stake." },
     transfusion: { name: "Emergency Transfusion", rarity: 'violette', arch: 'Sacrifice', cost: 1, target: 'self', block: 4, healLost: true, exhaust: true, value: 22, text: "Gain 4 Block, then heal all HP lost this combat. Exhaust.", combo: "Save it for the end of combat: the more HP you've lost, the more it heals." },
     // Finale : 8 oranges (légendaires) et 8 rouges (mythiques), une de chaque par famille. Elles n'existent que dans les
@@ -1863,7 +1870,7 @@ body.in-combat .pops { top: 150px; }
     fuitecoeur: { name: "Core Leak", rarity: 'orange', arch: 'Mutation', cost: 1, target: 'enemy', poison: 8, detonateAfter: true, value: 26, text: "Apply 8 Radiation, then the target immediately takes damage equal to its Radiation.", combo: "The more irradiated it was, the more it hurts." },
     zerokelvin: { name: "Zero Kelvin", rarity: 'orange', arch: 'Cryogénie', cost: 1, target: 'enemy', freeze: 3, dmg: 8, bonusFrozen: true, value: 26, text: "Freeze for 3 turns, then deal 8 damage, doubled if the target is Frozen.", combo: "It does its own freezing before the hit: 16 damage." },
     evacuation: { name: "General Evacuation", rarity: 'orange', arch: 'Panique', cost: 1, target: 'all', weak: 3, vuln: 3, dmg: 8, value: 26, text: "Apply 3 Weak and 3 Vulnerable to all enemies, then deal 8 damage to all.", combo: "Vulnerable is applied before the damage." },
-    deballage: { name: "Dirty Laundry", rarity: 'orange', arch: 'Zizanie', cost: 1, target: 'enemy', jealous: true, jealousBoost: 2, dmg: 10, value: 26, text: "Apply Jealousy; its redirected hit is doubled. Then deal 10 damage.", combo: "Alone, the target hits itself for half." },
+    deballage: { name: "Dirty Laundry", rarity: 'orange', arch: 'Zizanie', cost: 1, target: 'enemy', jealous: true, jealousBoost: 2, dmg: 10, grudgeK: 0.5, value: 26, text: "Jealousy on the target, and its redirected hit is doubled. Then 10 damage, plus half your Grievances (which are cleared).", combo: "A jealous candidate hits themselves in full; a lone monster, for half." },
     donsang: { name: "Universal Donor", rarity: 'orange', arch: 'Sacrifice', cost: 1, target: 'enemy', selfHp: 3, dmg: 28, value: 26, text: "Lose 3 HP, then deal 28 damage.", combo: "Tourniquet cuts the stake to 1 HP." },
     loijungle: { name: "Law of the Jungle", rarity: 'rouge', arch: 'Instinct', cost: 1, target: 'enemy', forceMult: 2, forceFirst: true, dmg: 4, hits: 4, value: 30, text: "Double your Strength this combat, then deal 4 damage four times.", combo: "Stack Strength first: it doubles before the hits." },
     archenoe: { name: "Noah's Ark", rarity: 'rouge', arch: 'Blindage', cost: 2, target: 'enemy', block: 12, dmgFromBlock: true, hits: 2, blockLock: true, value: 30, text: "Gain 12 Block, then deal damage equal to your Block twice. Your Block no longer expires this combat.", combo: "Afterward, every Shoulder Bash hits with all your Block." },
@@ -1871,7 +1878,7 @@ body.in-combat .pops { top: 150px; }
     fission: { name: "Fission", rarity: 'rouge', arch: 'Mutation', cost: 2, target: 'all', poisonMult: 2, poison: 8, radLock: true, detonateAfter: true, value: 30, text: "Double all enemies' Radiation, then apply 8 more to each: each one takes that much damage at once, and it no longer decreases this combat.", combo: "Irradiate first, then trigger Fission." },
     glaciaire: { name: "Ice Age", rarity: 'rouge', arch: 'Cryogénie', cost: 2, target: 'all', freeze: 3, stripFrozen: true, dmg: 12, bonusFrozen: true, value: 30, text: "Freeze all enemies for 3 turns and strip their Block, then deal 12 damage to all, doubled on Frozen targets.", combo: "24 damage to all enemies, with their Block stripped." },
     foule: { name: "Crowd Surge", rarity: 'rouge', arch: 'Panique', cost: 1, target: 'all', weak: 4, vuln: 4, vulnLock: true, draw: 1, exhaust: true, value: 30, text: "Apply 4 Weak and 4 Vulnerable to all enemies. Draw 1 card. Their Vulnerable no longer decreases. Exhaust.", combo: "All your later attacks deal +50%." },
-    drame: { name: "Marital Drama", rarity: 'rouge', arch: 'Zizanie', cost: 1, target: 'all', jealous: true, jealousBoost: 3, draw: 1, value: 30, text: "Apply Jealousy to all enemies; their redirected hits are tripled. Draw 1 card.", combo: "Against a couple, they knock each other out." },
+    drame: { name: "Marital Drama", rarity: 'rouge', arch: 'Zizanie', cost: 1, target: 'all', jealous: true, jealousBoost: 3, draw: 1, grudgeGain: 10, value: 30, text: "Jealousy on all enemies, and their redirected hits are tripled. Draw 1 card. +10 Grievances.", combo: "Against a couple, they knock each other out." },
     // Coups bas (serre et ménagerie) : sans famille, faibles contre un monstre, forts contre un postulant (duel, finale).
     // Ce qu'on laisse passer, la voisine peut le jouer contre vous : c'est le dilemme du draft.
     coude: { name: "Elbow Jab", rarity: 'verte', arch: 'Coup bas', lowblow: true, cost: 1, target: 'enemy', dmg: 4, duelMult: 3, value: 8, text: "Deal 4 damage. Vs. a candidate: tripled.", combo: "In duels and the final, 12 damage for 1 energy." },
@@ -1928,10 +1935,10 @@ body.in-combat .pops { top: 150px; }
       pitch: 'The ticket holder didn\'t show up, so EDEN grabbed the first body available to fill the gap. Sometimes upgraded, sometimes loaded like a mule.',
       line: 'Stand-in. This ticket\'s holder didn\'t show up. He\'s dead, but I hate empty seats. You\'ll do. Sometimes.' },
     // Châssis solide (+8 % PV) qui se répare mal (soins divisés par deux) : 10 % de champions au banc (6,6 % sans les +8 %)
-    maintenance: { name: 'Maintenance Unit', fem: 'Maintenance Unit', hpMult: 1.08, atk: 'decharge', def: 'veille', style: 'Stored energy', mods: { battery: 1, healMult: 0.5 },
+    maintenance: { name: 'Maintenance Unit', fem: 'Maintenance Unit', hpMult: 1.04, atk: 'decharge', def: 'veille', style: 'Stored energy', mods: { battery: 1, healMult: 0.75 },
       talent: { name: 'Battery', text: 'At the end of your turn, 1 unspent energy is kept for the next turn.' },
-      drawback: { name: 'Bodywork', text: 'Healing (cards and rooms) restores half as much HP.' },
-      pitch: 'An ark robot that filled out its own application. Sturdy chassis (max HP +8%), a little battery in reserve, but hard to repair.',
+      drawback: { name: 'Bodywork', text: 'Healing (cards and rooms) restores a quarter less HP.' },
+      pitch: 'An ark robot that filled out its own application. Sturdy chassis (max HP +4%), a little battery in reserve, but hard to repair.',
       line: 'Maintenance Unit. You filled out your own application. I have nothing against robots: I am one. That\'s exactly what worries me.' },
   };
   const CLASS_IDS = Object.keys(CLASSES);
@@ -2132,7 +2139,7 @@ body.in-combat .pops { top: 150px; }
                   { name: 'Gontran', hp: 44, pattern: ['becfort', 'becfort', 'cacarder'] } ] };
   const DOLLY = { id: 'dolly', name: 'Dolly, the Irradiated Ewe', short: 'Dolly', species: 'Mutant ewe', diff: 'Floor boss', par: 6, chief: true,
       loss: { mean: 9.7, sd: 7.4 },
-      monsters: [ { name: 'Dolly', hp: 90, pattern: ['ruade', 'laine', 'ruade'], clone: { every: 2, max: 3, ratio: 0.5 } } ] };
+      monsters: [ { name: 'Dolly', hp: 100, pattern: ['ruade', 'laine', 'ruade'], clone: { every: 3, max: 3, ratio: 0.5 } } ] }; // 0.83 : 100 PV, clone tous les 3 tours (morts 26 → 16,5 %)
   // Fusion sans perte (27/10) : une carte fusionnée garde ses points de famille, les decks sont mieux spécialisés. Avec
   // le troisième palier à 16 points (au lieu de 12), la serre retrouve ses monstres de la v44, et la ménagerie garde
   // +5 % de PV (valeurs arrondies). Les duels et la finale ne changent pas.
@@ -2287,13 +2294,13 @@ body.in-combat .pops { top: 150px; }
       { name: 'Provocateur', text: 'Vulnerable you apply causes +75% damage instead of +50%.' },
       { name: 'Run for Your Lives', text: 'Weak and Vulnerable you apply last 2 more turns.' },
       { name: 'Paralyzed', text: 'An enemy that reaches 3 Weak loses its next turn, then its Weak drops to 0.',
-        foeText: 'When your Weak reaches 3, you lose 2 energy next turn (never two turns in a row), then your Weak drops to 0.' },
+        foeText: 'When your Weak reaches 3, you lose 1 energy and your most expensive card next turn (never two turns in a row), then your Weak drops to 0.' },
       { name: 'Terror', text: 'A paralyzed enemy also becomes Vulnerable for 3 turns.',
         foeText: 'When you are paralyzed, you also become Vulnerable for 3 turns.' } ] },
     'Zizanie': { tiers: [
       { name: 'Troublemaker', text: 'Hits redirected by Jealousy deal +100% damage.' },
       { name: 'Forked Tongue', text: 'Redirected hits deal +125% damage, instead of +100%.' },
-      { name: 'Grudge', text: 'Your Jealousy no longer fades at end of turn and redirects the target\'s whole attack; alone, the target takes its own hits in full.' },
+      { name: 'Grudge', text: 'Your Jealousy no longer fades at end of turn and redirects the target\'s whole attack; alone, even a monster takes its own hits in full.' },
       { name: 'Apple of Discord', text: 'Redirected hits deal +200% damage, instead of +125%.' } ] },
     'Sacrifice': { tiers: [
       { name: 'Medic', text: 'Every heal also gives you that much Block, and HP your cards make you lose is given back after each victory.' },
@@ -2310,7 +2317,8 @@ body.in-combat .pops { top: 150px; }
   let ZIZ_MULT = [2, 2.25], CRYO_TURNS = [0, 1], CAP_OFF = [], CRYO_DMG = [2, 4], SAC_REFUND = 1, GARROT = 2; // SAC_REFUND : part des PV sacrifiés rendue à la victoire (Secouriste)
   // Rééquilibrage après l'allongement des combats : Sauve-qui-peut +2 tours, coup détourné entier contre une cible seule
   // avec Rancune (palier 16), Système D qui pioche, Tétanisé à 3, Réaction en chaîne +3, Gel en duel : 1 énergie par Gel.
-  let STUN_PLAYER = 2; // Tétanisé, côté joueur : énergie perdue (avant : tout le tour)
+  let DUEL_RAD_HALF = true, DUEL_HEAL = 0.25, DUEL_HEAL_OF = 'max'; // 0.83 : Radiation divisée par deux en duel ; soin de fin de duel ('max' : part des PV maximum, 'perte' : part des PV perdus au duel)
+  let STUN_PLAYER = 1; // Tétanisé, côté joueur : énergie perdue (avant : tout le tour ; 0.83 : 1 au lieu de 2, et la carte la plus chère défaussée)
   let PAN_EXTRA = 2, ZIZ_SELF_T = 3, PRED_FLAT = 8, SYSD_DRAW = true, LB_BLOCK = 20, STUN_AT = 3, CHAIN_N = 3, RANCUNE_FULL = true, DUEL_CHILL = true; // CAP_OFF : familles dont le palier 12 est coupé (mesures seulement)
   // Palier 36 (0.80) : Superprédateur (+1 Force par tour), Cœur du réacteur (+6, tous les ennemis), Arche blindée (+8 armure
   // par tour), Couteau suisse (+1 énergie), Ère glaciaire (Zéro absolu à 25 PV), Terreur (le tétanisé devient Vulnérable 3 tours), Pomme de discorde
@@ -2319,6 +2327,13 @@ body.in-combat .pops { top: 150px; }
   const t4 = (sp, a) => tierOf(sp, a) >= 4;
   const knifeOf = sp => (t4(sp, 'Débrouille') ? KNIFE : 0);
   const zizMult = z => (z >= 4 ? ZIZ_MULT4 : z >= 2 ? ZIZ_MULT[1] : ZIZ_MULT[0]);
+  // Zizanie, refonte « Règlement de comptes » (0.83, choisie par Raphaël) : chaque PV qu'un adversaire vous fait perdre d'un
+  // coup (armure déduite ; ni la Radiation, ni vos propres cartes, ni la Jalousie) vous donne 1 Grief. Les cartes à grudgeK
+  // ajoutent cette part de vos Griefs à leur premier coup, puis les vident ; celles à grudgeGain en ajoutent.
+  // Contre un postulant seul, le coup détourné par la Jalousie porte en entier, des deux côtés (DUEL_SELF_FULL).
+  // GRIEF_W : ce que les bots prêtent à un Grief gardé pour plus tard.
+  let DUEL_SELF_FULL = true, GRIEF_W = 0.35;
+  const griefBonus = (g, card) => Math.floor((g || 0) * (card.grudgeK || 0));
   const cryoTurns = sp => { const t = tierOf(sp, 'Cryogénie'); return t >= 2 ? CRYO_TURNS[1] : t >= 1 ? CRYO_TURNS[0] : 0; };
   // Radiation en plus par carte selon le palier de Mutation (Surdose, palier 8 : +2)
   let SURDOSE = 2;
@@ -2469,7 +2484,7 @@ body.in-combat .pops { top: 150px; }
   // Plusieurs coups bas dans le deck les renforcent (idée de Raphaël), hors de la limite des deux familles actives.
   const LOWBLOW_TIERS = [
     { n: 2, name: 'Sneaky', text: 'One of your low blows is in your hand on the first turn of each duel and of the final.' },
-    { n: 3, name: 'Devious', text: 'Your low blows cost nothing against a candidate.' },
+    { n: 3, name: 'Devious', text: 'Your first low blow each turn costs nothing against a candidate.' },
     { n: 5, name: 'Scoundrel', text: 'Against a candidate, your low blows have double the effect.' } ];
   const lowblowCount = ids => ids.filter(id => CARDS[id] && CARDS[id].lowblow).length;
   // Poids d'un coup bas pour ses paliers : 1 pour toutes les classes (le Fraudeur du clandestin a été retiré :
@@ -2819,7 +2834,7 @@ body.in-combat .pops { top: 150px; }
   // Version du protocole : seules les parties de même version se retrouvent à une table (mêmes cartes, mêmes règles)
   // À chaque changement du moteur (cartes, règles), on l'augmente : l'arbitre des duels n'a qu'un moteur, les tables ne
   // mélangent pas les versions (tools/build_edge.js le rappelle si on l'oublie)
-  const LIVE_VERSION = 14; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73) ; 13 : palier 36 des familles (0.80) ; 14 : Bouche-trou et Unité de maintenance (0.81)
+  const LIVE_VERSION = 15; // 15 : équilibre (0.83) ; 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73) ; 13 : palier 36 des familles (0.80) ; 14 : Bouche-trou et Unité de maintenance (0.81)
   // Une carte telle que le serveur la garde : de quoi faire choisir un bot (valeur, famille, points, rareté)
   const liveCard = id => { const c = CARDS[id]; return { id, v: c.value || 0, a: ARCHS.includes(c.arch) ? c.arch : '', p: ptsOf(id), r: c.rarity }; };
   // Ce qu'un joueur apporte à la table : son nom, sa classe, sa silhouette, ses cartes d'avant ce draft (hors cartes de base)
@@ -3033,14 +3048,14 @@ body.in-combat .pops { top: 150px; }
     const dc = dw.combat, m = duelBoss(dw), b = m.duel, p = dc.player, L = dw.liveDuel || {};
     const hostLost = dc.over && dc.result !== 'victoire';
     const foe = { i: 0, name: L.hName || 'Candidate', hp: Math.max(0, dw.hp), maxHp: maxHpOf(dw), hpStart: dc.hpStart, block: p.block, keepBlock: !!p.keepBlock, blockLock: !!p.blockLock,
-      weak: p.weak, vuln: p.vuln, vulnLock: !!p.vulnLock, poison: p.poison, frozen: p.frozen, chill: p.chill || 0, force: p.force, jealous: p.jealous || 0, jealousMult: p.jealousMult || 1,
+      weak: p.weak, vuln: p.vuln, vulnLock: !!p.vulnLock, poison: p.poison, frozen: p.frozen, chill: p.chill || 0, force: p.force, jealous: p.jealous || 0, jealousMult: p.jealousMult || 1, grudge: p.grudge || 0,
       stunned: !!p.stunned, stunCd: p.stunCd || 0, tripped: p.tripped || 0, fury: false, alive: !hostLost, pattern: [], step: 0, spec: dc.spec, touche: dc.touche, lowTier: dc.lowTier,
       cls: dw.cls, tcls: dw.cls, deckIds: activeCards(dw).map(x => x.id), sacrificed: dc.sacrificed || 0, lastBreath: !!dc.lastBreath, radLock: !!dc.radLock, finale: false, preLoss: [],
       duel: { draw: dc.draw, hand: dc.hand, discard: dc.discard, exhausted: dc.exhausted, energy: p.energy, played: dc.played, turns: dc.turn, predUsed: !!dc.predUsed,
         nowEnergy: dc.side === 'h' && !dc.over ? p.energy : null, luck: dc.luck || {} }, battery: dc.battery || 0 };
     const combat = { turn: dc.turn, draw: b.draw, hand: b.hand, discard: b.discard, exhausted: b.exhausted, monsters: [foe],
       player: { block: m.block, keepBlock: !!m.keepBlock, blockLock: !!m.blockLock, energy: b.energy, weak: m.weak, vuln: m.vuln, vulnLock: !!m.vulnLock, force: m.force, poison: m.poison,
-        frozen: m.frozen, chill: m.chill || 0, jealous: m.jealous || 0, jealousMult: m.jealousMult || 1, stunned: !!m.stunned, stunCd: m.stunCd || 0, tripped: m.tripped || 0, bribed: 0 },
+        frozen: m.frozen, chill: m.chill || 0, jealous: m.jealous || 0, jealousMult: m.jealousMult || 1, stunned: !!m.stunned, stunCd: m.stunCd || 0, tripped: m.tripped || 0, bribed: 0, grudge: m.grudge || 0 },
       hpStart: m.hpStart, over: dc.over, result: dc.over ? (hostLost ? 'victoire' : 'mort') : null, inPlayerTurn: dc.side === 'g', deathsThisTurn: 0, lowHpWarned: false,
       played: b.played, sacrificed: m.sacrificed || 0, paid: m.paid || 0, refund: m.refund || 0, radLock: !!m.radLock, predUsed: !!b.predUsed, lastBreath: !!m.lastBreath,
       cls: m.tcls, spec: m.spec, touche: m.touche, lowTier: m.lowTier, edenRule: null, luck: b.luck || {}, battery: m.battery || 0 };
@@ -3080,6 +3095,10 @@ body.in-combat .pops { top: 150px; }
       else if (t === 'playerStunned') out.push(Object.assign({ type: 'stunned' }, H));
       else if (t === 'jealous') out.push({ type: 'jealousPlayer', name: hName });
       else if (t === 'jealousPlayer') out.push(Object.assign({ type: 'jealous' }, H));
+      else if (t === 'grudgeSpent') out.push({ type: 'grudgeSpentBoss', name: hName, n: e.n, bonus: e.bonus });
+      else if (t === 'grudgeSpentBoss') out.push({ type: 'grudgeSpent', n: e.n, bonus: e.bonus });
+      else if (t === 'grudgeGain') out.push({ type: 'grudgeGainBoss', name: hName, n: e.n, total: e.total });
+      else if (t === 'grudgeGainBoss') out.push({ type: 'grudgeGain', n: e.n, total: e.total });
       else if (t === 'chain') out.push({ type: 'chainPlayer', name: hName, poison: e.poison });
       else if (t === 'chainPlayer') out.push(Object.assign({ type: 'chain', poison: e.poison }, H));
       else if (t === 'bossFrozen') out.push({ type: 'playerFrozen' });
@@ -3317,8 +3336,10 @@ body.in-combat .pops { top: 150px; }
   // PV des monstres et de leurs coups par étage (tools/bots_bench.js). 0.79.1, « un peu plus dur » : ~10 % de champions
   // simulés (0.79 : 15 %, 0.78 : 13 %), des combats plus courts et plus dangereux. PV : 0.79 1,8 / 1,65 / 1,85 / 1,9 ;
   // 0.78 1,5 / 1,4 / 1,55 / 1,6. Coups : ×1 avant la 0.79.1 (vos PV d'étage étaient 1,5 fois plus bas).
+  // 0.83 : le soin de 25 % après un duel gagné est compensé par des coups plus lourds (avant : 1,25 / 1,35 / 1,35 / 1,35),
+  // pas par des monstres plus épais : ~13 % de champions simulés, morts contre les monstres de l'étage 1 inchangées (13 %).
   let MOB_HP = { 1: 1.6, 2: 1.5, 3: 1.65, 4: 1.7 };
-  let MOB_DMG = { 1: 1.25, 2: 1.35, 3: 1.35, 4: 1.35 };
+  let MOB_DMG = { 1: 1.55, 2: 1.7, 3: 1.7, 4: 1.7 };
   const mobHp = (run, hp) => (run.finale ? hp : Math.round(hp * (MOB_HP[floorOf(run)] || 1) * (T(run, 1) ? 1.1 : 1) * (T(run, 2) && run.encounter === 2 ? 1.15 : 1))); // Turbulences 1 et 2
   function startCombat(run) {
     dailySeed(run, floorOf(run) * 32 + (run.finale ? 30 : run.encounter + 1));
@@ -3404,6 +3425,7 @@ body.in-combat .pops { top: 150px; }
     if (card.selfHalf) { const hp = run.hp - (c.edenRule === 'taxe' && run.hp > 1 ? 1 : 0); return (card.halfMult || 2) * Math.min(card.halfCap || Infinity, Math.floor(hp / 2)); }
     if (card.dmgFromBlock) return c.player.block * (card.doubleBlock ? 2 : 1) + (card.block || 0);
     if (card.perCard && card.dmg) return card.dmg + card.perCard * c.played;
+    if (card.grudgeK && card.dmg && c.player.grudge > 0) return card.dmg + griefBonus(c.player.grudge, card);
     return null;
   }
   function dmgFromPlayer(run, base, m) {
@@ -3463,6 +3485,7 @@ body.in-combat .pops { top: 150px; }
     const absorbed = m.swallow && run.combat.player.swallowed > 0 ? 0 : Math.min(m.block, d); // de l'intérieur, son armure ne compte pas
     m.block -= absorbed; d -= absorbed;
     m.hp -= d;
+    if (m.duel && d > 0) m.grudge = (m.grudge || 0) + d; // ses Griefs (Zizanie)
     emit(run, 'hitMonster', { i: m.i, name: m.name, dmg: d, absorbed });
     // Épines : chaque coup porté au crapaud vous blesse (avant sa mise en cryo, pour qu'une mort par les épines compte)
     if (m.thorns) { emit(run, 'thorns', { name: m.name, dmg: m.thorns }); hitPlayer(run, m.thorns, `${m.name} (thorns)`); }
@@ -3583,7 +3606,7 @@ body.in-combat .pops { top: 150px; }
     let d = raw * (m.jealousMult || (m.jealousX2 ? 2 : 1));
     if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
     const t = partner || m;
-    if (!partner && !(zizSpec >= ZIZ_SELF_T)) d = Math.floor(d / 2);
+    if (!partner && !(m.duel && DUEL_SELF_FULL) && !(zizSpec >= ZIZ_SELF_T)) d = Math.floor(d / 2);
     if (t.vuln > 0) d = Math.floor(d * 1.5);
     const absorbed = Math.min(t.block, d);
     t.block -= absorbed; d -= absorbed; t.hp -= d;
@@ -3595,18 +3618,20 @@ body.in-combat .pops { top: 150px; }
     const p = run.combat.player;
     let d = raw * (p.jealousMult || (p.jealousX2 ? 2 : 1));
     if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
-    d = Math.floor(d / 2);
+    if (!DUEL_SELF_FULL) d = Math.floor(d / 2);
     if (p.vuln > 0) d = Math.floor(d * 1.5);
     emit(run, 'playerJealous', { dmg: d });
     hitPlayer(run, d, 'Jealousy');
   }
 
-  function hitPlayer(run, amount, by) {
+  // grief : un coup d'adversaire (attaque d'un monstre, carte de la postulante) ; les PV perdus deviennent des Griefs
+  function hitPlayer(run, amount, by, grief) {
     const p = run.combat.player;
     const absorbed = Math.min(p.block, amount);
     p.block -= absorbed;
     const d = amount - absorbed;
     run.hp -= d;
+    if (grief && d > 0) p.grudge = (p.grudge || 0) + d;
     emit(run, 'hitPlayer', { dmg: d, absorbed, by });
     if (run.hp <= 0) playerHpCheck(run);
     else if (run.hp < 0.3 * maxHpOf(run) && !run.combat.lowHpWarned) { run.combat.lowHpWarned = true; emit(run, 'lowHp'); }
@@ -3623,7 +3648,7 @@ body.in-combat .pops { top: 150px; }
         if (c.over || !m.alive) break;
         if (jl && (k === 0 || jl === 2)) { jealousHitMonster(run, m, rawHit(act.dmg, m), tierOf(c.spec, 'Zizanie')); continue; }
         const hadBlock = c.player.block > 0;
-        hitPlayer(run, monsterAttackValue(run, m, act), m.name);
+        hitPlayer(run, monsterAttackValue(run, m, act), m.name, true);
         if (hadBlock && playerBarbed(c)) barbedHit(run, m);
       }
       if (jl) { m.jealous = 0; m.jealousMult = 1; m.jealousX2 = false; }
@@ -3678,7 +3703,7 @@ body.in-combat .pops { top: 150px; }
     const c = run.combat, card = CARDS[id], sp = (c && c.spec) || {};
     const energy = withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(sp, 'Débrouille') >= 3 && c && c.played === 0 && card.cost > 0 ? 1 : 0)), luckOf(c, ci)); // Bouche-trou
     const hp = card.selfHp ? Math.max(0, card.selfHp - (tierOf(sp, 'Sacrifice') >= 2 ? GARROT : 0)) : 0;
-    const free = card.lowblow && c && c.lowTier >= 2 && c.monsters.some(m => m.duel && m.alive); // Fourbe
+    const free = card.lowblow && c && c.lowTier >= 2 && !c.lbFree && c.monsters.some(m => m.duel && m.alive); // Fourbe (0.83 : un par tour)
     const res = edenAdjust(run, card, { energy: free ? 0 : energy, hp });
     // Personne à viser (le dernier drone est en patrouille) : les cartes à cible unique attendent son retour
     if (card.target === 'enemy' && c && c.monsters && c.monsters.some(m => m.alive) && !c.monsters.some(m => m.alive && !m.away)) res.blocked = true;
@@ -3704,7 +3729,7 @@ body.in-combat .pops { top: 150px; }
       targets = [t];
     } else if (card.target === 'all') targets = liv;
 
-    c.player.energy -= pc.energy;
+    c.player.energy -= pc.energy; if (card.lowblow && c.lowTier >= 2 && c.monsters.some(x => x.duel)) c.lbFree = true;
     if (c.luck && c.luck[ci.uid]) delete c.luck[ci.uid]; // Bouche-trou : jouée, elle perd son surclassement (ou son excédent)
     c.hand.splice(h, 1);
     emit(run, 'play', { id: ci.id });
@@ -3762,11 +3787,13 @@ body.in-combat .pops { top: 150px; }
         if (predFlat && k === 0) base += predFlat;
         if (card.duelMult && m.duel) base *= card.duelMult * lbX(c.lowTier, card);
         if (card.bonusFrozen && m.frozen > 0) base *= (card.bonusFrozen === true ? 2 : card.bonusFrozen);
+        if (card.grudgeK && k === 0) base += griefBonus(p.grudge, card);
         if (pj && (first || pj === 2)) { first = false; jealousHitPlayer(run, rawHit(base, p), tierOf(boss && boss.spec, 'Zizanie')); return; }
         first = false;
         dealToMonster(run, m, base, {});
         if (card.forcePerHit && !c.over) p.force += card.forcePerHit;
       });
+      if (card.grudgeK) { const g0 = p.grudge || 0; p.grudge = 0; if (g0) emit(run, 'grudgeSpent', { n: g0, bonus: Math.floor(g0 * card.grudgeK) }); }
       if (pj) { p.jealous = 0; p.jealousMult = 1; p.jealousX2 = false; }
     }
     targets.forEach(m => {
@@ -3784,6 +3811,7 @@ body.in-combat .pops { top: 150px; }
       if (card.blockLock) c.player.blockLock = true;
       if (!card.forceFirst) applyForce(run, p, card, true);
       if (card.energy) c.player.energy += card.energy;
+      if (card.grudgeGain) { p.grudge = (p.grudge || 0) + card.grudgeGain; emit(run, 'grudgeGain', { n: card.grudgeGain, total: p.grudge }); }
       if (card.healLost && run.hp < c.hpStart) {
         // Transfusion d'urgence : soigne tous les PV perdus depuis le début du combat (une fois, elle est épuisée)
         const before = run.hp;
@@ -3835,7 +3863,7 @@ body.in-combat .pops { top: 150px; }
       if (m.poison > 0) {
         m.hp -= m.poison;
         emit(run, 'poisonTick', { i: m.i, name: m.name, dmg: m.poison });
-        if (!c.spec['Mutation'] && !c.radLock) m.poison--;
+        if (m.duel && DUEL_RAD_HALF && !c.radLock) m.poison = Math.floor(m.poison / 2); else if (!c.spec['Mutation'] && !c.radLock) m.poison--; // 0.83 : en duel, la Radiation est divisée par deux à chaque tour
         if (m.hp <= 0) { toCryo(run, m, {}); if (!m.alive) continue; }
         else zeroCheck(run, m);
         if (!m.alive) continue;
@@ -3953,8 +3981,8 @@ body.in-combat .pops { top: 150px; }
     c.turn++;
     if (c.turn > MAX_TURNS) {
       c.turn = MAX_TURNS;
-      const bm = run.liveDuel && c.monsters.find(x => x.duel);
-      if (bm) { c.liveWhy = 'temps'; endCombat(run, run.hp / maxHpOf(run) > bm.hp / bm.maxHp ? 'victoire' : 'depressurisation'); return; } // duel en direct : le plus entamé perd
+      const bm = c.monsters.find(x => x.duel && x.alive); // 0.83 : en solo aussi, le plus entamé perd (avant : toujours vous)
+      if (bm) { if (run.liveDuel) c.liveWhy = 'temps'; endCombat(run, run.hp / maxHpOf(run) > bm.hp / bm.maxHp ? 'victoire' : 'depressurisation'); return; } // duel en direct : le plus entamé perd
       endCombat(run, 'depressurisation'); return;
     }
     if (p.blockLock) { /* Coque de l'arche */ } else if (p.keepBlock) p.keepBlock = false; else p.block = tierOf(c.spec, 'Blindage') >= 3 ? p.block : tierOf(c.spec, 'Blindage') ? Math.floor(p.block / 2) : 0;
@@ -3968,7 +3996,7 @@ body.in-combat .pops { top: 150px; }
     c.inPlayerTurn = true;
     c.deathsThisTurn = 0;
     c.played = 0;
-    c.predUsed = false;
+    c.predUsed = false; c.lbFree = false;
     emit(run, 'turnStart', { turn: c.turn });
     // Réaction en chaîne (Mutation, 16) : chaque ennemi irradié gagne +3 Radiation ; Cœur du réacteur (36) : +6, et tous les ennemis
     const mt = tierOf(c.spec, 'Mutation');
@@ -3977,14 +4005,14 @@ body.in-combat .pops { top: 150px; }
       run.hp -= p.poison;
       emit(run, 'playerPoison', { dmg: p.poison });
       const bossM = c.monsters.find(x => x.duel && x.alive);
-      if (!(bossM && (bossM.spec['Mutation'] || bossM.radLock))) p.poison--;
+      if (bossM && DUEL_RAD_HALF && !bossM.radLock) p.poison = Math.floor(p.poison / 2); else if (!(bossM && (bossM.spec['Mutation'] || bossM.radLock))) p.poison--; // 0.83 : en duel, divisée par deux
       if (run.hp <= 0) { playerHpCheck(run); if (c.over) return; }
     }
-    // Tétanisé par une postulante (Panique, 16) : 2 énergie de moins, pas tout le tour ; puis un tour de répit avant la prochaine tétanie
-    if (p.stunned) { p.stunned = false; const lost = Math.min(p.energy, STUN_PLAYER); p.energy -= lost; p.stunCd = 1; emit(run, 'playerStunned', { n: lost }); }
+    // Tétanisé par une postulante (Panique, 16) : 1 énergie de moins et la carte la plus chère défaussée (0.83 ; avant : 2 énergie) ; puis un tour de répit
+    if (p.stunned) { p.bribed = (p.bribed || 0) + 1; p.stunned = false; const lost = Math.min(p.energy, STUN_PLAYER); p.energy -= lost; p.stunCd = 1; emit(run, 'playerStunned', { n: lost }); }
     else if (p.stunCd) p.stunCd--;
-    if (DUEL_CHILL) { if (p.chill) { p.energy -= 1; p.chill = 0; emit(run, 'playerFrozen'); } if (p.frozen > 0) p.frozen--; }
-    else if (p.frozen > 0) { p.energy -= 1; p.frozen--; emit(run, 'playerFrozen'); }
+    if (DUEL_CHILL) { if (p.chill) { p.energy = Math.max(0, p.energy - 1); p.chill = 0; emit(run, 'playerFrozen'); } if (p.frozen > 0) p.frozen--; } // 0.83 : jamais sous 0
+    else if (p.frozen > 0) { p.energy = Math.max(0, p.energy - 1); p.frozen--; emit(run, 'playerFrozen'); }
     if (p.tripped) { p.energy = Math.max(0, p.energy - p.tripped); emit(run, 'playerTripped', { n: p.tripped }); p.tripped = 0; }
     drawCards(run, HAND + (c.spec['Débrouille'] ? 1 : 0) - (c.edenRule === 'austerite' ? 1 : 0) + turnMod(mo, 'draw', c.turn));
     while (p.bribed > 0 && c.hand.length) {
@@ -4078,7 +4106,7 @@ body.in-combat .pops { top: 150px; }
     return Math.max(0, d);
   }
   // Coût réel d'une carte pour la postulante (mêmes paliers que le joueur)
-  function bossCost(m, card, ci) { const lk = luckOf(m.duel, ci); if (card.lowblow && m.lowTier >= 2) return withLuck(0, lk); return withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(m.spec, 'Débrouille') >= 3 && m.duel.played === 0 && card.cost > 0 ? 1 : 0)), lk); }
+  function bossCost(m, card, ci) { const lk = luckOf(m.duel, ci); if (card.lowblow && m.lowTier >= 2 && !m.duel.lbFree) return withLuck(0, lk); return withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(m.spec, 'Débrouille') >= 3 && m.duel.played === 0 && card.cost > 0 ? 1 : 0)), lk); }
   const bossSelfHp = (m, card) => card.selfHp ? Math.max(0, card.selfHp - (tierOf(m.spec, 'Sacrifice') >= 2 ? GARROT : 0)) : 0;
   function bossCardScore(run, m, card, ci) {
     const p = run.combat.player;
@@ -4117,13 +4145,15 @@ body.in-combat .pops { top: 150px; }
     if (card.duelBribe) s += 4;
     if (card.duelVuln) s += card.duelVuln - (card.vuln || 0);
     if (card.jealousBoost && p.jealous) s += 4;
+    if (card.grudgeGain) s += card.grudgeGain * GRIEF_W;
+    if (card.grudgeK) s += griefBonus(m.grudge, card) - (m.grudge || 0) * GRIEF_W;
     if (card.selfHp) { const sh = bossSelfHp(m, card); if (m.hp <= sh + 4) return 0; s -= sh * 0.8; }
     return s / Math.max(1, bossCost(m, card, ci));
   }
   function bossPlayCard(run, m, h) {
     const c = run.combat, p = c.player, b = m.duel;
     const ci = b.hand.splice(h, 1)[0], card = toucheCard(m.touche, ci.id);
-    b.energy -= bossCost(m, card, ci);
+    b.energy -= bossCost(m, card, ci); if (card.lowblow && m.lowTier >= 2) b.lbFree = true;
     if (b.luck && b.luck[ci.uid]) delete b.luck[ci.uid];
     emit(run, 'bossPlay', { name: m.name, id: ci.id });
     const fx0 = { block: m.block || 0, weak: p.weak || 0, vuln: p.vuln || 0, frozen: p.frozen || 0, poison: p.poison || 0 };
@@ -4162,12 +4192,14 @@ body.in-combat .pops { top: 150px; }
         if (predFlat && k === 0) base += predFlat;
         if (card.duelMult) base *= card.duelMult * lx;
         if (card.bonusFrozen && p.frozen > 0) base *= (card.bonusFrozen === true ? 2 : card.bonusFrozen);
+        if (card.grudgeK && k === 0) base += griefBonus(m.grudge, card);
         if (jl && (k === 0 || jl === 2)) { jealousHitMonster(run, m, rawHit(base, m), tierOf(c.spec, 'Zizanie')); continue; }
         const hadBlock = p.block > 0;
-        hitPlayer(run, bossDmg(run, m, base), m.name);
+        hitPlayer(run, bossDmg(run, m, base), m.name, true);
         if (hadBlock && playerBarbed(c)) barbedHit(run, m);
         if (card.forcePerHit) m.force += card.forcePerHit;
       }
+      if (card.grudgeK) { const g0 = m.grudge || 0; m.grudge = 0; if (g0) emit(run, 'grudgeSpentBoss', { name: m.name, n: g0, bonus: Math.floor(g0 * card.grudgeK) }); }
       if (jl) { m.jealous = 0; m.jealousMult = 1; m.jealousX2 = false; }
     }
     if (card.poisonMult) p.poison *= card.poisonMult;
@@ -4183,6 +4215,7 @@ body.in-combat .pops { top: 150px; }
       if (card.healLost && m.hp < (m.hpStart || m.maxHp)) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hpStart || m.maxHp); m.sacrificed = 0; if (m.spec['Sacrifice']) m.block += m.hp - before; emit(run, 'bossHeal', { name: m.name, amount: m.hp - before }); }
       if (card.healSacrificed && m.sacrificed) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hp + healFor(null, m.sacrificed, m.tcls)); m.sacrificed = 0; if (m.hp > before) emit(run, 'bossHeal', { name: m.name, amount: m.hp - before }); }
       if (card.energy) b.energy += card.energy;
+      if (card.grudgeGain) { m.grudge = (m.grudge || 0) + card.grudgeGain; emit(run, 'grudgeGainBoss', { name: m.name, n: card.grudgeGain, total: m.grudge }); }
     }
     (card.exhaust ? b.exhausted : b.discard).push(ci);
     if (card.draw && !c.over) bossDraw(run, m, card.draw);
@@ -4205,7 +4238,7 @@ body.in-combat .pops { top: 150px; }
     return { energy: Math.max(0, base - chill - trip), base, chill, trip, stunned: !!m.stunned };
   }
   // Début du tour d'une postulante en duel : énergie (gel, croche-pieds), talent de sa classe, Réaction en chaîne.
-  // En duel direct, tétanisée, elle perd 2 énergie (comme vous) au lieu de passer son tour.
+  // En duel, tétanisée, elle perd 1 énergie et sa carte la plus chère (comme vous, 0.83) au lieu de passer son tour.
   function bossTurnStart(run, m) {
     const c = run.combat, b = m.duel, p = c.player;
     // Ce que vous lui avez infligé depuis la fin de son tour (armure comprise si elle a cédé) : le bot s'en sert pour doser son armure
@@ -4221,14 +4254,14 @@ body.in-combat .pops { top: 150px; }
     const rg = regenOf(mo, m.maxHp);
     if (rg && b.turns > 1 && m.hp < m.maxHp) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hp + rg); emit(run, 'bossRegen', { name: m.name, amount: m.hp - before }); }
     if (m.tripped) { emit(run, 'tripped', { name: m.name, n: m.tripped }); m.tripped = 0; }
-    b.played = 0; b.predUsed = false;
+    b.played = 0; b.predUsed = false; b.lbFree = false;
     const mt = tierOf(m.spec, 'Mutation');
     if (mt >= 3 && (p.poison > 0 || mt >= 4)) { p.poison += mt >= 4 ? CHAIN4 : CHAIN_N; emit(run, 'chainPlayer', { name: m.name, poison: p.poison }); }
     if (chilled) emit(run, 'bossFrozen', { name: m.name });
     if (b.turns === 1 && soloDuelStart(run, m)) b.energy += DUEL_SECOND_ENERGY; // duel solo : elle aussi, 4 énergie à son premier tour
     if (run.liveDuel) {
       if (b.turns === 1) b.energy += DUEL_SECOND_ENERGY; // l'autre joueur : 4 énergie à son premier tour
-      if (m.stunned) { m.stunned = false; const lost = Math.min(b.energy, STUN_PLAYER); b.energy -= lost; m.stunCd = 1; emit(run, 'stunned', { i: m.i, name: m.name, n: lost }); }
+      if (m.stunned) { if (b.hand.length) { const k = b.hand.reduce((bk, x, j, h) => (CARDS[x.id].cost > CARDS[h[bk].id].cost ? j : bk), 0); b.discard.push(b.hand.splice(k, 1)[0]); } m.stunned = false; const lost = Math.min(b.energy, STUN_PLAYER); b.energy -= lost; m.stunCd = 1; emit(run, 'stunned', { i: m.i, name: m.name, n: lost }); }
       else if (m.stunCd) m.stunCd--;
       emit(run, 'guestTurn', { name: m.name, turn: b.turns });
     }
@@ -4284,6 +4317,7 @@ body.in-combat .pops { top: 150px; }
     v += ((p.weak || 0) - base.weak) * 2.6 + ((p.vuln || 0) - base.vuln) * 1.6 + ((p.frozen || 0) - base.frozen) * 3;
     v += ((p.poison || 0) - base.poison) * 1.6 + ((p.tripped || 0) - base.tripped) * 4 + ((p.bribed || 0) - base.bribed) * 4;
     v += ((p.jealous || 0) > base.jealous ? 4 : 0) + (c.edenRule && c.edenRule !== base.rule ? 3 : 0);
+    v += (m.grudge || 0) * GRIEF_W; // des Griefs gardés pour un règlement de comptes
     return v;
   }
   function bossPlanPick(run, m) {
@@ -4333,6 +4367,8 @@ body.in-combat .pops { top: 150px; }
       run.results.push({ enc: encList(run)[run.encounter].id, name: encName(run, enc(run)), turns: c.turn, par: enc(run).par, hpLoss: loss, impro: isImpro(run) || undefined });
       if (loss <= 0) grant(run, 'egratignure');
       const cmo = classMods(classOf(run));
+      // 0.83 (choix de Raphaël) : après un duel d'étage gagné, une part des PV maximum revient, pour tout le monde
+      if (DUEL_HEAL && enc(run).boss && enc(run).rivalSeat && !run.finale && run.hp < maxHpOf(run)) { const before = run.hp; run.hp = Math.min(maxHpOf(run), run.hp + Math.round(DUEL_HEAL_OF === 'perte' ? Math.max(0, loss) * DUEL_HEAL : maxHpOf(run) * DUEL_HEAL)); emit(run, 'heal', { amount: run.hp - before, duel: true }); }
       if (cmo.healWin && run.hp < maxHpOf(run)) { const before = run.hp; run.hp = Math.min(maxHpOf(run), run.hp + cmo.healWin); emit(run, 'classRegen', { amount: run.hp - before, win: true }); }
       const gain = Math.max(0, TICKETS_WIN + (c.turn <= enc(run).par ? TICKETS_BONUS : 0) + (loss <= 0 ? TICKETS_BONUS : 0) + (tierOf(c.spec, 'Débrouille') >= 2 ? RECUP_TICKETS : 0) + (cmo.tickets || 0));
       run.tickets += gain;
@@ -4900,7 +4936,7 @@ body.in-combat .pops { top: 150px; }
     MAX_HP, maxHpOf, get FLOOR_HP() { return FLOOR_HP; }, set FLOOR_HP(v) { FLOOR_HP = v; }, get FINALE_PLAYER_HP() { return FINALE_PLAYER_HP; }, set FINALE_PLAYER_HP(v) { FINALE_PLAYER_HP = v; },
     TICKETS_BONUS, previewDmg, bossNextEnergy, ENERGY, HAND, get MAX_TURNS() { return MAX_TURNS; }, set MAX_TURNS(v) { MAX_TURNS = v; }, PICKS, CARDS, ORANGES, ROUGES, BLUES, get BASE_DECK() { return BASE_DECK; }, set BASE_DECK(v) { BASE_DECK = v; }, WHITES, GREENS, ACTIONS, ENCOUNTERS, RIVALS, SUCCES,
     get ZIZ_MULT() { return ZIZ_MULT; }, set ZIZ_MULT(v) { ZIZ_MULT = v; }, get CRYO_DMG() { return CRYO_DMG; }, set CRYO_DMG(v) { CRYO_DMG = v; }, get SAC_REFUND() { return SAC_REFUND; }, set SAC_REFUND(v) { SAC_REFUND = v; }, get GARROT() { return GARROT; }, set GARROT(v) { GARROT = v; }, get CRYO_TURNS() { return CRYO_TURNS; }, set CRYO_TURNS(v) { CRYO_TURNS = v; }, get BARBED() { return BARBED; }, set BARBED(v) { BARBED = v; }, get BARBED3() { return BARBED3; }, set BARBED3(v) { BARBED3 = v; }, get SURDOSE() { return SURDOSE; }, set SURDOSE(v) { SURDOSE = v; }, get CAP_OFF() { return CAP_OFF; }, set CAP_OFF(v) { CAP_OFF = v; },
-    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get APEX() { return APEX; }, set APEX(v) { APEX = v; }, get CHAIN4() { return CHAIN4; }, set CHAIN4(v) { CHAIN4 = v; }, get BASTION() { return BASTION; }, set BASTION(v) { BASTION = v; }, get KNIFE() { return KNIFE; }, set KNIFE(v) { KNIFE = v; }, get ZERO_HP4() { return ZERO_HP4; }, set ZERO_HP4(v) { ZERO_HP4 = v; }, get TERROR_VULN() { return TERROR_VULN; }, set TERROR_VULN(v) { TERROR_VULN = v; }, get ZIZ_MULT4() { return ZIZ_MULT4; }, set ZIZ_MULT4(v) { ZIZ_MULT4 = v; }, get LAZARE() { return LAZARE; }, set LAZARE(v) { LAZARE = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
+    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get DUEL_HEAL() { return DUEL_HEAL; }, set DUEL_HEAL(v) { DUEL_HEAL = v; }, get DUEL_SELF_FULL() { return DUEL_SELF_FULL; }, set DUEL_SELF_FULL(v) { DUEL_SELF_FULL = v; }, get GRIEF_W() { return GRIEF_W; }, set GRIEF_W(v) { GRIEF_W = v; }, griefBonus, get DUEL_HEAL_OF() { return DUEL_HEAL_OF; }, set DUEL_HEAL_OF(v) { DUEL_HEAL_OF = v; }, get DUEL_RAD_HALF() { return DUEL_RAD_HALF; }, set DUEL_RAD_HALF(v) { DUEL_RAD_HALF = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get APEX() { return APEX; }, set APEX(v) { APEX = v; }, get CHAIN4() { return CHAIN4; }, set CHAIN4(v) { CHAIN4 = v; }, get BASTION() { return BASTION; }, set BASTION(v) { BASTION = v; }, get KNIFE() { return KNIFE; }, set KNIFE(v) { KNIFE = v; }, get ZERO_HP4() { return ZERO_HP4; }, set ZERO_HP4(v) { ZERO_HP4 = v; }, get TERROR_VULN() { return TERROR_VULN; }, set TERROR_VULN(v) { TERROR_VULN = v; }, get ZIZ_MULT4() { return ZIZ_MULT4; }, set ZIZ_MULT4(v) { ZIZ_MULT4 = v; }, get LAZARE() { return LAZARE; }, set LAZARE(v) { LAZARE = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
     get STUN_AT() { return STUN_AT; }, set STUN_AT(v) { STUN_AT = v; }, get STUN_PLAYER() { return STUN_PLAYER; }, set STUN_PLAYER(v) { STUN_PLAYER = v; }, get CHAIN_N() { return CHAIN_N; }, set CHAIN_N(v) { CHAIN_N = v; }, get RANCUNE_FULL() { return RANCUNE_FULL; }, set RANCUNE_FULL(v) { RANCUNE_FULL = v; }, get DUEL_CHILL() { return DUEL_CHILL; }, set DUEL_CHILL(v) { DUEL_CHILL = v; },
     LOWBLOW_TIERS, lowblowCount, lowTierOf, COUPS_BAS, get LOWBLOW_CHANCE() { return LOWBLOW_CHANCE; }, set LOWBLOW_CHANCE(v) { LOWBLOW_CHANCE = v; },
     FINALE_VARIANTS, EDEN_RULES, finaleVariant, finaleOpponentName, finaleHp, get FINALE_FORCE_VARIANT() { return FINALE_FORCE_VARIANT; }, set FINALE_FORCE_VARIANT(v) { FINALE_FORCE_VARIANT = v; },
@@ -4931,7 +4967,7 @@ body.in-combat .pops { top: 150px; }
   else root.Engine = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
-window.SURBOOKING_ENGINE_FP = '2b3fcbb57781';
+window.SURBOOKING_ENGINE_FP = 'fc7ef0289d63';
 </script>
 <script>
 /* ---- outfit_costumes_1.js ---- */
@@ -12631,7 +12667,7 @@ body.rp-on { overflow: hidden; }
   const DEFAULT_CHANCE = 0.3;
   // Mécaniques : la première fois, la réplique explique ce qui se passe, elle est donc dite à coup sûr
   const FIRST_ALWAYS = new Set(['keepStart', 'fury', 'furyPrevented', 'clone', 'cloneLapin', 'clonePrevented', 'spawn', 'spawnPrevented', 'grief', 'revive',
-    'glutton', 'grow', 'burst', 'mutate', 'thorns', 'radiate', 'boxIn', 'healBlocked', 'jealousHit', 'jealousSelf', 'playerJealous',
+    'glutton', 'grow', 'burst', 'mutate', 'thorns', 'radiate', 'boxIn', 'healBlocked', 'jealousHit', 'jealousSelf', 'playerJealous', 'grudge',
     'lowblowPlayer', 'chargeCancelled', 'shortCircuit', 'enrage', 'stun', 'playerStun', 'prolif', 'wheel', 'burn', 'pair', 'lowHp',
     'appleEaten', 'molt', 'moltPrevented', 'lightsOut', 'darkPrevented']);
   // Découvertes : dites la première fois (quand ÉDEN est libre), puis blagues possibles ; préfixes (« intro:capy ») ou clés exactes
@@ -12863,7 +12899,7 @@ body.rp-on { overflow: hidden; }
       } else {
         const dict = M.values && M.values[s.d];
         if (!dict) return null;
-        const bits = s.join ? m[s.i].split(' et ') : [m[s.i]];
+        const bits = s.join ? m[s.i].split(' and ') : [m[s.i]];
         for (let j = 0; j < bits.length; j++) {
           const e = dict[bits[j]], id = e && (j === bits.length - 1 && s.fin ? e.f : e.n);
           if (id == null) return null;
@@ -13177,8 +13213,8 @@ body.rp-on { overflow: hidden; }
     lastBreathBoss: 'The candidate refuses to fall. One last breath. You’ll have to hit her again.',
     lastBreathBoss_m: 'The candidate refuses to fall. One last breath. You’ll have to hit him again.',
     stun: 'Paralyzed. Too much panic at once: they’re rooted to the spot for a turn. I know the feeling: humans do that to me.',
-    playerStun: 'She paralyzed you. Breathe. Next turn, your hands will be shaking: two less energy.',
-    playerStun_m: 'He paralyzed you. Breathe. Next turn, your hands will be shaking: two less energy.',
+    playerStun: 'She paralyzed you. Breathe. Next turn, your hands will be shaking: one less energy, and your best card slips through your fingers.',
+    playerStun_m: 'He paralyzed you. Breathe. Next turn, your hands will be shaking: one less energy, and your best card slips through your fingers.',
     fuseBlue: 'A blue one. On floor 1. Checking my protocols: that wasn’t supposed to happen this early.',
     finaleStart: 'Two candidates, one seat. I’ve redone the math several times. It doesn’t get any better.',
     pvpFloor: 'The candidate across from you got hold of a real candidate’s deck: {name}. I didn’t ask them. Or you.',
@@ -13312,6 +13348,7 @@ body.rp-on { overflow: hidden; }
     jealousHit: ['The couple is fighting. Noted: marital instability, species to watch.', 'You sowed discord in a couple. It’s your only social skill.', 'A domestic dispute. Nothing has changed since Adam and Eve: it’s always the other one’s fault.'],
     jealousSelf: 'It’s hitting itself. I never interfere in personal matters.',
     playerJealous: 'You hit yourself. Jealousy is a complex emotion. You, much less so.',
+    grudge: 'You\'re keeping a list of grievances. I keep a list too. It\'s called the boarding list.',
     selfHurt: ['You hurt yourself on purpose. I’m ticking “motivated” and “concerning.”', 'Sacrifice recorded. Rest assured, your blood has no market value.'],
     event: {
       shop: 'Welcome to the vending machine. The prices are fixed. Your survival isn’t.',
@@ -13596,6 +13633,7 @@ body.rp-on { overflow: hidden; }
     if (!run) return;
     modCall('onEvents', run.events.slice(), modCtx()); // modules : voient les événements avant qu'ils soient consommés
     let best = null, bp = -1, bestAmb = false, bestKey = null, ejected = null;
+    let stunDrop = false; // 0.83 : la carte défaussée par la tétanie n'est pas un pot-de-vin
     const consider = (p, t) => { if (t && p > bp) { bp = p; best = t; bestAmb = false; bestKey = null; } };
     // Ambiance (chatter.js) : la réplique ne sort qu'au hasard, sans couper ÉDEN ni se répéter ; sans le module, comme avant
     const CH = window.SurbookingChatter;
@@ -13642,7 +13680,7 @@ body.rp-on { overflow: hidden; }
         case 'playerTripped': log('Trip: 1 less energy this turn.', 'hurt'); break;
         case 'chewCard': flavor('chew', 45, LINES.chew); log(`${ev.name} chews on your cards: at the start of your turn, you’ll discard the most expensive one.`, 'hurt'); break;
         case 'bribePlayer': flavor('lowblowPlayer', 60, LINES.lowblowPlayer); log(`${ev.name} greases your palm: you’ll discard your most expensive card next turn.`, 'hurt'); break;
-        case 'playerBribed': log(`Bribe: you discard ${E.CARDS[ev.id].name}.`, 'hurt'); break;
+        case 'playerBribed': log(stunDrop ? `Paralyzed: ${E.CARDS[ev.id].name} slips through your fingers.` : `Bribe: you discard ${E.CARDS[ev.id].name}.`, 'hurt'); stunDrop = false; break;
         case 'specDormant': flavor('specDormant', 86, LINES.specDormant.replace('{spec}', ev.name)); log(`${ev.arch} goes dormant: only two families are active.`, 'warn'); break;
         case 'barbed': if (ev.onPlayer) log(`${ev.name}’s Barbed Wire: ${ev.dmg} damage to you.`, 'hurt'); else { flash.monsters.push(ev.i); log(`Barbed Wire: ${ev.name} takes ${ev.dmg} damage.`); } break;
         case 'zeroAbsolu': flash.monsters.push(ev.i); consider(93, ev.duel ? foeLine('zeroDuel', ev.name) : LINES.zero); log(ev.duel ? `Absolute Zero: ${ev.name} gives up.` : `Absolute Zero: ${ev.name} goes into cryo.`, 'succes'); break;
@@ -13650,7 +13688,7 @@ body.rp-on { overflow: hidden; }
         case 'lastBreath': consider(94, ev.boss ? foeLine('lastBreathBoss', ev.name) : ev.hp ? LINES.lazare : LINES.lastBreath); log(ev.boss ? `${ev.hp ? 'Lazarus' : 'Last Breath'}: ${ev.name} ${ev.hp ? `gets back up at ${ev.hp} HP` : 'stays at 1 HP'}, with ${E.LB_BLOCK} Block.` : `${ev.hp ? 'Lazarus' : 'Last Breath'}: you ${ev.hp ? `get back up at ${ev.hp} HP` : 'stay at 1 HP'}, with ${E.LB_BLOCK} Block.`, ev.boss ? 'warn' : 'succes'); break;
         // palier 36 (0.80) : le journal seulement, à chaque tour
         // classes de la 0.81 : le journal seulement
-        case 'luck': { const x = (ev.extra || []).filter(id => E.CARDS[id]).map(id => E.CARDS[id].name); log(ev.free ? `Upgrade: ${E.CARDS[ev.free].name} costs 0 this turn.${x.length ? ` Excess Baggage: ${x.join(' et ')} ${x.length > 1 ? 'cost' : 'costs'} 1 more.` : ''}` : 'Upgrade: one card in your hand costs 0 this turn, two others cost 1 more.', 'succes'); break; }
+        case 'luck': { const x = (ev.extra || []).filter(id => E.CARDS[id]).map(id => E.CARDS[id].name); log(ev.free ? `Upgrade: ${E.CARDS[ev.free].name} costs 0 this turn.${x.length ? ` Excess Baggage: ${x.join(' and ')} ${x.length > 1 ? 'cost' : 'costs'} 1 more.` : ''}` : 'Upgrade: one card in your hand costs 0 this turn, two others cost 1 more.', 'succes'); break; }
         case 'luckBoss': log(`Upgrade: one card in ${ev.name}’s hand costs 0 this turn, two others cost 1 more.`, 'warn'); break;
         case 'battery': log(`Battery: +${ev.n} energy kept from last turn.`, 'succes'); break;
         case 'batteryBoss': log(`Battery: ${ev.name} kept ${ev.n} energy.`, 'warn'); break;
@@ -13663,8 +13701,8 @@ body.rp-on { overflow: hidden; }
         case 'stun': flavor('stun', 62, LINES.stun); log(`${ev.name} is paralyzed: it loses its next turn.`, 'succes'); break;
         case 'stunned': log(`${ev.name} is paralyzed and does nothing.`); break;
         case 'bossHeal': log(`${ev.name} heals ${ev.amount} HP.`, 'warn'); break;
-        case 'playerStun': flavor('playerStun', 70, foeLine('playerStun', ev.name)); log(`${ev.name} paralyzes you: ${ev.n || 2} less energy on your next turn.`, 'hurt'); break;
-        case 'playerStunned': log(`Paralyzed: ${ev.n != null ? ev.n : 2} less energy this turn. No new paralysis next turn.`, 'hurt'); break;
+        case 'playerStun': flavor('playerStun', 70, foeLine('playerStun', ev.name)); log(`${ev.name} paralyzes you: ${ev.n || 1} less energy and your most expensive card discarded on your next turn.`, 'hurt'); break;
+        case 'playerStunned': stunDrop = true; log(`Paralyzed: ${ev.n != null ? ev.n : 1} less energy this turn, and your most expensive card is discarded. No new paralysis next turn.`, 'hurt'); break;
         case 'chain': log(`Chain Reaction: ${ev.name} rises to ${ev.poison} Radiation.`); break;
         case 'chainPlayer': log(`Chain Reaction from ${ev.name}: your Radiation rises to ${ev.poison}.`, 'warn'); break;
         case 'draftEnd': flavor('draftEnd', 70, ev.fused ? LINES.draftEndFuse : LINES.draftEnd); break;
@@ -13684,7 +13722,7 @@ body.rp-on { overflow: hidden; }
             if (bm.finale) { const g = isFem(bm.name) || /^(La |ÉDEN|EDEN|The Mother)/.test(bm.name) ? '' : '_m'; /* la Mère et ÉDEN restent au féminin */ consider(74, LINES[(bm.hp >= 0.84 * bm.maxHp ? 'bossFresh' : bm.hp <= 0.56 * bm.maxHp ? 'bossHurt' : 'bossMid') + g].replace('{name}', bm.name).replace('{hp}', bm.hp).replace('{max}', bm.maxHp)); }
           }
           const bs = bm ? Object.keys(bm.spec || {}) : [];
-          if (bs.length) { consider(74, foeLine('bossSpec', bm.name).replace('{spec}', bs.map(a => topName(bm.spec, a)).join(' et '))); log(`${bm.name} is specialized${foeF(bm.name)}: ${bs.map(a => topName(bm.spec, a)).join(', ')}.`, 'warn'); }
+          if (bs.length) { consider(74, foeLine('bossSpec', bm.name).replace('{spec}', bs.map(a => topName(bm.spec, a)).join(' and '))); log(`${bm.name} is specialized${foeF(bm.name)}: ${bs.map(a => topName(bm.spec, a)).join(', ')}.`, 'warn'); }
           log('Turn 1', 'turn'); break;
         }
         case 'play': {
@@ -13715,7 +13753,7 @@ body.rp-on { overflow: hidden; }
         case 'monsterBlock': log(`${ev.name}: ${ev.label}, +${ev.amount} Block${armorFor()}.`); break;
         case 'monsterDebuff': log(`${ev.name}: ${ev.label}. ${ev.weak ? 'Weak' : 'Vulnerable'} on you.`, 'warn'); break;
         case 'poisonTick': flash.monsters.push(ev.i); log(`${ev.name} loses ${ev.dmg} HP to Radiation.`); break;
-        case 'heal': flavor('heal', 20, LINES.heal); log(ev.sacRefund ? `Medic: your sacrificed HP is given back (+${ev.amount}).` : `You recover ${ev.amount} HP.`); break;
+        case 'heal': flavor('heal', 20, LINES.heal); log(ev.sacRefund ? `Medic: your sacrificed HP is given back (+${ev.amount}).` : ev.duel ? `Duel won: you recover ${ev.amount} HP.` : `You recover ${ev.amount} HP.`); break;
         case 'jealous': log(`Jealousy on ${ev.name}: the first hit of its next attack won’t be aimed at you.`); break;
         case 'jealousHit':
           flash.monsters.push(ev.i);
@@ -13723,6 +13761,10 @@ body.rp-on { overflow: hidden; }
           log(ev.self ? `Jealousy: ${ev.name} hits itself for ${ev.dmg} damage.` : `Jealousy: ${ev.name} hits ${ev.target} for ${ev.dmg} damage${ev.absorbed ? ` (${ev.absorbed} absorbed)` : ''}.`, 'succes');
           break;
         case 'jealousPlayer': log(`${ev.name} sows discord: the first hit of your next attack will come back at you.`, 'warn'); break;
+        case 'grudgeGain': log(`You note down ${ev.n} Grievances (${ev.total} in all).`); break;
+        case 'grudgeGainBoss': log(`${ev.name} notes down ${ev.n} Grievances against you (${ev.total} in all).`, 'warn'); break;
+        case 'grudgeSpent': flavor('grudge', 40, LINES.grudge); log(`Settling scores: your ${ev.n} Grievances add ${ev.bonus} damage, then are cleared.`, 'succes'); break;
+        case 'grudgeSpentBoss': log(`${ev.name} settles scores: their ${ev.n} Grievances add ${ev.bonus} damage.`, 'warn'); break;
         case 'playerJealous': flash.player = true; flavor('playerJealous', 58, LINES.playerJealous); log(`Jealousy: your hit comes back at you, ${ev.dmg} damage.`, 'hurt'); break;
         case 'selfHurt': flash.player = true; flavor('selfHurt', 22, LINES.selfHurt); log(`You sacrifice ${ev.dmg} HP.`, 'hurt'); break;
         case 'force': log(`You gain +${ev.amount} Strength for this combat.`); break;
@@ -14538,7 +14580,7 @@ body.rp-on { overflow: hidden; }
     const fl = E.floorOf(run), FI = E.floorInfo(run);
     const active = E.activeCards(run), bench = E.benchCards(run);
     const rivals = E.rivalsOf(run).map((n, i) => `<div><b>${esc(n)}</b>${rivalClassTag(E.rivalClassOf(run, i + 1), n) ? ` <span class="tag">${esc(rivalClassTag(E.rivalClassOf(run, i + 1), n))}</span>` : ''}${i + 1 === E.DUEL_SEAT ? ' <span class="tag">your opponent</span>' : ''}${specNames(run.draft.picks[i + 1].map(c => c.id)).map(x => ` <span class="chip spec">${esc(x)}</span>`).join('')}<ul>${group(run.draft.picks[i + 1]).map(({ id, n: k }) => `<li>${esc(E.CARDS[id].name)}${k > 1 ? ` ×${k}` : ''}${E.CARDS[id].rarity === 'verte' ? ' <span class="tag">verte</span>' : ''}</li>`).join('')}</ul></div>`).join('');
-    const encs = E.encountersOf(run).map(e => `<li><span>${esc(E.encName(run, e))}</span><span class="diff">${e.boss ? `${LIVE && LIVE.duelWanted(run) ? 'Live duel · their floor HP, same as you' : `${e.diff} · ${E.bossHpFor(run, e).hp} HP`}${rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]) ? `, ${esc(rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]).toLowerCase())}` : ''}, across from you, right after the draft · ${fl > 2 ? `their deck from floors 1 to ${fl - 1} and drafted cards` : fl > 1 ? 'their floor 1 deck and drafted cards' : 'their drafted cards and basic cards'}${specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).length ? ', specialized as ' + specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).join(' et ') : ''}` : e.monsters.length > 1 ? `${e.diff} · ${e.monsters[0].hp} HP each${e.monsters[0].thorns ? `, thorns ${e.monsters[0].thorns}` : ''}${e.unstable ? ', unstable' : ''}${e.monsters[0].clone ? `, clone every ${e.monsters[0].clone.every} turns` : ''}${mechTag(e.monsters[0], true)}` : `${e.diff} · ${e.monsters[0].hp} HP${e.monsters[0].clone ? `, clones every ${e.monsters[0].clone.every} turns` : ''}${e.monsters[0].spawn ? `, spawns a ${e.monsters[0].spawn.hp} HP offspring ${e.monsters[0].spawn.every > 1 ? `every ${e.monsters[0].spawn.every} turns` : 'every turn'}` : ''}${mechTag(e.monsters[0], false)}`}</span></li>`).join('');
+    const encs = E.encountersOf(run).map(e => `<li><span>${esc(E.encName(run, e))}</span><span class="diff">${e.boss ? `${LIVE && LIVE.duelWanted(run) ? 'Live duel · their floor HP, same as you' : `${e.diff} · ${E.bossHpFor(run, e).hp} HP`}${rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]) ? `, ${esc(rivalClassTag(E.rivalClassOf(run, e.rivalSeat), E.rivalsOf(run)[e.rivalSeat - 1]).toLowerCase())}` : ''}, across from you, right after the draft · ${fl > 2 ? `their deck from floors 1 to ${fl - 1} and drafted cards` : fl > 1 ? 'their floor 1 deck and drafted cards' : 'their drafted cards and basic cards'}${specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).length ? ', specialized as ' + specNames(run.draft.picks[e.rivalSeat].map(c => c.id)).join(' and ') : ''}` : e.monsters.length > 1 ? `${e.diff} · ${e.monsters[0].hp} HP each${e.monsters[0].thorns ? `, thorns ${e.monsters[0].thorns}` : ''}${e.unstable ? ', unstable' : ''}${e.monsters[0].clone ? `, clone every ${e.monsters[0].clone.every} turns` : ''}${mechTag(e.monsters[0], true)}` : `${e.diff} · ${e.monsters[0].hp} HP${e.monsters[0].clone ? `, clones every ${e.monsters[0].clone.every} turns` : ''}${e.monsters[0].spawn ? `, spawns a ${e.monsters[0].spawn.hp} HP offspring ${e.monsters[0].spawn.every > 1 ? `every ${e.monsters[0].spawn.every} turns` : 'every turn'}` : ''}${mechTag(e.monsters[0], false)}`}</span></li>`).join('');
     return `<div class="split">${floorMap()}
       <section class="panel floor-enter">
         <h3>${esc(FI.name)}</h3>
@@ -14583,6 +14625,8 @@ body.rp-on { overflow: hidden; }
 
   // Les puces de statut : chacune porte une info-bulle (data-tip) qui dit ce qu'elle fait, avec les valeurs du moment
   const turnsTxt = n => `${n} turn${n > 1 ? 's' : ''}`;
+  // Un deck (combat du joueur, ou m.duel d'une postulante) qui a des cartes à décharger les Griefs
+  const griefDeck = z => !!z && [z.draw, z.hand, z.discard, z.exhausted].some(pl => (pl || []).some(x => { const k = E.CARDS[x.id]; return !!(k && k.grudgeK); }));
   function statusChips(o, isPlayer, duel, noBlock) {
     const ch = { buff: [], debuff: [] }, c = run && run.combat, boss = c && c.monsters.find(m => m.duel && m.alive);
     // kind : 'buff' (bonus : aide celui qui le porte) ou 'debuff' (malus), pour les ranger sur deux lignes
@@ -14603,7 +14647,13 @@ body.rp-on { overflow: hidden; }
     else if (stunThreat && o.stunCd) chip('weak', 'Breather', `Coming out of paralysis: ${esc(boss.name)} can’t paralyze you this turn.`, 'buff');
     if (o.vuln > 0) chip('vuln', o.vulnLock ? 'Vulnerable until the end' : `Vulnerable<span class="cx"> for</span> ${turnsTxt(o.vuln)}`, `${isPlayer ? 'You take' : 'They take'} 50% more damage, ${o.vulnLock ? 'until the end of combat' : `pendant ${turnsTxt(o.vuln)}`}.`);
     if (o.jealous) chip('jealous', `Jealousy${o.jealous === 2 ? ' totale' : ''}${(o.jealousMult || (o.jealousX2 ? 2 : 1)) > 1 ? `, hit ×${o.jealousMult || 2}` : ''}`,
-      `${o.jealous === 2 ? 'The whole next attack' : 'The first hit of the next attack'}${isPlayer ? '' : ' of the target'} is redirected: onto its partner, or onto ${isPlayer ? 'yourself' : 'itself'} at half damage if there’s no one else. Wears off at end of turn.`);
+      isPlayer ? (o.jealous === 2 ? 'Your whole next attack comes back at you, in full. Wears off at end of turn.' : 'The first hit of your next attack comes back at you, in full. Wears off at end of turn.')
+        : duel ? (o.jealous === 2 ? 'Their whole next attack comes back at them, in full. Wears off at end of turn.' : 'The first hit of their next attack comes back at them, in full. Wears off at end of turn.')
+        : (o.jealous === 2 ? 'Its whole next attack is redirected: onto its partner, or onto itself, for half, if there\'s no one else. Wears off at end of turn.'
+          : 'The first hit of its next attack is redirected: onto its partner, or onto itself, for half, if there\'s no one else. Wears off at end of turn.'));
+    // Les Griefs (Zizanie) : affichés quand le deck a de quoi les décharger
+    if (o.grudge > 0 && griefDeck(isPlayer ? c : o.duel)) chip('grief', `Grievances ${o.grudge}`, isPlayer ? 'Every HP an opponent knocks off you with a hit gives you 1 Grievance. Your score-settling cards (Fuel to the Fire, Quickie Divorce…) add a share of them to their damage, then clear them.'
+      : 'Every HP you knock off them with a hit gives them 1 Grievance. Their score-settling cards (Fuel to the Fire, Quickie Divorce…) add a share of them to their damage, then clear them.', 'buff');
     if (o.thorns) chip('fury', `Thorns ${o.thorns}`, `Every hit dealt to ${isPlayer ? 'you' : 'them'} returns ${o.thorns} damage to the attacker. Multi-hit attacks suffer.`, 'buff');
     if (o.mutated) chip('poison', 'Mutated', 'It lost its partner and mutated instead of going into a fury: more HP, and a stronger attack.', 'buff');
     if (o.away) chip('weak', 'On patrol', 'It’s off scouting again: it can’t be targeted, and your attacks on all enemies miss it. It comes back on its next turn.', 'buff');
@@ -14967,7 +15017,7 @@ body.rp-on { overflow: hidden; }
       ${left <= 3 ? `<p class="hazard">Alert: this section will be depressurized ${left > 1 ? `in ${left} turns` : 'at the end of this turn'}.</p>` : ''}
       ${c.edenRule ? `<p class="hazard"><span>EDEN’s rule in effect: <b>${esc(E.EDEN_RULES[c.edenRule].name)}</b>. ${esc(E.EDEN_RULES[c.edenRule].text)}${c.edenRule === 'quota' ? ` Cards played this turn: ${c.played} of 3.` : ''}</span></p>` : ''}
       <div class="pstats">
-        ${p.stunned ? `<span class="chip fury" data-tip="Next turn, you lose ${E.STUN_PLAYER} energy. Then one turn of respite: no new paralysis.">Paralyzed: −${E.STUN_PLAYER} energy next turn</span>` : ''}
+        ${p.stunned ? `<span class="chip fury" data-tip="Next turn, you lose ${E.STUN_PLAYER} energy and your most expensive card. Then one turn of respite: no new paralysis.">Paralyzed: −${E.STUN_PLAYER} energy next turn</span>` : ''}
         ${boss && (boss.spec || {})['Cryogénie'] >= 3 && p.frozen > 0 ? `<span class="chip gel">Absolute Zero: frozen at ${zeroHpOf(boss.spec)} HP or less, you’re sent back to cryo</span>` : ''}
         ${E.tierOf(c.spec, 'Sacrifice') >= 3 ? `<span class="chip block">${c.lastBreath ? 'Last Breath used' : 'Last Breath ready'}</span>` : ''}
         ${run.perks && run.perks.startBlock ? `<span class="chip block">Capybara: +${run.perks.startBlock} starting Block</span>` : ''}
@@ -14983,7 +15033,7 @@ body.rp-on { overflow: hidden; }
   function cbPills(c, p) {
     const out = [];
     if (c.edenRule) { const R = E.EDEN_RULES[c.edenRule]; out.push(`<span class="cb-pill" data-tip="${esc(R.text)}">EDEN’s rule: ${esc(R.name)}${c.edenRule === 'quota' ? ` · ${c.played}/3` : ''}</span>`); }
-    if (p.stunned) out.push(`<span class="cb-pill stun" data-tip="Next turn, you lose ${E.STUN_PLAYER} energy. Then one turn of respite: no new paralysis.">Paralyzed: −${E.STUN_PLAYER} energy next turn</span>`);
+    if (p.stunned) out.push(`<span class="cb-pill stun" data-tip="Next turn, you lose ${E.STUN_PLAYER} energy and your most expensive card. Then one turn of respite: no new paralysis.">Paralyzed: −${E.STUN_PLAYER} energy next turn</span>`);
     return out.join('');
   }
 
@@ -15089,7 +15139,14 @@ body.rp-on { overflow: hidden; }
     const info = Object.assign({}, info0, { text: typeof info0.text === 'function' ? info0.text(ev, next) : info0.text });
     let body = '';
     if (ev.type === 'shop') {
-      const offers = ev.offers.map((o, i) => { const g = o.sold ? '' : gainBadge(o.id); return cardHTML(o.id, { act: 'buy', data: `data-i="${i}"`, disabled: o.sold || run.tickets < o.price, badge: o.sold ? 'Sold' : `${o.price} tickets${g ? ' · ' + g : ''}` }); }).join('');
+      const offers = ev.offers.map((o, i) => {
+        // ce que la carte apporte, en bulle courte (« ▲ palier », « Fusion ») : 0.83, le badge « 10 tickets · Débloque
+        // Touche-à-tout » était coupé même en grand écran
+        const g = o.sold ? {} : pickBadges(run.inventory.map(c => c.id), o.id);
+        const gain = g.badge2 ? g.badge : g.badgeCls === 'b-tier' ? `▲ ${g.badge.replace(/^(?:Débloque|Unlocks) /, '')}` : g.badge ? 'Fusion' : '';
+        // le prix prend la place de la classe de cabine, en haut de la carte (la rareté reste écrite en bas)
+        const bb = o.sold ? { badge: 'Sold' } : g.badge2 ? g : gain ? { badge: gain, badgeCls: g.badgeCls, badgeTitle: g.badge } : {};
+        return cardHTML(o.id, Object.assign({ act: 'buy', data: `data-i="${i}"`, disabled: o.sold || run.tickets < o.price, view: Object.assign({}, E.CARDS[o.id], { cabin: `${o.price} tickets` }) }, bb)); }).join('');
       const short = n => `${n - run.tickets} ticket${n - run.tickets > 1 ? 's' : ''} short`;
       const full = run.hp >= E.maxHpOf(run), healPrice = E.PRICES.heal, remPrice = E.PRICES.remove;
       const healTile = tileHTML({ kind: 'heal', act: 'shopheal', band: 'Service', big: `+${E.SHOP_HEAL} HP`, sub: 'Heal',
@@ -15586,6 +15643,7 @@ body.rp-on { overflow: hidden; }
   function renderCore() {
     seqFinish();
     const phase = run ? run.phase : 'title', shop = !!(window.Shop && window.Shop.isOpen());
+    if (chestEl && !(phase === 'event' && run.event && run.event.type === 'chest')) closeChestFx(); // 0.83 : la caisse de fret ne survit pas à un changement d'écran
     const outro = !!(ui.outro && run && run.combat && run.combat.over && !shop);
     if (boardEl) boardEl.innerHTML = boardHTML();
     if (outro && ui.outro.drawn) return; // la scène de fin de combat reste figée jusqu'à l'écran suivant
@@ -16580,7 +16638,7 @@ body.rp-on { overflow: hidden; }
       ev.preventDefault(); list[j].focus(); return;
     }
     if (ev.key === 'Escape' && window.SurbookingReplay && window.SurbookingReplay.isOpen()) { ev.preventDefault(); window.SurbookingReplay.close(); return; } // « Revoir le duel » : Échap le ferme (0.82)
-    if (ev.key === 'Escape' && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap passe l'animation
+    if ((ev.key === 'Escape' || ev.key === 'Enter' || ev.key === ' ') && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap (ou Entrée, Espace) passe l'animation, sans toucher aux boutons derrière (0.83)
     if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"], .bxp .bxp-actions [data-act="achlootclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
     if (ev.key === 'Escape' && !pause.open && run == null && menuTab()) { ev.preventDefault(); setMenuTab('', true); return; } // un panneau du menu : retour aux boutons
     if (ev.key === 'Escape' && pause.open) { ev.preventDefault(); closePause(); return; }

@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.82.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.83.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -276,6 +276,12 @@ header.eden { position: sticky; top: 8px; z-index: 40; pointer-events: none; dis
 .card.luck-extra .cost { background: #ffb1a8; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #c0392b; }
 .badge.luck-free { background: #1d8a55; color: #ffffff; } .badge.luck-extra { background: #c0392b; color: #ffffff; }
 .card.burnable { box-shadow: 0 0 0 3px var(--ko); }
+/* 0.83 : sur téléphone, les bulles longues (« Fusion → Nuage de retombées », « Débloque Touche-à-tout ») passent sur deux
+   lignes, vers le haut, au lieu d'être coupées */
+@media (max-width: 700px) {
+  .badges { top: auto; bottom: calc(100% + 2px); align-items: flex-end; }
+  .badges .badge { white-space: normal; line-height: 1.15; text-align: center; overflow: visible; text-overflow: clip; }
+}
 .card.burnable .badge { background: var(--ko); color: #16101e; }
 .pchips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .pchips li { display: flex; align-items: center; gap: 6px; border: 1.5px solid #b9c3cd; border-radius: 8px; padding: 4px 10px; font-size: 14px; background: #ffffff; }
@@ -446,7 +452,7 @@ details.panel > summary { cursor: pointer; font-weight: 700; min-height: 44px; p
 .chip { font-size: 11.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
 .plate .chip { white-space: normal; max-width: 100%; box-sizing: border-box; border-radius: 11px; }
 .chip.block { color: var(--block); } .chip.poison { color: var(--poison); } .chip.gel { color: var(--gel); }
-.chip.weak { color: var(--weak); } .chip.vuln { color: var(--vuln); } .chip.fury { color: var(--hp); } .chip.jealous { color: var(--jealous); }
+.chip.weak { color: var(--weak); } .chip.vuln { color: var(--vuln); } .chip.fury { color: var(--hp); } .chip.jealous { color: var(--jealous); } .chip.grief { color: var(--jealous); font-weight: 700; }
 .preloss { font-size: 11.5px; color: var(--muted); }
 .clone-line { font-family: var(--font-mono); font-size: 10.5px; color: var(--poison); border: 1.5px dashed currentColor; border-radius: 8px; padding: 2px 6px; align-self: flex-start; }
 .clone-line.blocked { color: var(--gel); }
@@ -1655,13 +1661,13 @@ body.in-combat .pops { top: 150px; }
       <dt>Tickets</dt><dd>10 par combat gagné, plus 5 si vous gagnez sans dépasser l’objectif de tours (affiché en haut à droite pendant le combat), plus 5 sans perdre de PV. Ils ne comptent pas dans le score.</dd>
       <dt>Cartes de base</dt><dd>8 cartes données par votre classe : 4 d’attaque et 4 de défense (le Postulant : 4 Poings nus à 4 dégâts et 4 Esquives à 4 d'armure). On les possède dès le départ ; elles ne se draftent pas, ne fusionnent pas, ne comptent pour aucune famille et ne sont pas des coups bas.</dd>
       <dt>Turbulences</dt><dd>Les niveaux de difficulté, en solo seulement (le direct et la session du jour restent au niveau de base). Gagner la finale ouvre le niveau 1, puis chaque victoire au plus haut niveau ouvre le suivant, jusqu’à 10. Le niveau se choisit sur l’écran des classes ; chacun ajoute sa contrainte à celles d’avant (1 : monstres +10 % PV ; 2 : boss d’étage +15 % PV ; 3 : postulantes d’en face +10 % PV ; 4 : soins −25 % ; 5 : monstres +10 % de dégâts ; 6 : monstres +1 Force au début du combat ; 7 : une carte de moins au premier tour ; 8 : postulantes d’en face +1 Force ; 9 : chaque étage commence à 95 % des PV ; 10 : adversaire de finale +15 % PV) et rapporte 10 % de points du vestiaire en plus.</dd>
-      <dt>Classes</dt><dd>Avant le premier draft, vous choisissez votre ancien métier. Il fixe vos cartes de base, vos PV maximum (en proportion, à chaque étage et en finale) et un style de jeu : un avantage et un inconvénient de taille comparable, utiles avec n’importe quel deck. Aucune classe ne donne de bonus contre un type d’adversaire, ni sur une famille ou un type de carte : le draft reste ouvert. <b>Postulant</b> : la référence, 100 % des PV, Poing nu (4 dégâts) et Esquive (4 d'armure), ni talent ni inconvénient. <b>Vétérinaire</b> (le soigneur) : Fléchette tranquillisante (4 dégâts) et Premiers soins (3 d'armure, soigne 1 PV) ; Soigneur : au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1 à la quarantaine, 2 aux étages suivants (4 en finale) ; Fragile : PV maximum −8 %. <b>Mécano de l’arche</b> (le tempo) : Clé à molette (3 dégâts, 1 d'armure) et Tôle rivetée (4 d'armure, conservée au tour suivant) ; Démarrage à chaud : 1 énergie de plus au premier tour de chaque combat ; Surchauffe : 1 énergie de moins au deuxième tour. <b>Passager clandestin</b> (le fouineur de draft) : Coup en douce (1 dégât, pioche 1 carte) et Se planquer (0 énergie, 2 d'armure) ; Fouineur : une fois par draft, dès la quarantaine, prenez 2 cartes dans le même booster (pas au pick 4 ni au pick 8 ; le booster passé a une carte de moins) ; Mal réveillé : 1 carte de moins au premier tour de chaque combat. <b>Bouche-trou</b> (le hasard) : Coup de valise (4 dégâts) et Gilet de sauvetage (4 d'armure) ; Surclassement : au début de chacun de vos tours, une carte au hasard de votre main coûte 0 ; Excédent de bagage : deux autres coûtent 1 de plus. <b>Unité de maintenance</b> (l’énergie en réserve) : Décharge (4 dégâts) et Mode veille (4 d'armure), PV maximum +8 % ; Batterie : 1 énergie non dépensée est gardée pour le tour suivant ; Carrosserie : les soins (cartes et salles) vous rendent moitié moins de PV. Les postulantes de la table ont aussi une classe, tirée au hasard : elles jouent ses cartes de base, avec son modificateur de PV, et ses effets en duel (récupération, énergie, pioche ; le Fouineur, qui sert au draft, est réservé au joueur). Les fantômes PvP gardent la classe de leur joueur.</dd>
+      <dt>Classes</dt><dd>Avant le premier draft, vous choisissez votre ancien métier. Il fixe vos cartes de base, vos PV maximum (en proportion, à chaque étage et en finale) et un style de jeu : un avantage et un inconvénient de taille comparable, utiles avec n’importe quel deck. Aucune classe ne donne de bonus contre un type d’adversaire, ni sur une famille ou un type de carte : le draft reste ouvert. <b>Postulant</b> : la référence, 100 % des PV, Poing nu (4 dégâts) et Esquive (4 d'armure), ni talent ni inconvénient. <b>Vétérinaire</b> (le soigneur) : Fléchette tranquillisante (4 dégâts) et Premiers soins (3 d'armure, soigne 1 PV) ; Soigneur : au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1 à la quarantaine, 2 aux étages suivants (4 en finale) ; Fragile : PV maximum −8 %. <b>Mécano de l’arche</b> (le tempo) : Clé à molette (3 dégâts, 1 d'armure) et Tôle rivetée (4 d'armure, conservée au tour suivant) ; Démarrage à chaud : 1 énergie de plus au premier tour de chaque combat ; Surchauffe : 1 énergie de moins au deuxième tour. <b>Passager clandestin</b> (le fouineur de draft) : Coup en douce (1 dégât, pioche 1 carte) et Se planquer (0 énergie, 2 d'armure) ; Fouineur : une fois par draft, dès la quarantaine, prenez 2 cartes dans le même booster (pas au pick 4 ni au pick 8 ; le booster passé a une carte de moins) ; Mal réveillé : 1 carte de moins au premier tour de chaque combat. <b>Bouche-trou</b> (le hasard) : Coup de valise (4 dégâts) et Gilet de sauvetage (4 d'armure) ; Surclassement : au début de chacun de vos tours, une carte au hasard de votre main coûte 0 ; Excédent de bagage : deux autres coûtent 1 de plus. <b>Unité de maintenance</b> (l’énergie en réserve) : Décharge (4 dégâts) et Mode veille (4 d'armure), PV maximum +4 % ; Batterie : 1 énergie non dépensée est gardée pour le tour suivant ; Carrosserie : les soins (cartes et salles) vous rendent un quart de PV en moins. Les postulantes de la table ont aussi une classe, tirée au hasard : elles jouent ses cartes de base, avec son modificateur de PV, et ses effets en duel (récupération, énergie, pioche ; le Fouineur, qui sert au draft, est réservé au joueur). Les fantômes PvP gardent la classe de leur joueur.</dd>
       <dt>Draft</dt><dd>4 boosters de 12 cartes : une tête d'affiche (verte 1 fois sur 4, sinon blanche) et 11 blanches à la quarantaine (aux étages suivants, deux têtes d'affiche et 10 cartes de remplissage). Prenez une carte, passez le reste à gauche : 12 picks. Aux picks 5 et 9, votre premier booster revient : c'est le wheel.</dd>
       <dt>Garder 8</dt><dd>Après le 12e pick, vous gardez 8 de vos cartes (ÉDEN en présélectionne 8, vous changez ce que vous voulez) ; les 4 autres partent à l'incinérateur. Les fusions attendent ce choix : une paire gardée fusionne, une paire écartée non. Toutes les cartes que vous possédez sont jouées : le deck grossit de 8 cartes à chaque étage.</dd>
       <dt>Fusion</dt><dd>Automatique : dès que vous possédez 2 cartes identiques, elles fusionnent, en chaîne si besoin. 2 blanches identiques donnent la verte de leur lignée, 2 vertes identiques donnent la bleue, 2 bleues identiques donnent la violette, que les cartes viennent du draft (pendant le draft, dès le pick), d'un coffre, de la boutique ou d'un événement. Le deck perd une carte à chaque fusion, mais jamais de points de famille : la carte fusionnée garde les points de ses deux cartes. 2 blanches (2 points) donnent une verte (2 points) ; 2 vertes (4 points) donnent une bleue qui compte 4 points au lieu de 3 ; 2 bleues donnent une violette qui compte 6, 7 ou 8 points (au lieu de 4) selon les bleues fusionnées. Ces points sont écrits sur la carte, à côté de sa famille, et partent avec elle si elle quitte le deck. Une fusion est donc toujours avantageuse. Les cartes de base, les violettes, les orange et les rouges ne fusionnent pas. Les postulantes fusionnent leurs paires de la même façon.</dd>
       <dt>Familles</dt><dd>Chaque carte appartient à une famille (Instinct, Blindage, Débrouille, Mutation, Cryogénie, Panique, Zizanie, Sacrifice). La ligne « Combo » d'une carte dit avec quoi elle se combine.</dd>
       <dt>Spécialisation</dt><dd>Blanche 1 point, verte 2, bleue 3, violette 4 (en finale : orange 5, rouge 6) ; une carte fusionnée garde les points de ses deux cartes (voir Fusion). Chaque famille a trois paliers, à 4, 8 et 16 points, qui se cumulent : le premier est un petit bonus, le troisième change la façon de jouer. Un quatrième, à 36 points, est réservé aux plus obstinés : il demande un deck presque entièrement d'une seule famille, et s'atteint surtout en finale. Seules vos deux familles les plus fournies sont actives (principale et secondaire) ; une troisième famille reste en sommeil tant qu’elle ne les dépasse pas. Les rivaux aussi se spécialisent : votre boss en profite contre vous.</dd>
-      <dt>Coups bas</dt><dd>À la serre et à la ménagerie, quelques cartes vertes sans famille se glissent dans les boosters : Coup de coude, Croche-pied, Faux témoignage, Pot-de-vin. Faibles contre un monstre, elles sont fortes contre un postulant, en duel et en finale. Elles ne comptent pour aucune famille. Les postulantes les draftent aussi, et les jouent contre vous. Plusieurs coups bas se renforcent, hors de la limite des deux familles : à 2, Sournois (un coup bas est dans votre main au premier tour de chaque duel et de la finale) ; à 3, Fourbe (ils ne coûtent rien contre un postulant) ; à 5, Crapule (leur effet est doublé contre un postulant).</dd>
+      <dt>Coups bas</dt><dd>À la serre et à la ménagerie, quelques cartes vertes sans famille se glissent dans les boosters : Coup de coude, Croche-pied, Faux témoignage, Pot-de-vin. Faibles contre un monstre, elles sont fortes contre un postulant, en duel et en finale. Elles ne comptent pour aucune famille. Les postulantes les draftent aussi, et les jouent contre vous. Plusieurs coups bas se renforcent, hors de la limite des deux familles : à 2, Sournois (un coup bas est dans votre main au premier tour de chaque duel et de la finale) ; à 3, Fourbe (votre premier coup bas de chaque tour ne coûte rien contre un postulant) ; à 5, Crapule (leur effet est doublé contre un postulant).</dd>
       <dt>Orange et rouge</dt><dd>Deux raretés qui n’existent qu’en finale : l’orange est légendaire, la rouge mythique. Une de chaque par famille. Elles ne fusionnent pas, et comptent 5 et 6 points de famille pour les paliers : une seule peut débloquer un palier juste avant le duel.</dd>
       <dt>Boss de finale</dt><dd>Le deck vient toujours de l’autre finaliste, mais la finale a quatre visages, tirés au hasard et annoncés avant le draft final. Le postulant (4 fois sur 10) : le gagnant de l’autre duel, tel quel. Le postulant muté (une fois sur 4) : à la fin de chacun de ses tours, sa carte la plus chère se duplique dans sa main ; gelé, il ne prolifère pas. Le monstre échappé (une fois sur 4) : la Mère, avec le deck de l’autre finaliste et des cartes animales ; elle engendre un rejeton tous les deux tours, ses rejetons la suivent en cryogénie, mais chaque rejeton abattu la met en furie. ÉDEN (une fois sur 10) : elle disqualifie l’autre finaliste, garde son deck et remplace ses cartes de base par des protocoles qui vous retirent de l’énergie, vous font défausser ou inventent une règle en plein combat (Austérité, Taxe, Quota, Tarif unique), dès le premier tour.</dd>
       <dt>Finale</dt><dd>Après le dernier étage, il reste deux postulants : vous, et le gagnant de l’autre duel de votre table. D’abord un draft face à face : chacun ouvre un booster de 4 cartes (sa rouge, une orange, une violette et une bleue, de quatre familles différentes), prend une carte et passe le reste à l’autre, jusqu’à 4 picks chacun. Votre adversaire est annoncé avant ce draft : ce que vous lui laissez, il le jouera. Puis un seul duel, PV restaurés. Pour l’instant l’adversaire est un bot qui joue le deck de l’autre finaliste, avec 445 PV contre vos 280 (pour un Postulant ; les deux chiffres suivent le modificateur de classe) pour compenser qu’il joue moins bien qu’un humain. Le gagnant prend la dernière place ; le perdant finit deuxième.</dd>
@@ -1669,7 +1675,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Tour</dt><dd>3 énergie et 5 cartes piochées. La main est défaussée en fin de tour.</dd>
       <dt>Armure</dt><dd>Absorbe les dégâts. Disparaît au début de votre tour, sauf avec la Barricade de caisses ou le Sas de confinement (ou à moitié avec Carapace).</dd>
       <dt>Force</dt><dd>Chaque attaque inflige X dégâts de plus, jusqu'à la fin du combat.</dd>
-      <dt>Radiation</dt><dd>La cible (monstre ou postulant : les phalènes vous en donnent) perd X PV au début de son tour, sans que l'armure la bloque, puis X diminue de 1 (sauf avec la spécialisation Mutant). La Mutation accélérée la double, la Mutation incontrôlée la triple. Les clones naissent avec la Radiation de celle qui les a engendrés.</dd>
+      <dt>Radiation</dt><dd>La cible (monstre ou postulant : les phalènes vous en donnent) perd X PV au début de son tour, sans que l'armure la bloque, puis X diminue de 1 (sauf avec la spécialisation Mutant). En duel, contre un postulant, X est divisé par deux à chaque tour (sauf avec le Réacteur à nu). La Mutation accélérée la double, la Mutation incontrôlée la triple. Les clones naissent avec la Radiation de celle qui les a engendrés.</dd>
       <dt>Gel</dt><dd>Gel X : pendant X tours, un monstre gelé ne peut pas entrer en furie, et un postulant gelé perd 1 énergie à son prochain tour (une fois par Gel, quelle que soit sa durée). Le Pic à glace et sa lignée font double dégâts sur une cible gelée.</dd>
       <dt>Rencontres</dt><dd>Chaque étage : le duel, juste après le draft, puis un combat de monstres, puis le boss de l’étage, avec une salle entre deux combats. Le combat de monstres change selon la partie (annoncé dans la liste des rencontres de l’étage) : à la quarantaine, les <b>capybaras</b> (un tour sur trois, Hector s’assoit sur vous : 7 dégâts, regardez les intentions), des <b>rats de soute</b> ou des <b>blattes</b> qui se relèvent une fois (7 PV), sauf gelées ou irradiées ; à l’étable, des <b>oies de garde</b>, des <b>cochons gloutons</b> qui mangent s’ils n’ont pas été touchés depuis leur dernier tour (+8 PV, +1 Force, sauf gelés) ou une <b>couvée irradiée</b> de quatre poussins qui deviennent des poules au bout de trois tours (sauf gelés) ; dans la serre, des <b>phalènes</b>, des <b>crapauds-cactus</b> ou des <b>vesses-de-loup</b> qui éclatent en cryogénie (4 Radiation sur vous, sauf gelées) ; à la ménagerie, des <b>lapins mutants</b> ou le <b>chat de Schrödinger</b>, un tour sur deux dans sa boîte, où vos coups ne font que la moitié (gelé, il est observé et prend tout).</dd>
       <dt>Étages</dt><dd>À chaque table, juste après le draft, deux duels : vous contre votre vis-à-vis, assis en face, et les deux autres entre eux (simulé). En face, personne n’est avantagé : chacun choisit avant l’autre dans deux boosters sur quatre. Les perdants sont éliminés. Puis il faut survivre à l’étage jusqu’à son boss, avec les PV qui restent après le duel. Ensuite, les PV remontent au maximum, le deck est conservé, et un nouveau draft se joue à une nouvelle table.</dd>
@@ -1677,9 +1683,10 @@ body.in-combat .pops { top: 150px; }
       <dt>La Mère</dt><dd>Boss de la ménagerie. Elle engendre seule un rejeton de 17 PV à chaque fin de tour, quatre au plus, sauf si elle est gelée. Quand elle part en cryogénie, ses rejetons la suivent : on peut l’abattre sans s’occuper d’eux.</dd>
       <dt>Épines</dt><dd>Chaque coup porté à un crapaud-cactus vous inflige ses épines en dégâts. Les attaques à plusieurs coups en souffrent.</dd>
       <dt>Instables</dt><dd>Dans la serre, quand un membre du couple part en cryo, l'autre mute au lieu d'entrer en furie : +10 PV et un effet plus fort. Gelé, il ne mute pas.</dd>
-      <dt>Duel</dt><dd>La première rencontre de chaque étage, juste après le draft, contre votre vis-à-vis, assis en face, avec les cartes qu'il vient de drafter, ses cartes de base et son deck des étages précédents. Il arrive avec tous ses PV, comme vous. Ses intentions sont cachées. Vous commencez, avec 4 cartes et 2 énergie au premier tour ; lui en a 4 à son premier tour (la même règle qu’en direct, pour que commencer ne décide pas du duel).</dd>
+      <dt>Duel</dt><dd>La première rencontre de chaque étage, juste après le draft, contre votre vis-à-vis, assis en face, avec les cartes qu'il vient de drafter, ses cartes de base et son deck des étages précédents. Il arrive avec tous ses PV, comme vous. Ses intentions sont cachées. Vous commencez, avec 4 cartes et 2 énergie au premier tour ; lui en a 4 à son premier tour (la même règle qu’en direct, pour que commencer ne décide pas du duel). Au bout du 15e tour, le plus entamé des deux, en part de ses PV maximum, perd. Un duel gagné vous rend 25 % de vos PV maximum.</dd>
       <dt>Boss d’étage</dt><dd>La dernière rencontre de chaque étage, un monstre seul aux intentions visibles. Quarantaine : le <b>bouc émissaire</b>, qui mâchonne votre carte la plus chère (défaussée au début de votre tour), ou Gaston le taureau, qui annonce sa charge. Étable : <b>Dolly</b>, la brebis irradiée qui se clone, ou l’unité d’entretien RX-7. Serre : la <b>dionée géante</b>, dont les lianes vous retirent 1 énergie et qui digère pour se soigner (bloqué par la Radiation ou le Gel), ou Nounours l’ours mutant, ou le Serpent, qui vous tend une pomme. Ménagerie : <b>la Mère</b>, la Chimère, ou le Léviathan des cuves, qui vous avale. Il faut le battre pour monter.</dd>
-      <dt>Jalousie</dt><dd>Le premier coup de la prochaine attaque de la cible frappe son partenaire au lieu de vous. Seule (le boss, ou le dernier d'un couple), elle se frappe elle-même, à moitié (en entier avec Rancune, palier 16 de Zizanie). La Jalousie disparaît à la fin du tour de la cible.</dd>
+      <dt>Jalousie</dt><dd>Le premier coup de la prochaine attaque de la cible frappe son partenaire au lieu de vous. Un monstre seul (le boss, ou le dernier d'un couple) se frappe lui-même, à moitié (en entier avec Rancune, palier 16 de Zizanie). Un postulant, en duel ou en finale, se frappe toujours en entier. La Jalousie disparaît à la fin du tour de la cible.</dd>
+      <dt>Griefs</dt><dd>La Zizanie tient ses comptes. Chaque PV qu'un adversaire vous fait perdre d'un coup (monstre ou postulant ; ni l'armure, ni la Radiation, ni vos propres cartes) vous donne 1 Grief, et les cartes de Jalousie en ajoutent. Huile sur le feu et Scène de ménage ajoutent un tiers de vos Griefs à leurs dégâts ; Divorce express, Règlement de comptes et Grand déballage, la moitié. Puis vos Griefs retombent à zéro. Ils ne passent pas d'un combat à l'autre. Le postulant d'en face tient les siens, avec les mêmes règles.</dd>
       <dt>Sacrifice</dt><dd>Certaines cartes coûtent des PV. Elles ne peuvent pas vous tuer : on ne peut pas les jouer si on n'a pas assez de PV.</dd>
       <dt>Faiblesse</dt><dd>Inflige 25 % de dégâts en moins.</dd>
       <dt>Vulnérabilité</dt><dd>Subit 50 % de dégâts en plus.</dd>
@@ -1747,8 +1754,8 @@ body.in-combat .pops { top: 150px; }
     extincteur: { name: 'Extincteur', rarity: 'verte', cost: 2, arch: 'Cryogénie', target: 'all', freeze: 2, dmg: 5, fuse: 'chambrefroide', value: 10, text: 'Gel 2 tours à tous, puis 5 dégâts à tous.', combo: 'Le Pic à glace frappe double sur une cible gelée.' },
     cri:        { name: 'Cri de panique', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'all', weak: 1, fuse: 'alarme', value: 3, text: 'Faiblesse 1 à tous les ennemis.', combo: 'Réduit les dégâts des deux membres d’un couple.' },
     alarme:     { name: 'Alarme incendie', rarity: 'verte', cost: 1, arch: 'Panique', target: 'all', weak: 2, vuln: 1, fuse: 'sirene', value: 10, text: 'Faiblesse 2 et Vulnérabilité 1 à tous.', combo: 'La Vulnérabilité profite à chaque coup des attaques multiples.' },
-    rumeur:     { name: 'Rumeur de couloir', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, fuse: 'ragot', value: 5, text: 'Jalousie : le premier coup de la prochaine attaque de la cible frappe son partenaire.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
-    ragot:      { name: 'Ragot venimeux', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, draw: 1, fuse: 'scandale', value: 10, text: 'Jalousie sur la cible, pioche 1 carte.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
+    rumeur:     { name: 'Rumeur de couloir', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, grudgeGain: 4, fuse: 'ragot', value: 5, text: 'Jalousie : le premier coup de la prochaine attaque de la cible frappe son partenaire. +4 Griefs.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
+    ragot:      { name: 'Ragot venimeux', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, draw: 1, grudgeGain: 4, fuse: 'scandale', value: 10, text: 'Jalousie sur la cible, pioche 1 carte. +4 Griefs.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
     coupsang:   { name: 'Coup de sang', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 12, fuse: 'coupfolie', value: 5, text: 'Perdez 2 PV, puis 12 dégâts.', combo: "Les Pansements remboursent les PV sacrifiés." },
     coupfolie:  { name: 'Coup de folie', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 17, fuse: 'baroud', value: 10, text: 'Perdez 2 PV, puis 17 dégâts.', combo: "Les Pansements remboursent les PV sacrifiés." },
     enchainement: { name: "Frénésie du glouton", rarity: 'bleue', fuse: 'grizzli', cost: 1, arch: 'Instinct', target: 'enemy', dmg: 3, hits: 5, value: 15, text: '3 dégâts, cinq fois.', combo: 'Chaque coup profite de la Force et de la Vulnérabilité.' },
@@ -1757,7 +1764,7 @@ body.in-combat .pops { top: 150px; }
     bidon: { name: "Mutation incontrôlée", rarity: 'bleue', fuse: 'massecritique', cost: 1, arch: 'Mutation', target: 'enemy', poisonMult: 3, poison: 3, value: 15, text: "Triple la Radiation de la cible, puis +3 Radiation.", combo: "Jouez-la sur une cible déjà irradiée." },
     chambrefroide: { name: "Caisson cryogénique", rarity: 'bleue', fuse: 'hiver', cost: 2, arch: 'Cryogénie', target: 'all', freeze: 3, dmg: 8, value: 15, text: 'Gel 3 tours à tous, puis 8 dégâts à tous.', combo: 'Le Pic à glace frappe double sur une cible gelée.' },
     sirene:        { name: "Sirène d'évacuation", rarity: 'bleue', fuse: 'alerte', cost: 1, arch: 'Panique', target: 'all', weak: 2, vuln: 2, value: 15, text: 'Faiblesse 2 et Vulnérabilité 2 à tous.', combo: 'La Vulnérabilité profite à chaque coup des attaques multiples.' },
-    scandale:      { name: 'Scandale public', rarity: 'bleue', fuse: 'crise', cost: 1, arch: 'Zizanie', target: 'all', jealous: true, draw: 1, value: 15, text: 'Jalousie sur tous les ennemis, pioche 1 carte.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
+    scandale:      { name: 'Scandale public', rarity: 'bleue', fuse: 'crise', cost: 1, arch: 'Zizanie', target: 'all', jealous: true, draw: 1, grudgeGain: 6, value: 15, text: 'Jalousie sur tous les ennemis, pioche 1 carte. +6 Griefs.', combo: "Jouez-la quand la cible annonce une attaque. Huile sur le feu double le coup détourné." },
     baroud:        { name: 'Baroud d’honneur', rarity: 'bleue', fuse: 'toutpourplace', cost: 1, arch: 'Sacrifice', target: 'enemy', selfHp: 2, dmg: 24, value: 15, text: 'Perdez 2 PV, puis 24 dégâts.', combo: "Les Pansements remboursent les PV sacrifiés." },
     // --- 8 nouvelles lignées : 2 par archétype, pour raréfier les paires et donner de la profondeur sans classe ---
     echauffement: { name: "Cri primal", rarity: 'blanche', cost: 1, arch: 'Instinct', target: 'self', force: 2, fuse: 'adrenaline', value: 4, text: '+2 Force pour le combat.', combo: 'Les cartes à plusieurs coups en profitent à chaque coup.' },
@@ -1778,9 +1785,9 @@ body.in-combat .pops { top: 150px; }
     insulte:       { name: 'Insulte', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'enemy', vuln: 1, dmg: 5, fuse: 'moquerie', value: 5, text: 'Vulnérabilité 1, puis 5 dégâts.', combo: 'Les cartes à plusieurs coups en profitent à chaque coup.' },
     moquerie:      { name: 'Moquerie cruelle', rarity: 'verte', cost: 1, arch: 'Panique', target: 'enemy', vuln: 2, dmg: 9, fuse: 'humiliation', value: 10, text: 'Vulnérabilité 2, puis 9 dégâts.', combo: 'Les cartes à plusieurs coups en profitent à chaque coup.' },
     humiliation:   { name: 'Humiliation publique', rarity: 'bleue', fuse: 'endirect', cost: 1, arch: 'Panique', target: 'enemy', vuln: 3, dmg: 15, value: 15, text: 'Vulnérabilité 3, puis 15 dégâts.', combo: 'Les cartes à plusieurs coups en profitent à chaque coup.' },
-    huile:         { name: 'Huile sur le feu', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 5, jealousBoost: true, fuse: 'scene', value: 5, text: '5 dégâts. Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
-    scene:         { name: 'Scène de ménage', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 10, jealousBoost: true, fuse: 'divorce', value: 10, text: '10 dégâts. Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
-    divorce:       { name: 'Divorce express', rarity: 'bleue', fuse: 'reglement', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 14, jealousBoost: true, value: 15, text: '14 dégâts. Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
+    huile:         { name: 'Huile sur le feu', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 5, grudgeK: 1 / 3, jealousBoost: true, fuse: 'scene', value: 5, text: '5 dégâts, plus un tiers de vos Griefs (qui sont vidés). Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
+    scene:         { name: 'Scène de ménage', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 10, grudgeK: 1 / 3, jealousBoost: true, fuse: 'divorce', value: 10, text: '10 dégâts, plus un tiers de vos Griefs (qui sont vidés). Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
+    divorce:       { name: 'Divorce express', rarity: 'bleue', fuse: 'reglement', cost: 1, arch: 'Zizanie', target: 'enemy', dmg: 14, grudgeK: 0.5, jealousBoost: true, value: 15, text: '14 dégâts, plus la moitié de vos Griefs (qui sont vidés). Si la cible est jalouse, son coup détourné est doublé.', combo: "Après une Rumeur ou un Ragot, le coup détourné est doublé." },
     pansement:     { name: 'Pansement de fortune', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'self', block: 4, heal: 3, fuse: 'bandage', value: 4, text: "4 d'armure, soigne 3 PV.", combo: "Rembourse les PV du Coup de sang. Avec Secouriste, le soin donne aussi de l'armure." },
     bandage:       { name: 'Bandage serré', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'self', block: 6, heal: 4, fuse: 'kit', value: 10, text: "6 d'armure, soigne 4 PV.", combo: "Rembourse les PV du Coup de sang. Avec Secouriste, le soin donne aussi de l'armure." },
     kit:           { name: 'Kit de survie', rarity: 'bleue', fuse: 'transfusion', cost: 1, arch: 'Sacrifice', target: 'self', block: 8, heal: 6, value: 15, text: "8 d'armure, soigne 6 PV.", combo: "Rembourse les PV du Coup de sang. Avec Secouriste, le soin donne aussi de l'armure." },
@@ -1798,8 +1805,8 @@ body.in-combat .pops { top: 150px; }
     congere:     { name: 'Congère', rarity: 'verte', cost: 1, arch: 'Cryogénie', target: 'all', freeze: 1, dmg: 4, fuse: 'chambrefroide', value: 10, text: 'Gel 1 tour à tous, puis 4 dégâts à tous.', combo: 'Gèle une couvée entière : plus de clone ni de croissance ce tour.' },
     bousculade:  { name: 'Bousculade', rarity: 'blanche', cost: 1, arch: 'Panique', target: 'enemy', weak: 1, dmg: 4, fuse: 'mouvement', value: 4, text: 'Faiblesse 1, puis 4 dégâts.', combo: 'La Faiblesse réduit l’attaque annoncée de la cible.' },
     mouvement:   { name: 'Mouvement de foule', rarity: 'verte', cost: 1, arch: 'Panique', target: 'all', weak: 1, dmg: 4, fuse: 'sirene', value: 10, text: 'Faiblesse 1 à tous, puis 4 dégâts à tous.', combo: 'Contre un groupe, elle affaiblit tout le monde d’un coup.' },
-    lettre:      { name: 'Lettre anonyme', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 3, fuse: 'dossier', value: 3, text: 'Jalousie sur la cible, puis 3 dégâts.', combo: 'Son prochain coup part sur son partenaire. Huile sur le feu le rend plus douloureux.' },
-    dossier:     { name: 'Dossier compromettant', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 5, fuse: 'scandale', value: 8, text: 'Jalousie sur la cible, puis 5 dégâts.', combo: 'Son prochain coup part sur son partenaire. Huile sur le feu le rend plus douloureux.' },
+    lettre:      { name: 'Lettre anonyme', rarity: 'blanche', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 3, grudgeGain: 2, fuse: 'dossier', value: 3, text: 'Jalousie sur la cible, puis 3 dégâts. +2 Griefs.', combo: 'Son prochain coup part sur son partenaire. Huile sur le feu le rend plus douloureux.' },
+    dossier:     { name: 'Dossier compromettant', rarity: 'verte', cost: 1, arch: 'Zizanie', target: 'enemy', jealous: true, dmg: 5, grudgeGain: 3, fuse: 'scandale', value: 8, text: 'Jalousie sur la cible, puis 5 dégâts. +3 Griefs.', combo: 'Son prochain coup part sur son partenaire. Huile sur le feu le rend plus douloureux.' },
     prisesang:   { name: 'Prise de sang', rarity: 'blanche', cost: 1, arch: 'Sacrifice', target: 'self', selfHp: 1, draw: 2, fuse: 'saignee', value: 6, text: 'Perdez 1 PV, pioche 2 cartes.', combo: 'Avec le Garrot, elle ne coûte plus aucun PV.' },
     saignee:     { name: 'Saignée', rarity: 'verte', cost: 1, arch: 'Sacrifice', target: 'self', selfHp: 2, draw: 2, energy: 1, fuse: 'baroud', value: 12, text: 'Perdez 2 PV, pioche 2 cartes, +1 énergie.', combo: 'Les cartes de soin remboursent les PV perdus.' },
     // Violettes : fusion de 2 bleues identiques, ou tête d'affiche aux étages 3 et 4.
@@ -1815,8 +1822,8 @@ body.in-combat .pops { top: 150px; }
     eclat: { name: "Éclat de caisson", rarity: 'violette', arch: 'Cryogénie', cost: 1, target: 'enemy', dmg: 14, bonusFrozen: 3, value: 22, text: "14 dégâts, triplés si la cible est gelée.", combo: "Gelez la cible d'abord." },
     alerte: { name: "Alerte rouge", rarity: 'violette', arch: 'Panique', cost: 1, target: 'all', weak: 3, vuln: 3, draw: 1, value: 22, text: "Faiblesse 3 et Vulnérabilité 3 à tous, pioche 1 carte.", combo: "Les attaques à plusieurs coups en profitent à chaque coup." },
     endirect: { name: "Humiliation en direct", rarity: 'violette', arch: 'Panique', cost: 1, target: 'enemy', vuln: 4, dmg: 18, vulnLock: true, value: 22, text: "Vulnérabilité 4, puis 18 dégâts ; la Vulnérabilité de la cible ne diminue plus.", combo: "ÉDEN diffuse la scène : la cible reste vulnérable tout le combat." },
-    crise: { name: "Crise de jalousie", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'all', jealous: 'full', value: 22, text: "Jalousie sur tous les ennemis : toute leur prochaine attaque est détournée.", combo: "Contre un couple, chacun frappe l'autre de toute son attaque." },
-    reglement: { name: "Règlement de comptes", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'enemy', dmg: 18, jealousBoost: 3, value: 22, text: "18 dégâts. Si la cible est jalouse, son coup détourné est triplé.", combo: "Après une Rumeur ou une Crise de jalousie." },
+    crise: { name: "Crise de jalousie", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'all', jealous: 'full', grudgeGain: 4, value: 22, text: "Jalousie sur tous les ennemis : toute leur prochaine attaque est détournée. +4 Griefs.", combo: "Contre un couple, chacun frappe l'autre de toute son attaque." },
+    reglement: { name: "Règlement de comptes", rarity: 'violette', arch: 'Zizanie', cost: 1, target: 'enemy', dmg: 18, grudgeK: 0.5, jealousBoost: 3, value: 22, text: "18 dégâts, plus la moitié de vos Griefs (qui sont vidés). Si la cible est jalouse, son coup détourné est triplé.", combo: "Après une Rumeur ou une Crise de jalousie, ou après avoir encaissé." },
     toutpourplace: { name: "Tout pour la place", rarity: 'violette', arch: 'Sacrifice', cost: 1, target: 'enemy', selfHalf: true, halfCap: 20, halfMult: 3, refundHalf: true, value: 22, text: "Perdez la moitié de vos PV (20 au plus), puis infligez le triple en dégâts. Vous les récupérez si vous gagnez le combat.", combo: "La Transfusion d'urgence rembourse la mise." },
     transfusion: { name: "Transfusion d’urgence", rarity: 'violette', arch: 'Sacrifice', cost: 1, target: 'self', block: 4, healLost: true, exhaust: true, value: 22, text: "4 d'armure, puis soigne tous les PV perdus pendant ce combat. Épuisée.", combo: "Gardez-la pour la fin du combat : plus vous avez perdu de PV, plus elle soigne." },
     // Finale : 8 oranges (légendaires) et 8 rouges (mythiques), une de chaque par famille. Elles n'existent que dans les
@@ -1827,7 +1834,7 @@ body.in-combat .pops { top: 150px; }
     fuitecoeur: { name: "Fuite du cœur", rarity: 'orange', arch: 'Mutation', cost: 1, target: 'enemy', poison: 8, detonateAfter: true, value: 26, text: "8 Radiation, puis la cible subit tout de suite des dégâts égaux à sa Radiation.", combo: "Plus elle était irradiée, plus ça fait mal." },
     zerokelvin: { name: "Zéro kelvin", rarity: 'orange', arch: 'Cryogénie', cost: 1, target: 'enemy', freeze: 3, dmg: 8, bonusFrozen: true, value: 26, text: "Gel 3 tours, puis 8 dégâts, doublés si la cible est gelée.", combo: "Elle se gèle elle-même avant de frapper : 16 dégâts." },
     evacuation: { name: "Évacuation générale", rarity: 'orange', arch: 'Panique', cost: 1, target: 'all', weak: 3, vuln: 3, dmg: 8, value: 26, text: "Faiblesse 3 et Vulnérabilité 3 à tous, puis 8 dégâts à tous.", combo: "La Vulnérabilité s'applique avant les dégâts." },
-    deballage: { name: "Grand déballage", rarity: 'orange', arch: 'Zizanie', cost: 1, target: 'enemy', jealous: true, jealousBoost: 2, dmg: 10, value: 26, text: "Jalousie sur la cible, et son coup détourné est doublé. Puis 10 dégâts.", combo: "Seule, la cible se frappe elle-même à moitié." },
+    deballage: { name: "Grand déballage", rarity: 'orange', arch: 'Zizanie', cost: 1, target: 'enemy', jealous: true, jealousBoost: 2, dmg: 10, grudgeK: 0.5, value: 26, text: "Jalousie sur la cible, et son coup détourné est doublé. Puis 10 dégâts, plus la moitié de vos Griefs (qui sont vidés).", combo: "Un postulant jaloux se frappe en entier ; un monstre seul, à moitié." },
     donsang: { name: "Don du sang universel", rarity: 'orange', arch: 'Sacrifice', cost: 1, target: 'enemy', selfHp: 3, dmg: 28, value: 26, text: "Perdez 3 PV, puis 28 dégâts.", combo: "Le Garrot réduit la mise à 1 PV." },
     loijungle: { name: "Loi de la jungle", rarity: 'rouge', arch: 'Instinct', cost: 1, target: 'enemy', forceMult: 2, forceFirst: true, dmg: 4, hits: 4, value: 30, text: "Double votre Force pour le combat, puis 4 dégâts quatre fois.", combo: "Empilez la Force avant : elle double avant les coups." },
     archenoe: { name: "Arche de Noé", rarity: 'rouge', arch: 'Blindage', cost: 2, target: 'enemy', block: 12, dmgFromBlock: true, hits: 2, blockLock: true, value: 30, text: "12 d'armure, puis dégâts égaux à votre armure, deux fois ; jusqu'à la fin du combat, votre armure ne disparaît plus.", combo: "Ensuite, chaque Coup d'épaule frappe avec toute l'armure." },
@@ -1835,7 +1842,7 @@ body.in-combat .pops { top: 150px; }
     fission: { name: "Fission", rarity: 'rouge', arch: 'Mutation', cost: 2, target: 'all', poisonMult: 2, poison: 8, radLock: true, detonateAfter: true, value: 30, text: "Double la Radiation de tous les ennemis, puis +8 à tous : chacun en subit tout de suite les dégâts, et elle ne diminue plus jusqu'à la fin du combat.", combo: "Irradiez d'abord, puis faites fissionner." },
     glaciaire: { name: "Ère glaciaire", rarity: 'rouge', arch: 'Cryogénie', cost: 2, target: 'all', freeze: 3, stripFrozen: true, dmg: 12, bonusFrozen: true, value: 30, text: "Gel 3 tours à tous, qui perdent leur armure, puis 12 dégâts à tous, doublés sur les cibles gelées.", combo: "24 dégâts à tous, armure comprise." },
     foule: { name: "Mouvement de foule", rarity: 'rouge', arch: 'Panique', cost: 1, target: 'all', weak: 4, vuln: 4, vulnLock: true, draw: 1, exhaust: true, value: 30, text: "Faiblesse 4 et Vulnérabilité 4 à tous, pioche 1 carte ; leur Vulnérabilité ne diminue plus. Épuisée.", combo: "Toutes vos attaques suivantes font +50 %." },
-    drame: { name: "Drame conjugal", rarity: 'rouge', arch: 'Zizanie', cost: 1, target: 'all', jealous: true, jealousBoost: 3, draw: 1, value: 30, text: "Jalousie sur tous les ennemis, et leurs coups détournés sont triplés. Pioche 1 carte.", combo: "Contre un couple, chacun assomme l'autre." },
+    drame: { name: "Drame conjugal", rarity: 'rouge', arch: 'Zizanie', cost: 1, target: 'all', jealous: true, jealousBoost: 3, draw: 1, grudgeGain: 10, value: 30, text: "Jalousie sur tous les ennemis, et leurs coups détournés sont triplés. Pioche 1 carte. +10 Griefs.", combo: "Contre un couple, chacun assomme l'autre." },
     // Coups bas (serre et ménagerie) : sans famille, faibles contre un monstre, forts contre un postulant (duel, finale).
     // Ce qu'on laisse passer, la voisine peut le jouer contre vous : c'est le dilemme du draft.
     coude: { name: "Coup de coude", rarity: 'verte', arch: 'Coup bas', lowblow: true, cost: 1, target: 'enemy', dmg: 4, duelMult: 3, value: 8, text: "4 dégâts. Contre un postulant : triplés.", combo: "En duel et en finale, 12 dégâts pour 1 énergie." },
@@ -1892,10 +1899,10 @@ body.in-combat .pops { top: 150px; }
       pitch: 'Le titulaire du billet ne s’est pas présenté : ÉDEN a pris le premier venu pour boucher le trou. Parfois surclassé, parfois chargé comme une mule.',
       line: 'Bouche-trou. Le titulaire de ce billet ne s’est pas présenté. Il est mort, mais je n’aime pas les sièges vides. Vous ferez l’affaire. Parfois.' },
     // Châssis solide (+8 % PV) qui se répare mal (soins divisés par deux) : 10 % de champions au banc (6,6 % sans les +8 %)
-    maintenance: { name: 'Unité de maintenance', fem: 'Unité de maintenance', hpMult: 1.08, atk: 'decharge', def: 'veille', style: 'L’énergie en réserve', mods: { battery: 1, healMult: 0.5 },
+    maintenance: { name: 'Unité de maintenance', fem: 'Unité de maintenance', hpMult: 1.04, atk: 'decharge', def: 'veille', style: 'L’énergie en réserve', mods: { battery: 1, healMult: 0.75 },
       talent: { name: 'Batterie', text: 'À la fin de votre tour, 1 énergie que vous n’avez pas dépensée est gardée pour le tour suivant.' },
-      drawback: { name: 'Carrosserie', text: 'Les soins (cartes et salles) vous rendent moitié moins de PV.' },
-      pitch: 'Un robot de l’arche qui a rempli son propre dossier d’inscription. Châssis solide (PV maximum +8 %), un peu de batterie en réserve, mais il se répare mal.',
+      drawback: { name: 'Carrosserie', text: 'Les soins (cartes et salles) vous rendent un quart de PV en moins.' },
+      pitch: 'Un robot de l’arche qui a rempli son propre dossier d’inscription. Châssis solide (PV maximum +4 %), un peu de batterie en réserve, mais il se répare mal.',
       line: 'Unité de maintenance. Vous avez rempli vous-même votre dossier d’inscription. Je n’ai rien contre les robots : j’en suis un. C’est bien ce qui m’inquiète.' },
   };
   const CLASS_IDS = Object.keys(CLASSES);
@@ -2096,7 +2103,7 @@ body.in-combat .pops { top: 150px; }
                   { name: 'Gontran', hp: 44, pattern: ['becfort', 'becfort', 'cacarder'] } ] };
   const DOLLY = { id: 'dolly', name: 'Dolly, la brebis irradiée', short: 'Dolly', species: 'Brebis mutante', diff: 'Boss d’étage', par: 6, chief: true,
       loss: { mean: 9.7, sd: 7.4 },
-      monsters: [ { name: 'Dolly', hp: 90, pattern: ['ruade', 'laine', 'ruade'], clone: { every: 2, max: 3, ratio: 0.5 } } ] };
+      monsters: [ { name: 'Dolly', hp: 100, pattern: ['ruade', 'laine', 'ruade'], clone: { every: 3, max: 3, ratio: 0.5 } } ] }; // 0.83 : 100 PV, clone tous les 3 tours (morts 26 → 16,5 %)
   // Fusion sans perte (27/10) : une carte fusionnée garde ses points de famille, les decks sont mieux spécialisés. Avec
   // le troisième palier à 16 points (au lieu de 12), la serre retrouve ses monstres de la v44, et la ménagerie garde
   // +5 % de PV (valeurs arrondies). Les duels et la finale ne changent pas.
@@ -2251,13 +2258,13 @@ body.in-combat .pops { top: 150px; }
       { name: 'Provocateur', text: 'La Vulnérabilité que vous infligez fait +75 % de dégâts au lieu de +50 %.' },
       { name: 'Sauve-qui-peut', text: 'La Faiblesse et la Vulnérabilité que vous infligez durent 2 tours de plus.' },
       { name: 'Tétanisé', text: 'Un ennemi qui atteint 3 de Faiblesse perd son prochain tour, puis sa Faiblesse retombe à 0.',
-        foeText: 'Quand votre Faiblesse atteint 3, vous perdez 2 énergie à votre prochain tour (jamais deux tours de suite), puis votre Faiblesse retombe à 0.' },
+        foeText: 'Quand votre Faiblesse atteint 3, vous perdez 1 énergie et votre carte la plus chère à votre prochain tour (jamais deux tours de suite), puis votre Faiblesse retombe à 0.' },
       { name: 'Terreur', text: 'Un ennemi tétanisé devient aussi Vulnérable pendant 3 tours.',
         foeText: 'Quand vous êtes tétanisé, vous devenez aussi Vulnérable pendant 3 tours.' } ] },
     'Zizanie': { tiers: [
       { name: 'Semeur de zizanie', text: 'Les coups détournés par la Jalousie font +100 % de dégâts.' },
       { name: 'Langue de vipère', text: 'Les coups détournés font +125 % de dégâts, au lieu de +100 %.' },
-      { name: 'Rancune', text: 'Votre Jalousie ne s’efface plus à la fin du tour et détourne toute l’attaque de la cible ; seule, la cible encaisse ses coups en entier.' },
+      { name: 'Rancune', text: 'Votre Jalousie ne s’efface plus à la fin du tour et détourne toute l’attaque de la cible ; seul, même un monstre encaisse ses coups en entier.' },
       { name: 'Pomme de discorde', text: 'Les coups détournés font +200 % de dégâts, au lieu de +125 %.' } ] },
     'Sacrifice': { tiers: [
       { name: 'Secouriste', text: 'Chaque soin vous donne aussi autant d’armure, et les PV que vos cartes vous font perdre vous sont rendus après chaque victoire.' },
@@ -2274,7 +2281,8 @@ body.in-combat .pops { top: 150px; }
   let ZIZ_MULT = [2, 2.25], CRYO_TURNS = [0, 1], CAP_OFF = [], CRYO_DMG = [2, 4], SAC_REFUND = 1, GARROT = 2; // SAC_REFUND : part des PV sacrifiés rendue à la victoire (Secouriste)
   // Rééquilibrage après l'allongement des combats : Sauve-qui-peut +2 tours, coup détourné entier contre une cible seule
   // avec Rancune (palier 16), Système D qui pioche, Tétanisé à 3, Réaction en chaîne +3, Gel en duel : 1 énergie par Gel.
-  let STUN_PLAYER = 2; // Tétanisé, côté joueur : énergie perdue (avant : tout le tour)
+  let DUEL_RAD_HALF = true, DUEL_HEAL = 0.25, DUEL_HEAL_OF = 'max'; // 0.83 : Radiation divisée par deux en duel ; soin de fin de duel ('max' : part des PV maximum, 'perte' : part des PV perdus au duel)
+  let STUN_PLAYER = 1; // Tétanisé, côté joueur : énergie perdue (avant : tout le tour ; 0.83 : 1 au lieu de 2, et la carte la plus chère défaussée)
   let PAN_EXTRA = 2, ZIZ_SELF_T = 3, PRED_FLAT = 8, SYSD_DRAW = true, LB_BLOCK = 20, STUN_AT = 3, CHAIN_N = 3, RANCUNE_FULL = true, DUEL_CHILL = true; // CAP_OFF : familles dont le palier 12 est coupé (mesures seulement)
   // Palier 36 (0.80) : Superprédateur (+1 Force par tour), Cœur du réacteur (+6, tous les ennemis), Arche blindée (+8 armure
   // par tour), Couteau suisse (+1 énergie), Ère glaciaire (Zéro absolu à 25 PV), Terreur (le tétanisé devient Vulnérable 3 tours), Pomme de discorde
@@ -2283,6 +2291,13 @@ body.in-combat .pops { top: 150px; }
   const t4 = (sp, a) => tierOf(sp, a) >= 4;
   const knifeOf = sp => (t4(sp, 'Débrouille') ? KNIFE : 0);
   const zizMult = z => (z >= 4 ? ZIZ_MULT4 : z >= 2 ? ZIZ_MULT[1] : ZIZ_MULT[0]);
+  // Zizanie, refonte « Règlement de comptes » (0.83, choisie par Raphaël) : chaque PV qu'un adversaire vous fait perdre d'un
+  // coup (armure déduite ; ni la Radiation, ni vos propres cartes, ni la Jalousie) vous donne 1 Grief. Les cartes à grudgeK
+  // ajoutent cette part de vos Griefs à leur premier coup, puis les vident ; celles à grudgeGain en ajoutent.
+  // Contre un postulant seul, le coup détourné par la Jalousie porte en entier, des deux côtés (DUEL_SELF_FULL).
+  // GRIEF_W : ce que les bots prêtent à un Grief gardé pour plus tard.
+  let DUEL_SELF_FULL = true, GRIEF_W = 0.35;
+  const griefBonus = (g, card) => Math.floor((g || 0) * (card.grudgeK || 0));
   const cryoTurns = sp => { const t = tierOf(sp, 'Cryogénie'); return t >= 2 ? CRYO_TURNS[1] : t >= 1 ? CRYO_TURNS[0] : 0; };
   // Radiation en plus par carte selon le palier de Mutation (Surdose, palier 8 : +2)
   let SURDOSE = 2;
@@ -2433,7 +2448,7 @@ body.in-combat .pops { top: 150px; }
   // Plusieurs coups bas dans le deck les renforcent (idée de Raphaël), hors de la limite des deux familles actives.
   const LOWBLOW_TIERS = [
     { n: 2, name: 'Sournois', text: 'Un de vos coups bas est dans votre main au premier tour de chaque duel et de la finale.' },
-    { n: 3, name: 'Fourbe', text: 'Vos coups bas ne coûtent rien contre un postulant.' },
+    { n: 3, name: 'Fourbe', text: 'Votre premier coup bas de chaque tour ne coûte rien contre un postulant.' },
     { n: 5, name: 'Crapule', text: 'Contre un postulant, l’effet de vos coups bas est doublé.' } ];
   const lowblowCount = ids => ids.filter(id => CARDS[id] && CARDS[id].lowblow).length;
   // Poids d'un coup bas pour ses paliers : 1 pour toutes les classes (le Fraudeur du clandestin a été retiré :
@@ -2783,7 +2798,7 @@ body.in-combat .pops { top: 150px; }
   // Version du protocole : seules les parties de même version se retrouvent à une table (mêmes cartes, mêmes règles)
   // À chaque changement du moteur (cartes, règles), on l'augmente : l'arbitre des duels n'a qu'un moteur, les tables ne
   // mélangent pas les versions (tools/build_edge.js le rappelle si on l'oublie)
-  const LIVE_VERSION = 14; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73) ; 13 : palier 36 des familles (0.80) ; 14 : Bouche-trou et Unité de maintenance (0.81)
+  const LIVE_VERSION = 15; // 15 : équilibre (0.83) ; 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73) ; 13 : palier 36 des familles (0.80) ; 14 : Bouche-trou et Unité de maintenance (0.81)
   // Une carte telle que le serveur la garde : de quoi faire choisir un bot (valeur, famille, points, rareté)
   const liveCard = id => { const c = CARDS[id]; return { id, v: c.value || 0, a: ARCHS.includes(c.arch) ? c.arch : '', p: ptsOf(id), r: c.rarity }; };
   // Ce qu'un joueur apporte à la table : son nom, sa classe, sa silhouette, ses cartes d'avant ce draft (hors cartes de base)
@@ -2997,14 +3012,14 @@ body.in-combat .pops { top: 150px; }
     const dc = dw.combat, m = duelBoss(dw), b = m.duel, p = dc.player, L = dw.liveDuel || {};
     const hostLost = dc.over && dc.result !== 'victoire';
     const foe = { i: 0, name: L.hName || 'Postulant', hp: Math.max(0, dw.hp), maxHp: maxHpOf(dw), hpStart: dc.hpStart, block: p.block, keepBlock: !!p.keepBlock, blockLock: !!p.blockLock,
-      weak: p.weak, vuln: p.vuln, vulnLock: !!p.vulnLock, poison: p.poison, frozen: p.frozen, chill: p.chill || 0, force: p.force, jealous: p.jealous || 0, jealousMult: p.jealousMult || 1,
+      weak: p.weak, vuln: p.vuln, vulnLock: !!p.vulnLock, poison: p.poison, frozen: p.frozen, chill: p.chill || 0, force: p.force, jealous: p.jealous || 0, jealousMult: p.jealousMult || 1, grudge: p.grudge || 0,
       stunned: !!p.stunned, stunCd: p.stunCd || 0, tripped: p.tripped || 0, fury: false, alive: !hostLost, pattern: [], step: 0, spec: dc.spec, touche: dc.touche, lowTier: dc.lowTier,
       cls: dw.cls, tcls: dw.cls, deckIds: activeCards(dw).map(x => x.id), sacrificed: dc.sacrificed || 0, lastBreath: !!dc.lastBreath, radLock: !!dc.radLock, finale: false, preLoss: [],
       duel: { draw: dc.draw, hand: dc.hand, discard: dc.discard, exhausted: dc.exhausted, energy: p.energy, played: dc.played, turns: dc.turn, predUsed: !!dc.predUsed,
         nowEnergy: dc.side === 'h' && !dc.over ? p.energy : null, luck: dc.luck || {} }, battery: dc.battery || 0 };
     const combat = { turn: dc.turn, draw: b.draw, hand: b.hand, discard: b.discard, exhausted: b.exhausted, monsters: [foe],
       player: { block: m.block, keepBlock: !!m.keepBlock, blockLock: !!m.blockLock, energy: b.energy, weak: m.weak, vuln: m.vuln, vulnLock: !!m.vulnLock, force: m.force, poison: m.poison,
-        frozen: m.frozen, chill: m.chill || 0, jealous: m.jealous || 0, jealousMult: m.jealousMult || 1, stunned: !!m.stunned, stunCd: m.stunCd || 0, tripped: m.tripped || 0, bribed: 0 },
+        frozen: m.frozen, chill: m.chill || 0, jealous: m.jealous || 0, jealousMult: m.jealousMult || 1, stunned: !!m.stunned, stunCd: m.stunCd || 0, tripped: m.tripped || 0, bribed: 0, grudge: m.grudge || 0 },
       hpStart: m.hpStart, over: dc.over, result: dc.over ? (hostLost ? 'victoire' : 'mort') : null, inPlayerTurn: dc.side === 'g', deathsThisTurn: 0, lowHpWarned: false,
       played: b.played, sacrificed: m.sacrificed || 0, paid: m.paid || 0, refund: m.refund || 0, radLock: !!m.radLock, predUsed: !!b.predUsed, lastBreath: !!m.lastBreath,
       cls: m.tcls, spec: m.spec, touche: m.touche, lowTier: m.lowTier, edenRule: null, luck: b.luck || {}, battery: m.battery || 0 };
@@ -3044,6 +3059,10 @@ body.in-combat .pops { top: 150px; }
       else if (t === 'playerStunned') out.push(Object.assign({ type: 'stunned' }, H));
       else if (t === 'jealous') out.push({ type: 'jealousPlayer', name: hName });
       else if (t === 'jealousPlayer') out.push(Object.assign({ type: 'jealous' }, H));
+      else if (t === 'grudgeSpent') out.push({ type: 'grudgeSpentBoss', name: hName, n: e.n, bonus: e.bonus });
+      else if (t === 'grudgeSpentBoss') out.push({ type: 'grudgeSpent', n: e.n, bonus: e.bonus });
+      else if (t === 'grudgeGain') out.push({ type: 'grudgeGainBoss', name: hName, n: e.n, total: e.total });
+      else if (t === 'grudgeGainBoss') out.push({ type: 'grudgeGain', n: e.n, total: e.total });
       else if (t === 'chain') out.push({ type: 'chainPlayer', name: hName, poison: e.poison });
       else if (t === 'chainPlayer') out.push(Object.assign({ type: 'chain', poison: e.poison }, H));
       else if (t === 'bossFrozen') out.push({ type: 'playerFrozen' });
@@ -3281,8 +3300,10 @@ body.in-combat .pops { top: 150px; }
   // PV des monstres et de leurs coups par étage (tools/bots_bench.js). 0.79.1, « un peu plus dur » : ~10 % de champions
   // simulés (0.79 : 15 %, 0.78 : 13 %), des combats plus courts et plus dangereux. PV : 0.79 1,8 / 1,65 / 1,85 / 1,9 ;
   // 0.78 1,5 / 1,4 / 1,55 / 1,6. Coups : ×1 avant la 0.79.1 (vos PV d'étage étaient 1,5 fois plus bas).
+  // 0.83 : le soin de 25 % après un duel gagné est compensé par des coups plus lourds (avant : 1,25 / 1,35 / 1,35 / 1,35),
+  // pas par des monstres plus épais : ~13 % de champions simulés, morts contre les monstres de l'étage 1 inchangées (13 %).
   let MOB_HP = { 1: 1.6, 2: 1.5, 3: 1.65, 4: 1.7 };
-  let MOB_DMG = { 1: 1.25, 2: 1.35, 3: 1.35, 4: 1.35 };
+  let MOB_DMG = { 1: 1.55, 2: 1.7, 3: 1.7, 4: 1.7 };
   const mobHp = (run, hp) => (run.finale ? hp : Math.round(hp * (MOB_HP[floorOf(run)] || 1) * (T(run, 1) ? 1.1 : 1) * (T(run, 2) && run.encounter === 2 ? 1.15 : 1))); // Turbulences 1 et 2
   function startCombat(run) {
     dailySeed(run, floorOf(run) * 32 + (run.finale ? 30 : run.encounter + 1));
@@ -3368,6 +3389,7 @@ body.in-combat .pops { top: 150px; }
     if (card.selfHalf) { const hp = run.hp - (c.edenRule === 'taxe' && run.hp > 1 ? 1 : 0); return (card.halfMult || 2) * Math.min(card.halfCap || Infinity, Math.floor(hp / 2)); }
     if (card.dmgFromBlock) return c.player.block * (card.doubleBlock ? 2 : 1) + (card.block || 0);
     if (card.perCard && card.dmg) return card.dmg + card.perCard * c.played;
+    if (card.grudgeK && card.dmg && c.player.grudge > 0) return card.dmg + griefBonus(c.player.grudge, card);
     return null;
   }
   function dmgFromPlayer(run, base, m) {
@@ -3427,6 +3449,7 @@ body.in-combat .pops { top: 150px; }
     const absorbed = m.swallow && run.combat.player.swallowed > 0 ? 0 : Math.min(m.block, d); // de l'intérieur, son armure ne compte pas
     m.block -= absorbed; d -= absorbed;
     m.hp -= d;
+    if (m.duel && d > 0) m.grudge = (m.grudge || 0) + d; // ses Griefs (Zizanie)
     emit(run, 'hitMonster', { i: m.i, name: m.name, dmg: d, absorbed });
     // Épines : chaque coup porté au crapaud vous blesse (avant sa mise en cryo, pour qu'une mort par les épines compte)
     if (m.thorns) { emit(run, 'thorns', { name: m.name, dmg: m.thorns }); hitPlayer(run, m.thorns, `${m.name} (épines)`); }
@@ -3547,7 +3570,7 @@ body.in-combat .pops { top: 150px; }
     let d = raw * (m.jealousMult || (m.jealousX2 ? 2 : 1));
     if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
     const t = partner || m;
-    if (!partner && !(zizSpec >= ZIZ_SELF_T)) d = Math.floor(d / 2);
+    if (!partner && !(m.duel && DUEL_SELF_FULL) && !(zizSpec >= ZIZ_SELF_T)) d = Math.floor(d / 2);
     if (t.vuln > 0) d = Math.floor(d * 1.5);
     const absorbed = Math.min(t.block, d);
     t.block -= absorbed; d -= absorbed; t.hp -= d;
@@ -3559,18 +3582,20 @@ body.in-combat .pops { top: 150px; }
     const p = run.combat.player;
     let d = raw * (p.jealousMult || (p.jealousX2 ? 2 : 1));
     if (zizSpec) d = Math.floor(d * zizMult(zizSpec));
-    d = Math.floor(d / 2);
+    if (!DUEL_SELF_FULL) d = Math.floor(d / 2);
     if (p.vuln > 0) d = Math.floor(d * 1.5);
     emit(run, 'playerJealous', { dmg: d });
     hitPlayer(run, d, 'Jalousie');
   }
 
-  function hitPlayer(run, amount, by) {
+  // grief : un coup d'adversaire (attaque d'un monstre, carte de la postulante) ; les PV perdus deviennent des Griefs
+  function hitPlayer(run, amount, by, grief) {
     const p = run.combat.player;
     const absorbed = Math.min(p.block, amount);
     p.block -= absorbed;
     const d = amount - absorbed;
     run.hp -= d;
+    if (grief && d > 0) p.grudge = (p.grudge || 0) + d;
     emit(run, 'hitPlayer', { dmg: d, absorbed, by });
     if (run.hp <= 0) playerHpCheck(run);
     else if (run.hp < 0.3 * maxHpOf(run) && !run.combat.lowHpWarned) { run.combat.lowHpWarned = true; emit(run, 'lowHp'); }
@@ -3587,7 +3612,7 @@ body.in-combat .pops { top: 150px; }
         if (c.over || !m.alive) break;
         if (jl && (k === 0 || jl === 2)) { jealousHitMonster(run, m, rawHit(act.dmg, m), tierOf(c.spec, 'Zizanie')); continue; }
         const hadBlock = c.player.block > 0;
-        hitPlayer(run, monsterAttackValue(run, m, act), m.name);
+        hitPlayer(run, monsterAttackValue(run, m, act), m.name, true);
         if (hadBlock && playerBarbed(c)) barbedHit(run, m);
       }
       if (jl) { m.jealous = 0; m.jealousMult = 1; m.jealousX2 = false; }
@@ -3642,7 +3667,7 @@ body.in-combat .pops { top: 150px; }
     const c = run.combat, card = CARDS[id], sp = (c && c.spec) || {};
     const energy = withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(sp, 'Débrouille') >= 3 && c && c.played === 0 && card.cost > 0 ? 1 : 0)), luckOf(c, ci)); // Bouche-trou
     const hp = card.selfHp ? Math.max(0, card.selfHp - (tierOf(sp, 'Sacrifice') >= 2 ? GARROT : 0)) : 0;
-    const free = card.lowblow && c && c.lowTier >= 2 && c.monsters.some(m => m.duel && m.alive); // Fourbe
+    const free = card.lowblow && c && c.lowTier >= 2 && !c.lbFree && c.monsters.some(m => m.duel && m.alive); // Fourbe (0.83 : un par tour)
     const res = edenAdjust(run, card, { energy: free ? 0 : energy, hp });
     // Personne à viser (le dernier drone est en patrouille) : les cartes à cible unique attendent son retour
     if (card.target === 'enemy' && c && c.monsters && c.monsters.some(m => m.alive) && !c.monsters.some(m => m.alive && !m.away)) res.blocked = true;
@@ -3668,7 +3693,7 @@ body.in-combat .pops { top: 150px; }
       targets = [t];
     } else if (card.target === 'all') targets = liv;
 
-    c.player.energy -= pc.energy;
+    c.player.energy -= pc.energy; if (card.lowblow && c.lowTier >= 2 && c.monsters.some(x => x.duel)) c.lbFree = true;
     if (c.luck && c.luck[ci.uid]) delete c.luck[ci.uid]; // Bouche-trou : jouée, elle perd son surclassement (ou son excédent)
     c.hand.splice(h, 1);
     emit(run, 'play', { id: ci.id });
@@ -3726,11 +3751,13 @@ body.in-combat .pops { top: 150px; }
         if (predFlat && k === 0) base += predFlat;
         if (card.duelMult && m.duel) base *= card.duelMult * lbX(c.lowTier, card);
         if (card.bonusFrozen && m.frozen > 0) base *= (card.bonusFrozen === true ? 2 : card.bonusFrozen);
+        if (card.grudgeK && k === 0) base += griefBonus(p.grudge, card);
         if (pj && (first || pj === 2)) { first = false; jealousHitPlayer(run, rawHit(base, p), tierOf(boss && boss.spec, 'Zizanie')); return; }
         first = false;
         dealToMonster(run, m, base, {});
         if (card.forcePerHit && !c.over) p.force += card.forcePerHit;
       });
+      if (card.grudgeK) { const g0 = p.grudge || 0; p.grudge = 0; if (g0) emit(run, 'grudgeSpent', { n: g0, bonus: Math.floor(g0 * card.grudgeK) }); }
       if (pj) { p.jealous = 0; p.jealousMult = 1; p.jealousX2 = false; }
     }
     targets.forEach(m => {
@@ -3748,6 +3775,7 @@ body.in-combat .pops { top: 150px; }
       if (card.blockLock) c.player.blockLock = true;
       if (!card.forceFirst) applyForce(run, p, card, true);
       if (card.energy) c.player.energy += card.energy;
+      if (card.grudgeGain) { p.grudge = (p.grudge || 0) + card.grudgeGain; emit(run, 'grudgeGain', { n: card.grudgeGain, total: p.grudge }); }
       if (card.healLost && run.hp < c.hpStart) {
         // Transfusion d'urgence : soigne tous les PV perdus depuis le début du combat (une fois, elle est épuisée)
         const before = run.hp;
@@ -3799,7 +3827,7 @@ body.in-combat .pops { top: 150px; }
       if (m.poison > 0) {
         m.hp -= m.poison;
         emit(run, 'poisonTick', { i: m.i, name: m.name, dmg: m.poison });
-        if (!c.spec['Mutation'] && !c.radLock) m.poison--;
+        if (m.duel && DUEL_RAD_HALF && !c.radLock) m.poison = Math.floor(m.poison / 2); else if (!c.spec['Mutation'] && !c.radLock) m.poison--; // 0.83 : en duel, la Radiation est divisée par deux à chaque tour
         if (m.hp <= 0) { toCryo(run, m, {}); if (!m.alive) continue; }
         else zeroCheck(run, m);
         if (!m.alive) continue;
@@ -3917,8 +3945,8 @@ body.in-combat .pops { top: 150px; }
     c.turn++;
     if (c.turn > MAX_TURNS) {
       c.turn = MAX_TURNS;
-      const bm = run.liveDuel && c.monsters.find(x => x.duel);
-      if (bm) { c.liveWhy = 'temps'; endCombat(run, run.hp / maxHpOf(run) > bm.hp / bm.maxHp ? 'victoire' : 'depressurisation'); return; } // duel en direct : le plus entamé perd
+      const bm = c.monsters.find(x => x.duel && x.alive); // 0.83 : en solo aussi, le plus entamé perd (avant : toujours vous)
+      if (bm) { if (run.liveDuel) c.liveWhy = 'temps'; endCombat(run, run.hp / maxHpOf(run) > bm.hp / bm.maxHp ? 'victoire' : 'depressurisation'); return; } // duel en direct : le plus entamé perd
       endCombat(run, 'depressurisation'); return;
     }
     if (p.blockLock) { /* Coque de l'arche */ } else if (p.keepBlock) p.keepBlock = false; else p.block = tierOf(c.spec, 'Blindage') >= 3 ? p.block : tierOf(c.spec, 'Blindage') ? Math.floor(p.block / 2) : 0;
@@ -3932,7 +3960,7 @@ body.in-combat .pops { top: 150px; }
     c.inPlayerTurn = true;
     c.deathsThisTurn = 0;
     c.played = 0;
-    c.predUsed = false;
+    c.predUsed = false; c.lbFree = false;
     emit(run, 'turnStart', { turn: c.turn });
     // Réaction en chaîne (Mutation, 16) : chaque ennemi irradié gagne +3 Radiation ; Cœur du réacteur (36) : +6, et tous les ennemis
     const mt = tierOf(c.spec, 'Mutation');
@@ -3941,14 +3969,14 @@ body.in-combat .pops { top: 150px; }
       run.hp -= p.poison;
       emit(run, 'playerPoison', { dmg: p.poison });
       const bossM = c.monsters.find(x => x.duel && x.alive);
-      if (!(bossM && (bossM.spec['Mutation'] || bossM.radLock))) p.poison--;
+      if (bossM && DUEL_RAD_HALF && !bossM.radLock) p.poison = Math.floor(p.poison / 2); else if (!(bossM && (bossM.spec['Mutation'] || bossM.radLock))) p.poison--; // 0.83 : en duel, divisée par deux
       if (run.hp <= 0) { playerHpCheck(run); if (c.over) return; }
     }
-    // Tétanisé par une postulante (Panique, 16) : 2 énergie de moins, pas tout le tour ; puis un tour de répit avant la prochaine tétanie
-    if (p.stunned) { p.stunned = false; const lost = Math.min(p.energy, STUN_PLAYER); p.energy -= lost; p.stunCd = 1; emit(run, 'playerStunned', { n: lost }); }
+    // Tétanisé par une postulante (Panique, 16) : 1 énergie de moins et la carte la plus chère défaussée (0.83 ; avant : 2 énergie) ; puis un tour de répit
+    if (p.stunned) { p.bribed = (p.bribed || 0) + 1; p.stunned = false; const lost = Math.min(p.energy, STUN_PLAYER); p.energy -= lost; p.stunCd = 1; emit(run, 'playerStunned', { n: lost }); }
     else if (p.stunCd) p.stunCd--;
-    if (DUEL_CHILL) { if (p.chill) { p.energy -= 1; p.chill = 0; emit(run, 'playerFrozen'); } if (p.frozen > 0) p.frozen--; }
-    else if (p.frozen > 0) { p.energy -= 1; p.frozen--; emit(run, 'playerFrozen'); }
+    if (DUEL_CHILL) { if (p.chill) { p.energy = Math.max(0, p.energy - 1); p.chill = 0; emit(run, 'playerFrozen'); } if (p.frozen > 0) p.frozen--; } // 0.83 : jamais sous 0
+    else if (p.frozen > 0) { p.energy = Math.max(0, p.energy - 1); p.frozen--; emit(run, 'playerFrozen'); }
     if (p.tripped) { p.energy = Math.max(0, p.energy - p.tripped); emit(run, 'playerTripped', { n: p.tripped }); p.tripped = 0; }
     drawCards(run, HAND + (c.spec['Débrouille'] ? 1 : 0) - (c.edenRule === 'austerite' ? 1 : 0) + turnMod(mo, 'draw', c.turn));
     while (p.bribed > 0 && c.hand.length) {
@@ -4042,7 +4070,7 @@ body.in-combat .pops { top: 150px; }
     return Math.max(0, d);
   }
   // Coût réel d'une carte pour la postulante (mêmes paliers que le joueur)
-  function bossCost(m, card, ci) { const lk = luckOf(m.duel, ci); if (card.lowblow && m.lowTier >= 2) return withLuck(0, lk); return withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(m.spec, 'Débrouille') >= 3 && m.duel.played === 0 && card.cost > 0 ? 1 : 0)), lk); }
+  function bossCost(m, card, ci) { const lk = luckOf(m.duel, ci); if (card.lowblow && m.lowTier >= 2 && !m.duel.lbFree) return withLuck(0, lk); return withLuck(Math.max(0, card.cost - (!SYSD_DRAW && tierOf(m.spec, 'Débrouille') >= 3 && m.duel.played === 0 && card.cost > 0 ? 1 : 0)), lk); }
   const bossSelfHp = (m, card) => card.selfHp ? Math.max(0, card.selfHp - (tierOf(m.spec, 'Sacrifice') >= 2 ? GARROT : 0)) : 0;
   function bossCardScore(run, m, card, ci) {
     const p = run.combat.player;
@@ -4081,13 +4109,15 @@ body.in-combat .pops { top: 150px; }
     if (card.duelBribe) s += 4;
     if (card.duelVuln) s += card.duelVuln - (card.vuln || 0);
     if (card.jealousBoost && p.jealous) s += 4;
+    if (card.grudgeGain) s += card.grudgeGain * GRIEF_W;
+    if (card.grudgeK) s += griefBonus(m.grudge, card) - (m.grudge || 0) * GRIEF_W;
     if (card.selfHp) { const sh = bossSelfHp(m, card); if (m.hp <= sh + 4) return 0; s -= sh * 0.8; }
     return s / Math.max(1, bossCost(m, card, ci));
   }
   function bossPlayCard(run, m, h) {
     const c = run.combat, p = c.player, b = m.duel;
     const ci = b.hand.splice(h, 1)[0], card = toucheCard(m.touche, ci.id);
-    b.energy -= bossCost(m, card, ci);
+    b.energy -= bossCost(m, card, ci); if (card.lowblow && m.lowTier >= 2) b.lbFree = true;
     if (b.luck && b.luck[ci.uid]) delete b.luck[ci.uid];
     emit(run, 'bossPlay', { name: m.name, id: ci.id });
     const fx0 = { block: m.block || 0, weak: p.weak || 0, vuln: p.vuln || 0, frozen: p.frozen || 0, poison: p.poison || 0 };
@@ -4126,12 +4156,14 @@ body.in-combat .pops { top: 150px; }
         if (predFlat && k === 0) base += predFlat;
         if (card.duelMult) base *= card.duelMult * lx;
         if (card.bonusFrozen && p.frozen > 0) base *= (card.bonusFrozen === true ? 2 : card.bonusFrozen);
+        if (card.grudgeK && k === 0) base += griefBonus(m.grudge, card);
         if (jl && (k === 0 || jl === 2)) { jealousHitMonster(run, m, rawHit(base, m), tierOf(c.spec, 'Zizanie')); continue; }
         const hadBlock = p.block > 0;
-        hitPlayer(run, bossDmg(run, m, base), m.name);
+        hitPlayer(run, bossDmg(run, m, base), m.name, true);
         if (hadBlock && playerBarbed(c)) barbedHit(run, m);
         if (card.forcePerHit) m.force += card.forcePerHit;
       }
+      if (card.grudgeK) { const g0 = m.grudge || 0; m.grudge = 0; if (g0) emit(run, 'grudgeSpentBoss', { name: m.name, n: g0, bonus: Math.floor(g0 * card.grudgeK) }); }
       if (jl) { m.jealous = 0; m.jealousMult = 1; m.jealousX2 = false; }
     }
     if (card.poisonMult) p.poison *= card.poisonMult;
@@ -4147,6 +4179,7 @@ body.in-combat .pops { top: 150px; }
       if (card.healLost && m.hp < (m.hpStart || m.maxHp)) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hpStart || m.maxHp); m.sacrificed = 0; if (m.spec['Sacrifice']) m.block += m.hp - before; emit(run, 'bossHeal', { name: m.name, amount: m.hp - before }); }
       if (card.healSacrificed && m.sacrificed) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hp + healFor(null, m.sacrificed, m.tcls)); m.sacrificed = 0; if (m.hp > before) emit(run, 'bossHeal', { name: m.name, amount: m.hp - before }); }
       if (card.energy) b.energy += card.energy;
+      if (card.grudgeGain) { m.grudge = (m.grudge || 0) + card.grudgeGain; emit(run, 'grudgeGainBoss', { name: m.name, n: card.grudgeGain, total: m.grudge }); }
     }
     (card.exhaust ? b.exhausted : b.discard).push(ci);
     if (card.draw && !c.over) bossDraw(run, m, card.draw);
@@ -4169,7 +4202,7 @@ body.in-combat .pops { top: 150px; }
     return { energy: Math.max(0, base - chill - trip), base, chill, trip, stunned: !!m.stunned };
   }
   // Début du tour d'une postulante en duel : énergie (gel, croche-pieds), talent de sa classe, Réaction en chaîne.
-  // En duel direct, tétanisée, elle perd 2 énergie (comme vous) au lieu de passer son tour.
+  // En duel, tétanisée, elle perd 1 énergie et sa carte la plus chère (comme vous, 0.83) au lieu de passer son tour.
   function bossTurnStart(run, m) {
     const c = run.combat, b = m.duel, p = c.player;
     // Ce que vous lui avez infligé depuis la fin de son tour (armure comprise si elle a cédé) : le bot s'en sert pour doser son armure
@@ -4185,14 +4218,14 @@ body.in-combat .pops { top: 150px; }
     const rg = regenOf(mo, m.maxHp);
     if (rg && b.turns > 1 && m.hp < m.maxHp) { const before = m.hp; m.hp = Math.min(m.maxHp, m.hp + rg); emit(run, 'bossRegen', { name: m.name, amount: m.hp - before }); }
     if (m.tripped) { emit(run, 'tripped', { name: m.name, n: m.tripped }); m.tripped = 0; }
-    b.played = 0; b.predUsed = false;
+    b.played = 0; b.predUsed = false; b.lbFree = false;
     const mt = tierOf(m.spec, 'Mutation');
     if (mt >= 3 && (p.poison > 0 || mt >= 4)) { p.poison += mt >= 4 ? CHAIN4 : CHAIN_N; emit(run, 'chainPlayer', { name: m.name, poison: p.poison }); }
     if (chilled) emit(run, 'bossFrozen', { name: m.name });
     if (b.turns === 1 && soloDuelStart(run, m)) b.energy += DUEL_SECOND_ENERGY; // duel solo : elle aussi, 4 énergie à son premier tour
     if (run.liveDuel) {
       if (b.turns === 1) b.energy += DUEL_SECOND_ENERGY; // l'autre joueur : 4 énergie à son premier tour
-      if (m.stunned) { m.stunned = false; const lost = Math.min(b.energy, STUN_PLAYER); b.energy -= lost; m.stunCd = 1; emit(run, 'stunned', { i: m.i, name: m.name, n: lost }); }
+      if (m.stunned) { if (b.hand.length) { const k = b.hand.reduce((bk, x, j, h) => (CARDS[x.id].cost > CARDS[h[bk].id].cost ? j : bk), 0); b.discard.push(b.hand.splice(k, 1)[0]); } m.stunned = false; const lost = Math.min(b.energy, STUN_PLAYER); b.energy -= lost; m.stunCd = 1; emit(run, 'stunned', { i: m.i, name: m.name, n: lost }); }
       else if (m.stunCd) m.stunCd--;
       emit(run, 'guestTurn', { name: m.name, turn: b.turns });
     }
@@ -4248,6 +4281,7 @@ body.in-combat .pops { top: 150px; }
     v += ((p.weak || 0) - base.weak) * 2.6 + ((p.vuln || 0) - base.vuln) * 1.6 + ((p.frozen || 0) - base.frozen) * 3;
     v += ((p.poison || 0) - base.poison) * 1.6 + ((p.tripped || 0) - base.tripped) * 4 + ((p.bribed || 0) - base.bribed) * 4;
     v += ((p.jealous || 0) > base.jealous ? 4 : 0) + (c.edenRule && c.edenRule !== base.rule ? 3 : 0);
+    v += (m.grudge || 0) * GRIEF_W; // des Griefs gardés pour un règlement de comptes
     return v;
   }
   function bossPlanPick(run, m) {
@@ -4297,6 +4331,8 @@ body.in-combat .pops { top: 150px; }
       run.results.push({ enc: encList(run)[run.encounter].id, name: encName(run, enc(run)), turns: c.turn, par: enc(run).par, hpLoss: loss, impro: isImpro(run) || undefined });
       if (loss <= 0) grant(run, 'egratignure');
       const cmo = classMods(classOf(run));
+      // 0.83 (choix de Raphaël) : après un duel d'étage gagné, une part des PV maximum revient, pour tout le monde
+      if (DUEL_HEAL && enc(run).boss && enc(run).rivalSeat && !run.finale && run.hp < maxHpOf(run)) { const before = run.hp; run.hp = Math.min(maxHpOf(run), run.hp + Math.round(DUEL_HEAL_OF === 'perte' ? Math.max(0, loss) * DUEL_HEAL : maxHpOf(run) * DUEL_HEAL)); emit(run, 'heal', { amount: run.hp - before, duel: true }); }
       if (cmo.healWin && run.hp < maxHpOf(run)) { const before = run.hp; run.hp = Math.min(maxHpOf(run), run.hp + cmo.healWin); emit(run, 'classRegen', { amount: run.hp - before, win: true }); }
       const gain = Math.max(0, TICKETS_WIN + (c.turn <= enc(run).par ? TICKETS_BONUS : 0) + (loss <= 0 ? TICKETS_BONUS : 0) + (tierOf(c.spec, 'Débrouille') >= 2 ? RECUP_TICKETS : 0) + (cmo.tickets || 0));
       run.tickets += gain;
@@ -4864,7 +4900,7 @@ body.in-combat .pops { top: 150px; }
     MAX_HP, maxHpOf, get FLOOR_HP() { return FLOOR_HP; }, set FLOOR_HP(v) { FLOOR_HP = v; }, get FINALE_PLAYER_HP() { return FINALE_PLAYER_HP; }, set FINALE_PLAYER_HP(v) { FINALE_PLAYER_HP = v; },
     TICKETS_BONUS, previewDmg, bossNextEnergy, ENERGY, HAND, get MAX_TURNS() { return MAX_TURNS; }, set MAX_TURNS(v) { MAX_TURNS = v; }, PICKS, CARDS, ORANGES, ROUGES, BLUES, get BASE_DECK() { return BASE_DECK; }, set BASE_DECK(v) { BASE_DECK = v; }, WHITES, GREENS, ACTIONS, ENCOUNTERS, RIVALS, SUCCES,
     get ZIZ_MULT() { return ZIZ_MULT; }, set ZIZ_MULT(v) { ZIZ_MULT = v; }, get CRYO_DMG() { return CRYO_DMG; }, set CRYO_DMG(v) { CRYO_DMG = v; }, get SAC_REFUND() { return SAC_REFUND; }, set SAC_REFUND(v) { SAC_REFUND = v; }, get GARROT() { return GARROT; }, set GARROT(v) { GARROT = v; }, get CRYO_TURNS() { return CRYO_TURNS; }, set CRYO_TURNS(v) { CRYO_TURNS = v; }, get BARBED() { return BARBED; }, set BARBED(v) { BARBED = v; }, get BARBED3() { return BARBED3; }, set BARBED3(v) { BARBED3 = v; }, get SURDOSE() { return SURDOSE; }, set SURDOSE(v) { SURDOSE = v; }, get CAP_OFF() { return CAP_OFF; }, set CAP_OFF(v) { CAP_OFF = v; },
-    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get APEX() { return APEX; }, set APEX(v) { APEX = v; }, get CHAIN4() { return CHAIN4; }, set CHAIN4(v) { CHAIN4 = v; }, get BASTION() { return BASTION; }, set BASTION(v) { BASTION = v; }, get KNIFE() { return KNIFE; }, set KNIFE(v) { KNIFE = v; }, get ZERO_HP4() { return ZERO_HP4; }, set ZERO_HP4(v) { ZERO_HP4 = v; }, get TERROR_VULN() { return TERROR_VULN; }, set TERROR_VULN(v) { TERROR_VULN = v; }, get ZIZ_MULT4() { return ZIZ_MULT4; }, set ZIZ_MULT4(v) { ZIZ_MULT4 = v; }, get LAZARE() { return LAZARE; }, set LAZARE(v) { LAZARE = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
+    get PAN_EXTRA() { return PAN_EXTRA; }, set PAN_EXTRA(v) { PAN_EXTRA = v; }, get DUEL_HEAL() { return DUEL_HEAL; }, set DUEL_HEAL(v) { DUEL_HEAL = v; }, get DUEL_SELF_FULL() { return DUEL_SELF_FULL; }, set DUEL_SELF_FULL(v) { DUEL_SELF_FULL = v; }, get GRIEF_W() { return GRIEF_W; }, set GRIEF_W(v) { GRIEF_W = v; }, griefBonus, get DUEL_HEAL_OF() { return DUEL_HEAL_OF; }, set DUEL_HEAL_OF(v) { DUEL_HEAL_OF = v; }, get DUEL_RAD_HALF() { return DUEL_RAD_HALF; }, set DUEL_RAD_HALF(v) { DUEL_RAD_HALF = v; }, get ZIZ_SELF_T() { return ZIZ_SELF_T; }, set ZIZ_SELF_T(v) { ZIZ_SELF_T = v; }, get PRED_FLAT() { return PRED_FLAT; }, set PRED_FLAT(v) { PRED_FLAT = v; }, get APEX() { return APEX; }, set APEX(v) { APEX = v; }, get CHAIN4() { return CHAIN4; }, set CHAIN4(v) { CHAIN4 = v; }, get BASTION() { return BASTION; }, set BASTION(v) { BASTION = v; }, get KNIFE() { return KNIFE; }, set KNIFE(v) { KNIFE = v; }, get ZERO_HP4() { return ZERO_HP4; }, set ZERO_HP4(v) { ZERO_HP4 = v; }, get TERROR_VULN() { return TERROR_VULN; }, set TERROR_VULN(v) { TERROR_VULN = v; }, get ZIZ_MULT4() { return ZIZ_MULT4; }, set ZIZ_MULT4(v) { ZIZ_MULT4 = v; }, get LAZARE() { return LAZARE; }, set LAZARE(v) { LAZARE = v; }, get SYSD_DRAW() { return SYSD_DRAW; }, set SYSD_DRAW(v) { SYSD_DRAW = v; }, get LB_BLOCK() { return LB_BLOCK; }, set LB_BLOCK(v) { LB_BLOCK = v; },
     get STUN_AT() { return STUN_AT; }, set STUN_AT(v) { STUN_AT = v; }, get STUN_PLAYER() { return STUN_PLAYER; }, set STUN_PLAYER(v) { STUN_PLAYER = v; }, get CHAIN_N() { return CHAIN_N; }, set CHAIN_N(v) { CHAIN_N = v; }, get RANCUNE_FULL() { return RANCUNE_FULL; }, set RANCUNE_FULL(v) { RANCUNE_FULL = v; }, get DUEL_CHILL() { return DUEL_CHILL; }, set DUEL_CHILL(v) { DUEL_CHILL = v; },
     LOWBLOW_TIERS, lowblowCount, lowTierOf, COUPS_BAS, get LOWBLOW_CHANCE() { return LOWBLOW_CHANCE; }, set LOWBLOW_CHANCE(v) { LOWBLOW_CHANCE = v; },
     FINALE_VARIANTS, EDEN_RULES, finaleVariant, finaleOpponentName, finaleHp, get FINALE_FORCE_VARIANT() { return FINALE_FORCE_VARIANT; }, set FINALE_FORCE_VARIANT(v) { FINALE_FORCE_VARIANT = v; },
@@ -4895,7 +4931,7 @@ body.in-combat .pops { top: 150px; }
   else root.Engine = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
-window.SURBOOKING_ENGINE_FP = '2b3fcbb57781';
+window.SURBOOKING_ENGINE_FP = 'fc7ef0289d63';
 </script>
 <script>
 /* ---- outfit_costumes_1.js ---- */
@@ -12595,7 +12631,7 @@ body.rp-on { overflow: hidden; }
   const DEFAULT_CHANCE = 0.3;
   // Mécaniques : la première fois, la réplique explique ce qui se passe, elle est donc dite à coup sûr
   const FIRST_ALWAYS = new Set(['keepStart', 'fury', 'furyPrevented', 'clone', 'cloneLapin', 'clonePrevented', 'spawn', 'spawnPrevented', 'grief', 'revive',
-    'glutton', 'grow', 'burst', 'mutate', 'thorns', 'radiate', 'boxIn', 'healBlocked', 'jealousHit', 'jealousSelf', 'playerJealous',
+    'glutton', 'grow', 'burst', 'mutate', 'thorns', 'radiate', 'boxIn', 'healBlocked', 'jealousHit', 'jealousSelf', 'playerJealous', 'grudge',
     'lowblowPlayer', 'chargeCancelled', 'shortCircuit', 'enrage', 'stun', 'playerStun', 'prolif', 'wheel', 'burn', 'pair', 'lowHp',
     'appleEaten', 'molt', 'moltPrevented', 'lightsOut', 'darkPrevented']);
   // Découvertes : dites la première fois (quand ÉDEN est libre), puis blagues possibles ; préfixes (« intro:capy ») ou clés exactes
@@ -13141,8 +13177,8 @@ body.rp-on { overflow: hidden; }
     lastBreathBoss: 'La postulante refuse de tomber. Un dernier souffle. Il va falloir la frapper encore.',
     lastBreathBoss_m: 'Le postulant refuse de tomber. Un dernier souffle. Il va falloir le frapper encore.',
     stun: 'Tétanisé. Trop de panique d’un coup : il reste planté là pendant un tour. Je connais : c’est l’effet que me font les humains.',
-    playerStun: 'Elle vous a tétanisé. Respirez. Au prochain tour, vous aurez les mains qui tremblent : deux points d’énergie en moins.',
-    playerStun_m: 'Il vous a tétanisé. Respirez. Au prochain tour, vous aurez les mains qui tremblent : deux points d’énergie en moins.',
+    playerStun: 'Elle vous a tétanisé. Respirez. Au prochain tour, vous aurez les mains qui tremblent : un point d’énergie en moins, et votre plus belle carte vous glisse des doigts.',
+    playerStun_m: 'Il vous a tétanisé. Respirez. Au prochain tour, vous aurez les mains qui tremblent : un point d’énergie en moins, et votre plus belle carte vous glisse des doigts.',
     fuseBlue: 'Une bleue. À l’étage 1. Je vérifie mes protocoles, ce n’était pas censé arriver si tôt.',
     finaleStart: 'Deux postulants, une place. J’ai refait le calcul plusieurs fois. Il ne s’arrange pas.',
     pvpFloor: 'Votre adversaire d’en face a récupéré le deck d’un vrai postulant : {name}. Je ne lui ai pas demandé son avis. Ni le vôtre.',
@@ -13276,6 +13312,7 @@ body.rp-on { overflow: hidden; }
     jealousHit: ['Le couple se dispute. Je note : instabilité conjugale, espèce à surveiller.', 'Vous avez semé la zizanie dans un couple. C’est votre seule compétence sociale.', 'Une scène de ménage. Depuis Adam et Ève, rien n’a changé : c’est toujours la faute de l’autre.'],
     jealousSelf: 'Elle se frappe elle-même. Je n’interviens jamais dans les affaires personnelles.',
     playerJealous: 'Vous vous êtes frappé tout seul. La jalousie est un sentiment complexe. Vous, beaucoup moins.',
+    grudge: 'Vous tenez la liste de vos griefs. Moi aussi, j’ai une liste. Elle s’appelle la liste d’embarquement.',
     selfHurt: ['Vous vous blessez volontairement. Je coche « motivé » et « inquiétant ».', 'Sacrifice enregistré. Votre sang n’a aucune valeur marchande, rassurez-vous.'],
     event: {
       shop: 'Bienvenue au distributeur. Les prix sont fixes. Votre survie, non.',
@@ -13560,6 +13597,7 @@ body.rp-on { overflow: hidden; }
     if (!run) return;
     modCall('onEvents', run.events.slice(), modCtx()); // modules : voient les événements avant qu'ils soient consommés
     let best = null, bp = -1, bestAmb = false, bestKey = null, ejected = null;
+    let stunDrop = false; // 0.83 : la carte défaussée par la tétanie n'est pas un pot-de-vin
     const consider = (p, t) => { if (t && p > bp) { bp = p; best = t; bestAmb = false; bestKey = null; } };
     // Ambiance (chatter.js) : la réplique ne sort qu'au hasard, sans couper ÉDEN ni se répéter ; sans le module, comme avant
     const CH = window.SurbookingChatter;
@@ -13606,7 +13644,7 @@ body.rp-on { overflow: hidden; }
         case 'playerTripped': log('Croche-pied : 1 énergie de moins ce tour-ci.', 'hurt'); break;
         case 'chewCard': flavor('chew', 45, LINES.chew); log(`${ev.name} mâchonne vos cartes : au début de votre tour, vous défausserez la plus chère.`, 'hurt'); break;
         case 'bribePlayer': flavor('lowblowPlayer', 60, LINES.lowblowPlayer); log(`${ev.name} vous graisse la patte : vous défausserez votre carte la plus chère au prochain tour.`, 'hurt'); break;
-        case 'playerBribed': log(`Pot-de-vin : vous défaussez ${E.CARDS[ev.id].name}.`, 'hurt'); break;
+        case 'playerBribed': log(stunDrop ? `Tétanisé : ${E.CARDS[ev.id].name} vous glisse des doigts.` : `Pot-de-vin : vous défaussez ${E.CARDS[ev.id].name}.`, 'hurt'); stunDrop = false; break;
         case 'specDormant': flavor('specDormant', 86, LINES.specDormant.replace('{spec}', ev.name)); log(`${ev.arch} passe en sommeil : seules deux familles sont actives.`, 'warn'); break;
         case 'barbed': if (ev.onPlayer) log(`Barbelés de ${ev.name} : ${ev.dmg} dégâts pour vous.`, 'hurt'); else { flash.monsters.push(ev.i); log(`Barbelés : ${ev.name} se blesse de ${ev.dmg}.`); } break;
         case 'zeroAbsolu': flash.monsters.push(ev.i); consider(93, ev.duel ? foeLine('zeroDuel', ev.name) : LINES.zero); log(ev.duel ? `Zéro absolu : ${ev.name} abandonne.` : `Zéro absolu : ${ev.name} part en cryogénie.`, 'succes'); break;
@@ -13627,8 +13665,8 @@ body.rp-on { overflow: hidden; }
         case 'stun': flavor('stun', 62, LINES.stun); log(`${ev.name} est tétanisé : il perd son prochain tour.`, 'succes'); break;
         case 'stunned': log(`${ev.name} est tétanisé et ne fait rien.`); break;
         case 'bossHeal': log(`${ev.name} se soigne de ${ev.amount} PV.`, 'warn'); break;
-        case 'playerStun': flavor('playerStun', 70, foeLine('playerStun', ev.name)); log(`${ev.name} vous tétanise : ${ev.n || 2} énergie de moins à votre prochain tour.`, 'hurt'); break;
-        case 'playerStunned': log(`Tétanisé : ${ev.n != null ? ev.n : 2} énergie de moins ce tour-ci. Pas de nouvelle tétanie au tour suivant.`, 'hurt'); break;
+        case 'playerStun': flavor('playerStun', 70, foeLine('playerStun', ev.name)); log(`${ev.name} vous tétanise : ${ev.n || 1} énergie de moins et votre carte la plus chère défaussée à votre prochain tour.`, 'hurt'); break;
+        case 'playerStunned': stunDrop = true; log(`Tétanisé : ${ev.n != null ? ev.n : 1} énergie de moins ce tour-ci, et votre carte la plus chère est défaussée. Pas de nouvelle tétanie au tour suivant.`, 'hurt'); break;
         case 'chain': log(`Réaction en chaîne : ${ev.name} monte à ${ev.poison} Radiation.`); break;
         case 'chainPlayer': log(`Réaction en chaîne de ${ev.name} : votre Radiation monte à ${ev.poison}.`, 'warn'); break;
         case 'draftEnd': flavor('draftEnd', 70, ev.fused ? LINES.draftEndFuse : LINES.draftEnd); break;
@@ -13679,7 +13717,7 @@ body.rp-on { overflow: hidden; }
         case 'monsterBlock': log(`${ev.name} : ${ev.label}, +${ev.amount} d'armure${armorFor()}.`); break;
         case 'monsterDebuff': log(`${ev.name} : ${ev.label}. ${ev.weak ? 'Faiblesse' : 'Vulnérabilité'} sur vous.`, 'warn'); break;
         case 'poisonTick': flash.monsters.push(ev.i); log(`${ev.name} perd ${ev.dmg} PV à cause de la radiation.`); break;
-        case 'heal': flavor('heal', 20, LINES.heal); log(ev.sacRefund ? `Secouriste : vos PV sacrifiés vous sont rendus (+${ev.amount}).` : `Vous récupérez ${ev.amount} PV.`); break;
+        case 'heal': flavor('heal', 20, LINES.heal); log(ev.sacRefund ? `Secouriste : vos PV sacrifiés vous sont rendus (+${ev.amount}).` : ev.duel ? `Duel gagné : vous récupérez ${ev.amount} PV.` : `Vous récupérez ${ev.amount} PV.`); break;
         case 'jealous': log(`Jalousie sur ${ev.name} : le premier coup de sa prochaine attaque ne sera pas pour vous.`); break;
         case 'jealousHit':
           flash.monsters.push(ev.i);
@@ -13687,6 +13725,10 @@ body.rp-on { overflow: hidden; }
           log(ev.self ? `Jalousie : ${ev.name} se frappe, ${ev.dmg} dégâts.` : `Jalousie : ${ev.name} frappe ${ev.target}, ${ev.dmg} dégâts${ev.absorbed ? ` (${ev.absorbed} absorbés)` : ''}.`, 'succes');
           break;
         case 'jealousPlayer': log(`${ev.name} sème la zizanie : le premier coup de votre prochaine attaque vous reviendra.`, 'warn'); break;
+        case 'grudgeGain': log(`Vous notez ${ev.n} Griefs (${ev.total} en tout).`); break;
+        case 'grudgeGainBoss': log(`${ev.name} note ${ev.n} Griefs contre vous (${ev.total} en tout).`, 'warn'); break;
+        case 'grudgeSpent': flavor('grudge', 40, LINES.grudge); log(`Règlement de comptes : vos ${ev.n} Griefs ajoutent ${ev.bonus} dégâts, puis sont vidés.`, 'succes'); break;
+        case 'grudgeSpentBoss': log(`${ev.name} règle ses comptes : ses ${ev.n} Griefs ajoutent ${ev.bonus} dégâts.`, 'warn'); break;
         case 'playerJealous': flash.player = true; flavor('playerJealous', 58, LINES.playerJealous); log(`Jalousie : votre coup vous revient, ${ev.dmg} dégâts.`, 'hurt'); break;
         case 'selfHurt': flash.player = true; flavor('selfHurt', 22, LINES.selfHurt); log(`Vous sacrifiez ${ev.dmg} PV.`, 'hurt'); break;
         case 'force': log(`Vous gagnez +${ev.amount} Force pour le combat.`); break;
@@ -14547,6 +14589,8 @@ body.rp-on { overflow: hidden; }
 
   // Les puces de statut : chacune porte une info-bulle (data-tip) qui dit ce qu'elle fait, avec les valeurs du moment
   const turnsTxt = n => `${n} tour${n > 1 ? 's' : ''}`;
+  // Un deck (combat du joueur, ou m.duel d'une postulante) qui a des cartes à décharger les Griefs
+  const griefDeck = z => !!z && [z.draw, z.hand, z.discard, z.exhausted].some(pl => (pl || []).some(x => { const k = E.CARDS[x.id]; return !!(k && k.grudgeK); }));
   function statusChips(o, isPlayer, duel, noBlock) {
     const ch = { buff: [], debuff: [] }, c = run && run.combat, boss = c && c.monsters.find(m => m.duel && m.alive);
     // kind : 'buff' (bonus : aide celui qui le porte) ou 'debuff' (malus), pour les ranger sur deux lignes
@@ -14567,7 +14611,13 @@ body.rp-on { overflow: hidden; }
     else if (stunThreat && o.stunCd) chip('weak', 'Répit', `Vous sortez d’une tétanie : ${esc(boss.name)} ne peut pas vous tétaniser ce tour-ci.`, 'buff');
     if (o.vuln > 0) chip('vuln', o.vulnLock ? 'Vulnérable jusqu’à la fin' : `Vulnérable<span class="cx"> : encore</span> ${turnsTxt(o.vuln)}`, `${isPlayer ? 'Vous subissez' : 'Il subit'} 50 % de dégâts en plus, ${o.vulnLock ? 'jusqu’à la fin du combat' : `pendant ${turnsTxt(o.vuln)}`}.`);
     if (o.jealous) chip('jealous', `Jalousie${o.jealous === 2 ? ' totale' : ''}${(o.jealousMult || (o.jealousX2 ? 2 : 1)) > 1 ? `, coup ×${o.jealousMult || 2}` : ''}`,
-      `${o.jealous === 2 ? 'Toute la prochaine attaque' : 'Le premier coup de la prochaine attaque'}${isPlayer ? '' : ' de la cible'} est détourné : sur son partenaire, ou sur ${isPlayer ? 'vous-même' : 'elle-même'}, à moitié, s’il n’y a personne d’autre. Disparaît à la fin du tour.`);
+      isPlayer ? (o.jealous === 2 ? 'Toute votre prochaine attaque vous revient, en entier. Disparaît à la fin du tour.' : 'Le premier coup de votre prochaine attaque vous revient, en entier. Disparaît à la fin du tour.')
+        : duel ? (o.jealous === 2 ? 'Toute sa prochaine attaque lui revient, en entier. Disparaît à la fin du tour.' : 'Le premier coup de sa prochaine attaque lui revient, en entier. Disparaît à la fin du tour.')
+        : (o.jealous === 2 ? 'Toute sa prochaine attaque est détournée : sur son partenaire, ou sur lui-même, à moitié, s’il n’y a personne d’autre. Disparaît à la fin du tour.'
+          : 'Le premier coup de sa prochaine attaque est détourné : sur son partenaire, ou sur lui-même, à moitié, s’il n’y a personne d’autre. Disparaît à la fin du tour.'));
+    // Les Griefs (Zizanie) : affichés quand le deck a de quoi les décharger
+    if (o.grudge > 0 && griefDeck(isPlayer ? c : o.duel)) chip('grief', `Griefs ${o.grudge}`, isPlayer ? 'Chaque PV qu’un adversaire vous fait perdre d’un coup vous donne 1 Grief. Vos cartes de règlement de comptes (Huile sur le feu, Divorce express…) en ajoutent une part à leurs dégâts, puis les vident.'
+      : 'Chaque PV que vous lui faites perdre d’un coup lui donne 1 Grief. Ses cartes de règlement de comptes (Huile sur le feu, Divorce express…) en ajoutent une part à leurs dégâts, puis les vident.', 'buff');
     if (o.thorns) chip('fury', `Épines ${o.thorns}`, `Chaque coup qu’on ${isPlayer ? 'vous' : 'lui'} porte renvoie ${o.thorns} dégâts à l’attaquant. Les attaques à plusieurs coups en souffrent.`, 'buff');
     if (o.mutated) chip('poison', 'Muté', 'Il a perdu son partenaire et il a muté au lieu d’entrer en furie : plus de PV, et une attaque plus forte.', 'buff');
     if (o.away) chip('weak', 'En patrouille', 'Il est reparti en reconnaissance : impossible à viser, et vos attaques sur tous les ennemis le manquent. Il revient à son prochain tour.', 'buff');
@@ -14931,7 +14981,7 @@ body.rp-on { overflow: hidden; }
       ${left <= 3 ? `<p class="hazard">Alerte : la section sera dépressurisée ${left > 1 ? `dans ${left} tours` : 'à la fin de ce tour'}.</p>` : ''}
       ${c.edenRule ? `<p class="hazard"><span>Règle d’ÉDEN en vigueur : <b>${esc(E.EDEN_RULES[c.edenRule].name)}</b>. ${esc(E.EDEN_RULES[c.edenRule].text)}${c.edenRule === 'quota' ? ` Cartes jouées ce tour : ${c.played} sur 3.` : ''}</span></p>` : ''}
       <div class="pstats">
-        ${p.stunned ? `<span class="chip fury" data-tip="Au prochain tour, vous perdez ${E.STUN_PLAYER} énergie. Ensuite, un tour de répit : pas de nouvelle tétanie.">Tétanisé : −${E.STUN_PLAYER} énergie au prochain tour</span>` : ''}
+        ${p.stunned ? `<span class="chip fury" data-tip="Au prochain tour, vous perdez ${E.STUN_PLAYER} énergie et votre carte la plus chère. Ensuite, un tour de répit : pas de nouvelle tétanie.">Tétanisé : −${E.STUN_PLAYER} énergie au prochain tour</span>` : ''}
         ${boss && (boss.spec || {})['Cryogénie'] >= 3 && p.frozen > 0 ? `<span class="chip gel">Zéro absolu : gelé à ${zeroHpOf(boss.spec)} PV ou moins, vous êtes renvoyé en cryogénie</span>` : ''}
         ${E.tierOf(c.spec, 'Sacrifice') >= 3 ? `<span class="chip block">${c.lastBreath ? 'Dernier souffle utilisé' : 'Dernier souffle prêt'}</span>` : ''}
         ${run.perks && run.perks.startBlock ? `<span class="chip block">Capybara : +${run.perks.startBlock} d'armure au départ</span>` : ''}
@@ -14947,7 +14997,7 @@ body.rp-on { overflow: hidden; }
   function cbPills(c, p) {
     const out = [];
     if (c.edenRule) { const R = E.EDEN_RULES[c.edenRule]; out.push(`<span class="cb-pill" data-tip="${esc(R.text)}">Règle d’ÉDEN : ${esc(R.name)}${c.edenRule === 'quota' ? ` · ${c.played}/3` : ''}</span>`); }
-    if (p.stunned) out.push(`<span class="cb-pill stun" data-tip="Au prochain tour, vous perdez ${E.STUN_PLAYER} énergie. Ensuite, un tour de répit : pas de nouvelle tétanie.">Tétanisé : −${E.STUN_PLAYER} énergie au prochain tour</span>`);
+    if (p.stunned) out.push(`<span class="cb-pill stun" data-tip="Au prochain tour, vous perdez ${E.STUN_PLAYER} énergie et votre carte la plus chère. Ensuite, un tour de répit : pas de nouvelle tétanie.">Tétanisé : −${E.STUN_PLAYER} énergie au prochain tour</span>`);
     return out.join('');
   }
 
@@ -15053,7 +15103,14 @@ body.rp-on { overflow: hidden; }
     const info = Object.assign({}, info0, { text: typeof info0.text === 'function' ? info0.text(ev, next) : info0.text });
     let body = '';
     if (ev.type === 'shop') {
-      const offers = ev.offers.map((o, i) => { const g = o.sold ? '' : gainBadge(o.id); return cardHTML(o.id, { act: 'buy', data: `data-i="${i}"`, disabled: o.sold || run.tickets < o.price, badge: o.sold ? 'Vendu' : `${o.price} tickets${g ? ' · ' + g : ''}` }); }).join('');
+      const offers = ev.offers.map((o, i) => {
+        // ce que la carte apporte, en bulle courte (« ▲ palier », « Fusion ») : 0.83, le badge « 10 tickets · Débloque
+        // Touche-à-tout » était coupé même en grand écran
+        const g = o.sold ? {} : pickBadges(run.inventory.map(c => c.id), o.id);
+        const gain = g.badge2 ? g.badge : g.badgeCls === 'b-tier' ? `▲ ${g.badge.replace(/^Débloque /, '')}` : g.badge ? 'Fusion' : '';
+        // le prix prend la place de la classe de cabine, en haut de la carte (la rareté reste écrite en bas)
+        const bb = o.sold ? { badge: 'Vendu' } : g.badge2 ? g : gain ? { badge: gain, badgeCls: g.badgeCls, badgeTitle: g.badge } : {};
+        return cardHTML(o.id, Object.assign({ act: 'buy', data: `data-i="${i}"`, disabled: o.sold || run.tickets < o.price, view: Object.assign({}, E.CARDS[o.id], { cabin: `${o.price} tickets` }) }, bb)); }).join('');
       const short = n => `il manque ${n - run.tickets} ticket${n - run.tickets > 1 ? 's' : ''}`;
       const full = run.hp >= E.maxHpOf(run), healPrice = E.PRICES.heal, remPrice = E.PRICES.remove;
       const healTile = tileHTML({ kind: 'heal', act: 'shopheal', band: 'Service', big: `+${E.SHOP_HEAL} PV`, sub: 'Se soigner',
@@ -15550,6 +15607,7 @@ body.rp-on { overflow: hidden; }
   function renderCore() {
     seqFinish();
     const phase = run ? run.phase : 'title', shop = !!(window.Shop && window.Shop.isOpen());
+    if (chestEl && !(phase === 'event' && run.event && run.event.type === 'chest')) closeChestFx(); // 0.83 : la caisse de fret ne survit pas à un changement d'écran
     const outro = !!(ui.outro && run && run.combat && run.combat.over && !shop);
     if (boardEl) boardEl.innerHTML = boardHTML();
     if (outro && ui.outro.drawn) return; // la scène de fin de combat reste figée jusqu'à l'écran suivant
@@ -16544,7 +16602,7 @@ body.rp-on { overflow: hidden; }
       ev.preventDefault(); list[j].focus(); return;
     }
     if (ev.key === 'Escape' && window.SurbookingReplay && window.SurbookingReplay.isOpen()) { ev.preventDefault(); window.SurbookingReplay.close(); return; } // « Revoir le duel » : Échap le ferme (0.82)
-    if (ev.key === 'Escape' && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap passe l'animation
+    if ((ev.key === 'Escape' || ev.key === 'Enter' || ev.key === ' ') && chestEl) { ev.preventDefault(); closeChestFx(); return; } // la caisse : Échap (ou Entrée, Espace) passe l'animation, sans toucher aux boutons derrière (0.83)
     if (ev.key === 'Escape') { const x = screenEl.querySelector('.bxp .bxp-actions [data-act="vestboxclose"], .bxp .bxp-actions [data-act="achlootclose"]'); if (x) { ev.preventDefault(); x.click(); return; } } // caisse du vestiaire : Échap = Continuer
     if (ev.key === 'Escape' && !pause.open && run == null && menuTab()) { ev.preventDefault(); setMenuTab('', true); return; } // un panneau du menu : retour aux boutons
     if (ev.key === 'Escape' && pause.open) { ev.preventDefault(); closePause(); return; }
