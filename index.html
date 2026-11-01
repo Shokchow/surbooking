@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.78.4';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.79.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -1632,7 +1632,7 @@ body.in-combat .pops { top: 150px; }
       <dt>La Mère</dt><dd>Boss de la ménagerie. Elle engendre seule un rejeton de 17 PV à chaque fin de tour, quatre au plus, sauf si elle est gelée. Quand elle part en cryogénie, ses rejetons la suivent : on peut l’abattre sans s’occuper d’eux.</dd>
       <dt>Épines</dt><dd>Chaque coup porté à un crapaud-cactus vous inflige ses épines en dégâts. Les attaques à plusieurs coups en souffrent.</dd>
       <dt>Instables</dt><dd>Dans la serre, quand un membre du couple part en cryo, l'autre mute au lieu d'entrer en furie : +10 PV et un effet plus fort. Gelé, il ne mute pas.</dd>
-      <dt>Duel</dt><dd>La première rencontre de chaque étage, juste après le draft, contre votre vis-à-vis, assis en face, avec les cartes qu'il vient de drafter, ses cartes de base et son deck des étages précédents. Il arrive avec tous ses PV, comme vous. Ses intentions sont cachées. Vous commencez, avec 4 cartes au premier tour.</dd>
+      <dt>Duel</dt><dd>La première rencontre de chaque étage, juste après le draft, contre votre vis-à-vis, assis en face, avec les cartes qu'il vient de drafter, ses cartes de base et son deck des étages précédents. Il arrive avec tous ses PV, comme vous. Ses intentions sont cachées. Vous commencez, avec 4 cartes et 2 énergie au premier tour ; lui en a 4 à son premier tour (la même règle qu’en direct, pour que commencer ne décide pas du duel).</dd>
       <dt>Boss d’étage</dt><dd>La dernière rencontre de chaque étage, un monstre seul aux intentions visibles. Quarantaine : le <b>bouc émissaire</b>, qui mâchonne votre carte la plus chère (défaussée au début de votre tour), ou Gaston le taureau, qui annonce sa charge. Étable : <b>Dolly</b>, la brebis irradiée qui se clone, ou l’unité d’entretien RX-7. Serre : la <b>dionée géante</b>, dont les lianes vous retirent 1 énergie et qui digère pour se soigner (bloqué par la Radiation ou le Gel), ou Nounours l’ours mutant. Ménagerie : <b>la Mère</b>, ou la Chimère. Il faut le battre pour monter.</dd>
       <dt>Jalousie</dt><dd>Le premier coup de la prochaine attaque de la cible frappe son partenaire au lieu de vous. Seule (le boss, ou le dernier d'un couple), elle se frappe elle-même, à moitié (en entier avec Rancune, palier 16 de Zizanie). La Jalousie disparaît à la fin du tour de la cible.</dd>
       <dt>Sacrifice</dt><dd>Certaines cartes coûtent des PV. Elles ne peuvent pas vous tuer : on ne peut pas les jouer si on n'a pas assez de PV.</dd>
@@ -1660,7 +1660,7 @@ body.in-combat .pops { top: 150px; }
 (function (root) {
   'use strict';
 
-  const MAX_HP = 50, ENERGY = 3, HAND = 5, PICKS = 12, SEATS = 4;
+  const MAX_HP = 75, ENERGY = 3, HAND = 5, PICKS = 12, SEATS = 4;
   // Draft de 12, on en garde 8 (0.78, idée de Raphaël) : des boosters de 12 cartes, 12 picks (trois tours de table, deux
   // wheels), puis chacun garde 8 de ses cartes ; les fusions attendent ce choix. Plus de carte brûlée.
   let KEEP = 8;
@@ -1669,7 +1669,8 @@ body.in-combat .pops { top: 150px; }
   const DUEL_SEAT = 2;
   let MAX_TURNS = 15; // dépressurisation (12 avant l'allongement des combats)
   // PV maximum du joueur selon l'étage : les combats s'allongent à mesure que le deck se renforce (choix de Raphaël).
-  let FLOOR_HP = { 1: 50, 2: 95, 3: 110, 4: 120 }, FINALE_PLAYER_HP = 280;
+  // 0.79 : PV d'étage ×1,5 (avant 50 / 95 / 110 / 120) : des duels solo plus longs (règle de départ comme en direct) sans plus de morts
+  let FLOOR_HP = { 1: 75, 2: 143, 3: 165, 4: 180 }, FINALE_PLAYER_HP = 280;
   const maxHpOf = run => (run && run.maxHp) || MAX_HP;
 
   const CARDS = {
@@ -1818,7 +1819,7 @@ body.in-combat .pops { top: 150px; }
       pitch: 'Le candidat standard, décongelé avec sa feuille et ses poings.',
       line: 'Postulant standard. Aucun talent particulier, aucune attente particulière. Vous êtes la moyenne, et la moyenne survit parfois.' },
     veterinaire: { name: 'Vétérinaire', fem: 'Vétérinaire', hpMult: 0.92, atk: 'flechette', def: 'soins', style: 'Le soigneur', mods: { regenPct: 0.016 },
-      talent: { name: 'Soigneur', text: 'Au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1 (4 en finale : 1,6 % de vos PV maximum).' },
+      talent: { name: 'Soigneur', text: 'Au début de chacun de vos tours, si vous avez perdu des PV, vous en récupérez 1,6 % de vos PV maximum : 1 à la quarantaine, 2 aux étages suivants, 4 en finale.' },
       drawback: { name: 'Fragile', text: 'PV maximum −8 %, à chaque étage et en finale.' },
       pitch: 'Elle soignait les animaux de l’arche. Elle sait se recoudre entre deux morsures, moins les encaisser. Ses fléchettes calment les bêtes restées seules.',
       line: 'Vétérinaire. Vous soigniez ces animaux, maintenant vous allez les renvoyer en cryogénie. Recousez-vous entre deux morsures : je ne fournis pas les pansements.' },
@@ -1977,10 +1978,10 @@ body.in-combat .pops { top: 150px; }
   // précédents). PV calés par simulation (0.78 : draft de 12, bots qui planifient leur tour, joueur automatique qui planifie
   // aussi ses duels : deux joueurs de même niveau) : ~79 / 77 / 65 / 60 % des postulants qui entrent dans chaque étage en
   // sortent, le duel faisant 30 à 40 % des éliminations, comme en 0.77 (tools/bots_bench.js). Avant : 30 / 65 / 90 / 110 PV.
-  const DUEL1 = { id: 'boss', name: 'Duel contre Ève 2207', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 24, monsters: [] };
-  const DUEL2 = { id: 'boss2', name: 'Duel contre Ève 7781', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 51, monsters: [] };
-  const DUEL3 = { id: 'boss3', name: 'Duel contre Ève 3317', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 80, monsters: [] };
-  const DUEL4 = { id: 'boss4', name: 'Duel contre Ève 8128', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 96, monsters: [] };
+  const DUEL1 = { id: 'boss', name: 'Duel contre Ève 2207', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 26, monsters: [] };
+  const DUEL2 = { id: 'boss2', name: 'Duel contre Ève 7781', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 61, monsters: [] };
+  const DUEL3 = { id: 'boss3', name: 'Duel contre Ève 3317', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 96, monsters: [] };
+  const DUEL4 = { id: 'boss4', name: 'Duel contre Ève 8128', species: 'Duel de l’étage', diff: 'Duel', par: 5, boss: true, rivalSeat: DUEL_SEAT, hp: 108, monsters: [] };
   // Valeurs équilibrées par simulation (3000 parties, joueur automatique, deck de base de 8 cartes) :
   // Difficulté relevée : ~88 % de victoires et ~19 PV restants pour le joueur automatique.
   const CAPY = { id: 'capy', name: 'Couple de capybaras', short: 'les capybaras', species: 'Capybara', diff: 'Facile', par: 4,
@@ -2651,7 +2652,7 @@ body.in-combat .pops { top: 150px; }
   // Version du protocole : seules les parties de même version se retrouvent à une table (mêmes cartes, mêmes règles)
   // À chaque changement du moteur (cartes, règles), on l'augmente : l'arbitre des duels n'a qu'un moteur, les tables ne
   // mélangent pas les versions (tools/build_edge.js le rappelle si on l'oublie)
-  const LIVE_VERSION = 10; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73)
+  const LIVE_VERSION = 11; // 2 : duel en direct (0.63) ; 3 : finale en direct (0.64) ; 4 : duel arbitré (0.67) ; 5 : fléchette calmante (0.69) ; 6 : Adam et Ève (0.70) ; 7 : le Serpent (0.71) ; 8 : sauterelles, drones, Léviathan (0.72) ; 9 : chauves-souris ; 10 : draft de 12, on en garde 8, bots améliorés (0.78) (0.73)
   // Une carte telle que le serveur la garde : de quoi faire choisir un bot (valeur, famille, points, rareté)
   const liveCard = id => { const c = CARDS[id]; return { id, v: c.value || 0, a: ARCHS.includes(c.arch) ? c.arch : '', p: ptsOf(id), r: c.rarity }; };
   // Ce qu'un joueur apporte à la table : son nom, sa classe, sa silhouette, ses cartes d'avant ce draft (hors cartes de base)
@@ -2810,6 +2811,12 @@ body.in-combat .pops { top: 150px; }
   // Équilibre du premier tour (simulations, mêmes decks : 71 % de victoires pour le joueur qui commence sans rien ; 48 %
   // avec 2 énergie à son premier tour et 4 au premier tour de l'autre)
   let DUEL_FIRST_ENERGY = -1, DUEL_SECOND_ENERGY = 1;
+  // Duels d'étage en solo (0.79, demande de Raphaël : « les duels se jouent en deux ou trois tours, ce qui avantage celui
+  // qui commence ») : la même règle de départ qu'en direct. Vous commencez toujours, avec 2 énergie (et 4 cartes, comme
+  // dans tout combat de boss) ; la postulante d'en face, jouée par ÉDEN, a 4 énergie à son premier tour. Ses PV d'étage
+  // ont été relevés en même temps (DUEL1 à DUEL4, et vos PV d'étage ×1,5) : des duels de 3 à 5 tours au lieu d'une course en 2. Pas en finale.
+  let SOLO_DUEL_START = true;
+  const soloDuelStart = (run, m) => !!(SOLO_DUEL_START && run && !run.liveDuel && m && m.duel && !m.finale);
   const duelBoss = run => run && run.combat && run.combat.monsters.find(x => x.duel);
   // La rencontre de la finale en direct, contre l'autre finaliste (o : { name, cls, deck, hp })
   const liveFinaleEnc = o => ({ id: 'finale', name: `Finale contre ${o.name}`, species: 'Finaliste', diff: 'Finale', par: 5, boss: true, finale: true, variant: 'postulant',
@@ -3129,7 +3136,7 @@ body.in-combat .pops { top: 150px; }
 
   // PV des monstres par étage (0.78) : les decks du draft de 12 (on garde les 8 meilleures) sont plus forts ; les monstres
   // et les boss d'étage suivent, pour garder la même difficulté (réglé par simulation, tools/bots_bench.js)
-  let MOB_HP = { 1: 1.5, 2: 1.4, 3: 1.55, 4: 1.6 };
+  let MOB_HP = { 1: 1.8, 2: 1.65, 3: 1.85, 4: 1.9 }; // 0.79 : relevés avec les PV d'étage ×1,5 (avant 1,5 / 1,4 / 1,55 / 1,6), même entonnoir (tools/bots_bench.js)
   const mobHp = (run, hp) => (run.finale ? hp : Math.round(hp * (MOB_HP[floorOf(run)] || 1)));
   function startCombat(run) {
     dailySeed(run, floorOf(run) * 32 + (run.finale ? 30 : run.encounter + 1));
@@ -3161,8 +3168,11 @@ body.in-combat .pops { top: 150px; }
     const sp0 = run.combat.spec;
     if (tierOf(sp0, 'Instinct')) run.combat.player.force += tierOf(sp0, 'Instinct') >= 2 ? 2 : 1;
     const mo = classMods(classOf(run)); run.combat.player.energy += turnMod(mo, 'energy', 1); // talent de classe (1er tour)
+    const duelM = run.combat.monsters.find(x => x.duel);
+    if (soloDuelStart(run, duelM)) { run.combat.player.energy = Math.max(0, run.combat.player.energy + DUEL_FIRST_ENERGY); run.combat.duelStart = true; } // vous commencez : 2 énergie
     run.phase = 'combat';
     emit(run, 'combatStart', { enc: e.id, n: run.encounter });
+    if (run.combat.duelStart) emit(run, 'duelStartRule', { first: ENERGY + DUEL_FIRST_ENERGY, second: ENERGY + DUEL_SECOND_ENERGY, name: duelM.name });
     drawCards(run, (e.boss ? HAND - 1 : HAND) + (sp0['Débrouille'] ? 1 : 0) + turnMod(mo, 'draw', 1));
     offerApple(run);
   }
@@ -3980,7 +3990,7 @@ body.in-combat .pops { top: 150px; }
     // duel en direct : pendant son tour, son énergie du moment
     if (b.nowEnergy != null) return { energy: b.nowEnergy, base: b.nowEnergy, chill: 0, trip: 0, stunned: false, now: true };
     if (run && run.liveDuel && run.combat && run.combat.side === 'g') return { energy: b.energy, base: b.energy, chill: 0, trip: 0, stunned: false, now: true };
-    const base = ENERGY + turnMod(classMods(m.tcls), 'energy', (b.turns || 0) + 1) + (run && run.liveDuel && !b.turns ? DUEL_SECOND_ENERGY : 0);
+    const base = ENERGY + turnMod(classMods(m.tcls), 'energy', (b.turns || 0) + 1) + (((run && run.liveDuel) || soloDuelStart(run, m)) && !b.turns ? DUEL_SECOND_ENERGY : 0);
     const chill = (DUEL_CHILL ? !!m.chill : m.frozen > 0) ? 1 : 0, trip = m.tripped || 0;
     return { energy: Math.max(0, base - chill - trip), base, chill, trip, stunned: !!m.stunned };
   }
@@ -4000,6 +4010,7 @@ body.in-combat .pops { top: 150px; }
     b.played = 0; b.predUsed = false;
     if (tierOf(m.spec, 'Mutation') >= 3 && p.poison > 0) { p.poison += CHAIN_N; emit(run, 'chainPlayer', { name: m.name, poison: p.poison }); }
     if (chilled) emit(run, 'bossFrozen', { name: m.name });
+    if (b.turns === 1 && soloDuelStart(run, m)) b.energy += DUEL_SECOND_ENERGY; // duel solo : elle aussi, 4 énergie à son premier tour
     if (run.liveDuel) {
       if (b.turns === 1) b.energy += DUEL_SECOND_ENERGY; // l'autre joueur : 4 énergie à son premier tour
       if (m.stunned) { m.stunned = false; const lost = Math.min(b.energy, STUN_PLAYER); b.energy -= lost; m.stunCd = 1; emit(run, 'stunned', { i: m.i, name: m.name, n: lost }); }
@@ -4212,7 +4223,8 @@ body.in-combat .pops { top: 150px; }
   // on prend une carte, on passe à l'autre, 4 picks chacun), puis un seul duel. Les deux finalistes repartent à 50 PV :
   // pas d'avantage au mieux classé. L'adversaire est un bot qui joue le deck de l'autre finaliste.
   // Chaque booster de finale contient sa rouge (mythique) et une seule orange (légendaire) : voir ORANGES et ROUGES.
-  let FINALE_HP = 412; // ≈ 52 % de victoires simulées (0.78 : le bot et le joueur automatique planifient tous deux leur tour ; 405 en 0.77). En vrai PvP, PV égaux.
+  let FINALE_HP = 430; // 0.79 : 430 avec les duels d'étage plus longs (≈ 52 %)
+  // 0.78 : 412 ; // ≈ 52 % de victoires simulées (0.78 : le bot et le joueur automatique planifient tous deux leur tour ; 405 en 0.77). En vrai PvP, PV égaux.
   const FINALE_PICKS = 4, FINALE_WIN_POINTS = 100, FINALE_SECOND_POINTS = 50;
   const isLastFloor = run => !FLOORS[floorOf(run) + 1];
   const canStartFinale = run => run.phase === 'end' && run.qualified === true && isLastFloor(run) && !!run.tableResult && !run.finale;
@@ -4495,7 +4507,7 @@ body.in-combat .pops { top: 150px; }
   /* ---------- événements entre les combats ---------- */
   const TICKETS_START = 10, TICKETS_WIN = 10, TICKETS_BONUS = 5, RECUP_TICKETS = 5; // Récup : Débrouille, palier 8
   const PRICES = { blanche: 10, verte: 40, remove: 15, heal: 15 };
-  const SHOP_HEAL = 10;
+  const SHOP_HEAL = 15; // 0.79 : soins et coûts en PV des salles ×1,5, comme les PV d'étage
   const DOOR_TYPES = ['shop', 'chest', 'mystery'];
   const GIFTS = ['fountain', 'locker', 'capybara'];
   const DEALS = ['lab', 'blackmarket', 'radiation', 'nurse', 'training', 'reclamation', 'pari', 'douche'];
@@ -4517,20 +4529,20 @@ body.in-combat .pops { top: 150px; }
     }
     if (rand(run) < 0.4) {
       const kind = pickOne(run, GIFTS);
-      if (kind === 'fountain') return { type: 'gift', kind, heal: 8, done: false };
+      if (kind === 'fountain') return { type: 'gift', kind, heal: 12, done: false };
       if (kind === 'locker') return { type: 'gift', kind, cards: pickN(run, poolW(run), 2), done: false };
       return { type: 'gift', kind, startBlock: 2, done: false };
     }
     const kind = pickOne(run, DEALS);
     const ev = { type: 'deal', kind, done: false };
-    if (kind === 'lab') ev.costHp = 8;
+    if (kind === 'lab') ev.costHp = 12;
     if (kind === 'blackmarket') { ev.costTickets = 25; ev.cards = pickN(run, poolG(run), 2); }
-    if (kind === 'radiation') { ev.costHp = 6; ev.force = 1; }
-    if (kind === 'nurse') { ev.costTickets = 20; ev.heal = 15; }
-    if (kind === 'training') ev.costHp = 5;
+    if (kind === 'radiation') { ev.costHp = 9; ev.force = 1; }
+    if (kind === 'nurse') { ev.costTickets = 20; ev.heal = 22; }
+    if (kind === 'training') ev.costHp = 8;
     if (kind === 'reclamation') ev.costTickets = 10; // une blanche échangée contre une blanche de votre famille principale
     if (kind === 'pari') { ev.costTickets = BET_STAKE; ev.reward = BET_REWARD; }
-    if (kind === 'douche') ev.costHp = 4; // une carte de base incinérée
+    if (kind === 'douche') ev.costHp = 6; // une carte de base incinérée
     return ev;
   }
 
@@ -4682,7 +4694,7 @@ body.in-combat .pops { top: 150px; }
     currentEncounter: enc, currentEnc: enc, POSTULANTS, finalePoints, FINALE_PICKS, FINALE_WIN_POINTS, FINALE_SECOND_POINTS, get FINALE_HP() { return FINALE_HP; }, set FINALE_HP(v) { FINALE_HP = v; }, get MOB_HP() { return MOB_HP; }, set MOB_HP(v) { MOB_HP = v; }, get BOT_PLAN() { return BOT_PLAN; }, set BOT_PLAN(v) { BOT_PLAN = !!v; }, get BOT_DRAFT() { return BOT_DRAFT; }, set BOT_DRAFT(v) { BOT_DRAFT = !!v; },
     isImpro, IMPROVISED, get IMPRO_CHANCE() { return IMPRO_CHANCE; }, set IMPRO_CHANCE(v) { IMPRO_CHANCE = v; },
     playCost, toucheOf, cardFor, familiesAt4, get TOUCHE_FAMILIES() { return TOUCHE_FAMILIES; }, set TOUCHE_FAMILIES(v) { TOUCHE_FAMILIES = v; },
-    get TOUCHE_BONUS() { return TOUCHE_BONUS; }, set TOUCHE_BONUS(v) { TOUCHE_BONUS = v; }, get TOUCHE_SLOTS() { return TOUCHE_SLOTS; }, set TOUCHE_SLOTS(v) { TOUCHE_SLOTS = v; }, specRanking, tierFor, tierOf, get SPEC_TIERS() { return SPEC_TIERS; }, set SPEC_TIERS(v) { SPEC_TIERS = v; }, resetDraft, canResetDraft, encName, liveFinaleQueue, liveFinaleSolo, liveFinaleSetup, liveFinalePrep, get DUEL_FIRST_ENERGY() { return DUEL_FIRST_ENERGY; }, set DUEL_FIRST_ENERGY(v) { DUEL_FIRST_ENERGY = v; }, get DUEL_SECOND_ENERGY() { return DUEL_SECOND_ENERGY; }, set DUEL_SECOND_ENERGY(v) { DUEL_SECOND_ENERGY = v; }, duelBuild, duelAct, duelWinner, duelMirror, duelView, duelEventsFor, duelToSolo, duelFinish, duelRedact, draftPick: withSpecCheck(draftPick), liveRound: withSpecCheck(liveRound), liveInstall, liveReplay: withSpecCheck(liveReplay), liveSetup, liveMe, liveCard, LIVE_VERSION, applyDraftRound, draftBurn: withSpecCheck((run, i) => draftPick(run, i, true)), draftDouble: withSpecCheck(draftDouble), keepCards: withSpecCheck(keepCards), keepAuto: withSpecCheck(keepAuto), aiKeepCards, get KEEP() { return KEEP; }, set KEEP(v) { KEEP = v; }, canDouble, doublesLeft, classMods, regenOf, fusables, fuse: withSpecCheck(fuse), autoFuse: withSpecCheck(autoFuse), startCombat, playCard, endTurn, nextEncounter, score,
+    get TOUCHE_BONUS() { return TOUCHE_BONUS; }, set TOUCHE_BONUS(v) { TOUCHE_BONUS = v; }, get TOUCHE_SLOTS() { return TOUCHE_SLOTS; }, set TOUCHE_SLOTS(v) { TOUCHE_SLOTS = v; }, specRanking, tierFor, tierOf, get SPEC_TIERS() { return SPEC_TIERS; }, set SPEC_TIERS(v) { SPEC_TIERS = v; }, resetDraft, canResetDraft, encName, liveFinaleQueue, liveFinaleSolo, liveFinaleSetup, liveFinalePrep, get DUEL_FIRST_ENERGY() { return DUEL_FIRST_ENERGY; }, set DUEL_FIRST_ENERGY(v) { DUEL_FIRST_ENERGY = v; }, get DUEL_SECOND_ENERGY() { return DUEL_SECOND_ENERGY; }, set DUEL_SECOND_ENERGY(v) { DUEL_SECOND_ENERGY = v; }, get SOLO_DUEL_START() { return SOLO_DUEL_START; }, set SOLO_DUEL_START(v) { SOLO_DUEL_START = !!v; }, duelBuild, duelAct, duelWinner, duelMirror, duelView, duelEventsFor, duelToSolo, duelFinish, duelRedact, draftPick: withSpecCheck(draftPick), liveRound: withSpecCheck(liveRound), liveInstall, liveReplay: withSpecCheck(liveReplay), liveSetup, liveMe, liveCard, LIVE_VERSION, applyDraftRound, draftBurn: withSpecCheck((run, i) => draftPick(run, i, true)), draftDouble: withSpecCheck(draftDouble), keepCards: withSpecCheck(keepCards), keepAuto: withSpecCheck(keepAuto), aiKeepCards, get KEEP() { return KEEP; }, set KEEP(v) { KEEP = v; }, canDouble, doublesLeft, classMods, regenOf, fusables, fuse: withSpecCheck(fuse), autoFuse: withSpecCheck(autoFuse), startCombat, playCard, endTurn, nextEncounter, score,
     chooseDoor, eventAction: withSpecCheck(eventAction), canPay, deckIds, PRICES, SHOP_HEAL, OIES, SPECS, get SPEC_THRESHOLD() { return SPEC_THRESHOLD; }, set SPEC_THRESHOLD(v) { SPEC_THRESHOLD = v; SPEC_STEPS = [v, 2 * v, 3 * v]; }, get SPEC_STEPS() { return SPEC_STEPS.slice(); }, set SPEC_STEPS(v) { SPEC_STEPS = v.slice(); SPEC_THRESHOLD = SPEC_STEPS[0]; }, tierPts, get SPEC_MAX() { return SPEC_MAX; }, set SPEC_MAX(v) { SPEC_MAX = v; }, RARITY_POINTS, familyPoints, specsOf, ptsOf, baseOf, fusedId, autoFuseIds,
     get GREEN_CHANCE() { return GREEN_CHANCE; }, set GREEN_CHANCE(v) { GREEN_CHANCE = v; },
     get FAMILIES_PER_RUN() { return FAMILIES_PER_RUN; }, set FAMILIES_PER_RUN(v) { FAMILIES_PER_RUN = v; }, ARCHS,
@@ -4703,7 +4715,7 @@ body.in-combat .pops { top: 150px; }
   else root.Engine = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
-window.SURBOOKING_ENGINE_FP = 'cbcbaf06859a';
+window.SURBOOKING_ENGINE_FP = '39373b50f698';
 </script>
 <script>
 /* ---- outfit_costumes_1.js ---- */
@@ -6681,17 +6693,24 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     if (!st.db || !st.me) { st.save = st.db ? 'anonymous' : ''; notify(); return; }
     rec.at = new Date().toISOString();
     st.save = 'saving'; notify();
-    try {
-      const ref = st.db.collection(COLL).doc(st.me);
-      const snap = await ref.get();
-      const prev = snap && snap.exists && Array.isArray((snap.data() || {}).runs) ? snap.data().runs.map(clean).filter(Boolean) : [];
-      const runs = [clean(rec)].concat(prev).slice(0, KEEP);
-      await ref.set({ v: 1, at: rec.at, runs });
-      st.save = 'saved';
-      st.entries = [Object.assign(clean(rec), { owner: st.me, own: true })].concat(st.entries).slice(0, MAX_POOL);
-    } catch (e) {
-      const code = e && e.code;
-      st.save = code === 'quota_exceeded' ? 'full' : code === 'invalid_argument' ? 'readonly' : 'error';
+    // une coupure passagère (réseau du téléphone, connexion fermée par le serveur) : deux nouveaux essais, sinon le deck
+    // de fin de partie était perdu (0.79)
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const ref = st.db.collection(COLL).doc(st.me);
+        const snap = await ref.get();
+        const prev = snap && snap.exists && Array.isArray((snap.data() || {}).runs) ? snap.data().runs.map(clean).filter(Boolean) : [];
+        const runs = [clean(rec)].concat(prev).slice(0, KEEP);
+        await ref.set({ v: 1, at: rec.at, runs });
+        st.save = 'saved';
+        st.entries = [Object.assign(clean(rec), { owner: st.me, own: true })].concat(st.entries).slice(0, MAX_POOL);
+        break;
+      } catch (e) {
+        const code = e && e.code;
+        if (code === 'unavailable' && attempt < 2) { await new Promise(r => setTimeout(r, 700 * (attempt + 1))); continue; }
+        st.save = code === 'quota_exceeded' ? 'full' : code === 'invalid_argument' ? 'readonly' : 'error';
+        break;
+      }
     }
     notify();
   }
@@ -7941,7 +7960,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     { id: 'combat-hand', when: c => fight(c), at: s => q(s, '.hand .card:not([disabled])') || q(s, '.hand .card'), side: 'top',
       text: () => 'Votre main. Cliquez une carte pour la jouer. Son coût en énergie est dans la pastille, en haut à droite.' },
     { id: 'combat-energy', when: c => fight(c), at: s => q(s, '.handbar .energy'), side: 'top',
-      text: c => `${c.E.ENERGY || 3} énergie par tour. Ce qui n’est pas dépensé est perdu. Comme le reste, ici.` },
+      text: c => `${c.E.ENERGY || 3} énergie par tour${foes(c).some(m => m.duel) && c.run && c.run.combat && c.run.combat.duelStart && c.run.combat.turn === 1 ? ' (2 au premier tour d’un duel : vous commencez)' : ''}. Ce qui n’est pas dépensé est perdu. Comme le reste, ici.` },
     { id: 'combat-intent', when: c => fight(c), at: s => q(s, '.foe-intent .intent:not(.hid)'), side: 'top',
       text: () => 'Au-dessus de chaque monstre, ce qu’il fera à son tour. Je préviens toujours. C’est mon côté loyal.' },
     { id: 'combat-armor', when: c => fight(c), at: s => q(s, '.me-side .plate'), side: 'top',
@@ -12293,6 +12312,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     chew: ['Le bouc mâchonne votre plus belle carte. Il a bon goût, c’est le seul reproche qu’on ne lui fait pas.', 'Il a mangé une carte. Je l’accuse, il ne dit rien. Le système fonctionne.'],
     shortCircuit: 'Court-circuit. RX-7 n’était pas garanti contre le gel. Rien ne l’était, d’ailleurs.',
     enrage: 'Nounours enrage. Je déconseille de le prendre dans vos bras.',
+    duelStart: 'Vous commencez. Pour que ce soit juste, vous n’avez que deux énergie à ce premier tour, et elle en aura quatre au sien. Chez moi, la justice se mesure en énergie.',
     resumed: 'Vous revoilà, {moi}. Votre dossier n’avait pas bougé : la partie reprend exactement où vous l’aviez laissée. Moi aussi, d’ailleurs.',
     title: 'Bonjour, {moi}. Vos vêtements ont été incinérés pour raisons sanitaires. Vous les regretterez moins que la planète.',
     draftStart: "Je suis ÉDEN : Évacuation Des Espèces Nécessaires. Prenez une carte, passez le reste. La postulante d’en face sera votre adversaire, juste après le draft. Elle choisit en même temps que vous. Moins bien, j’espère.",
@@ -12769,6 +12789,10 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
       outfitEvent(ev, consider, flavor);
       switch (ev.type) {
         case 'draftStart': flavor('draftStart', 60, LINES.draftStart); break;
+        case 'duelStartRule': { // la règle de départ des duels solo (0.79) : ÉDEN l'explique aux deux premiers duels, le journal toujours
+          log(`Duel : vous commencez, avec ${ev.first} énergie à ce premier tour. ${ev.name} en aura ${ev.second} au sien.`, 'warn');
+          let n = 0; try { n = +(window.localStorage.getItem('surbooking.duelRule') || 0); window.localStorage.setItem('surbooking.duelRule', String(n + 1)); } catch (e) { n = 0; }
+          consider(n < 2 ? 96 : 40, LINES.duelStart); break; }
         case 'pick':
           if (ev.lowblow) flavor('lowblowPick', 34, foeLine('lowblowPick', duelFoeName()));
           else if (ev.green) flavor('pickGreen', 30, LINES.pickGreen);
@@ -13248,7 +13272,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
         <li><b>Combos.</b> Les cartes appartiennent à 8 familles (Instinct, Mutation, Cryogénie…), et celles d’une même famille se répondent. Une famille débloque un bonus à ${E.SPEC_STEPS[0]}, ${E.SPEC_STEPS[1]} et ${E.SPEC_STEPS[2]} points (blanche 1, verte 2, bleue 3, violette 4). Seules vos deux familles les plus fournies sont actives, trois si vous en avez ${E.TOUCHE_FAMILIES} à ${E.SPEC_THRESHOLD} points (Touche-à-tout).</li>
         <li><b>Fusion.</b> Automatique : dès que vous avez deux cartes identiques, elles fusionnent. Deux blanches donnent la verte de leur lignée, deux vertes la bleue. Un doublon pris au draft, trouvé dans un coffre, à la boutique ou dans un événement compte aussi.</li>
         <li><b>Duels.</b> Juste après le draft, à chaque table, deux duels : vous contre votre vis-à-vis, assis en face, et les deux autres entre eux. En face, personne n’est avantagé : chacun choisit avant l’autre dans deux boosters sur quatre. Les perdants sont éliminés.</li>
-        <li><b>Quarantaine.</b> Après le duel, un couple d'animaux à renvoyer en cryogénie, puis le boss de l'étage : le bouc émissaire. Vos 50 PV sont conservés d'un combat à l'autre, duel compris. Entre deux combats, une seule salle, tirée au hasard : boutique, coffre ou événement.</li>
+        <li><b>Quarantaine.</b> Après le duel, un couple d'animaux à renvoyer en cryogénie, puis le boss de l'étage : le bouc émissaire. Vos ${E.FLOOR_HP[1]} PV sont conservés d'un combat à l'autre, duel compris. Entre deux combats, une seule salle, tirée au hasard : boutique, coffre ou événement.</li>
         <li><b>L’étable.</b> Si vous battez le boss de l’étage, vous montez : PV restaurés et augmentés (${E.FLOOR_HP[2]} à l’étable, ${E.FLOOR_HP[3]} à la serre, ${E.FLOOR_HP[4]} à la ménagerie, ${E.FINALE_PLAYER_HP} en finale), deck conservé, nouveau draft à une nouvelle table, avec deux têtes d’affiche par booster. Toutes vos cartes restent dans le deck. Perdre un duel, c’est l’élimination.</li>
         <li><b>La serre.</b> Troisième étage : des couples instables qui mutent au lieu d’entrer en furie, des crapauds à épines, des phalènes qui vous irradient. Les violettes y apparaissent, et deux bleues identiques fusionnent en violette.</li>
         <li><b>La ménagerie.</b> Quatrième et dernier étage : quatre postulants, deux places en finale. Des lapins qui se clonent, puis la Mère, qui engendre seule des rejetons qui la suivent en cryogénie. Les violettes deviennent courantes. Chaque étage a son boss, et parfois un autre à sa place.</li>
@@ -14110,13 +14134,13 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
   const EVENT_INFO = {
     shop: { eyebrow: 'Boutique', title: 'Le distributeur d’ÉDEN' },
     chest: { eyebrow: 'Coffre', title: 'Caisse de fret' },
-    fountain: { eyebrow: 'Événement · cadeau', title: 'Fontaine de décontamination', text: 'Elle soigne 8 PV. Gratuitement, ce qui est suspect.' },
+    fountain: { eyebrow: 'Événement · cadeau', title: 'Fontaine de décontamination', text: ev => `Elle soigne ${ev.heal} PV. Gratuitement, ce qui est suspect.` },
     locker: { eyebrow: 'Événement · cadeau', title: 'Casier oublié', text: 'Deux cartes traînent au fond. Vous pouvez en prendre une.' },
     capybara: { eyebrow: 'Événement · cadeau', title: 'Un capybara reconnaissant', text: 'Il vous suit pour le reste de l’étage : +2 d’armure au début de chaque combat.' },
     lab: { eyebrow: 'Événement · offre coûteuse', title: 'Laboratoire abandonné', text: 'Améliorez une carte blanche en la verte de sa lignée, sans avoir besoin d’une paire.' },
     blackmarket: { eyebrow: 'Événement · offre coûteuse', title: 'Marché noir de la soute', text: 'Deux vertes vendues sous le manteau. Vous pouvez en acheter une.' },
     radiation: { eyebrow: 'Événement · offre coûteuse', title: 'Cuve fissurée', text: 'Une courte exposition : +1 Force au début de chaque combat de l’étage.' },
-    nurse: { eyebrow: 'Événement · offre coûteuse', title: 'Infirmier clandestin', text: 'Il vous soigne de 15 PV.' },
+    nurse: { eyebrow: 'Événement · offre coûteuse', title: 'Infirmier clandestin', text: ev => `Il vous soigne de ${ev.heal} PV.` },
     training: { eyebrow: 'Événement · offre coûteuse', title: 'Salle d’entraînement', text: 'Dupliquez une carte blanche de votre deck. La copie fusionne aussitôt avec l’original : vous obtenez la verte de sa lignée.' },
     reclamation: { eyebrow: 'Événement · offre coûteuse', title: 'Bureau des réclamations', text: 'Échangez une carte blanche de votre deck contre une blanche, tirée au hasard, de votre famille principale.' },
     pari: { eyebrow: 'Événement · pari', title: 'Le pari d’ÉDEN', text: (ev, next) => `Misez ${ev.costTickets} tickets. Si vous gagnez le prochain combat en ${next ? next.par : 5} tours ou moins, ÉDEN vous en rend ${ev.reward}.` },
@@ -14209,7 +14233,7 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
     } else if (ev.type === 'gift') {
       body = `<p>${info.text}</p>` + (ev.done ? '<p class="muted">C’est fait.</p>'
         : ev.kind === 'locker' ? `<div class="cards">${ev.cards.map((id, i) => cardHTML(id, { act: 'giftpick', data: `data-i="${i}"`, badge: gainBadge(id) })).join('')}</div>`
-        : `<div class="actions"><button type="button" class="ghost" data-act="gift">${ev.kind === 'fountain' ? 'Boire (+8 PV)' : 'L’adopter'}</button></div>`);
+        : `<div class="actions"><button type="button" class="ghost" data-act="gift">${ev.kind === 'fountain' ? `Boire (+${ev.heal} PV)` : 'L’adopter'}</button></div>`);
     } else if (ev.type === 'deal') {
       const cost = ev.costHp ? `${ev.costHp} PV` : `${ev.costTickets} tickets`;
       const pay = E.canPay(run, ev);
