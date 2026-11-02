@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Surbooking">
-<script>window.SURBOOKING_WEB_PAGE = '0.84.0';</script>
+<script>window.SURBOOKING_WEB_PAGE = '0.85.0';</script>
 </head>
 <body>
 <title>Surbooking</title>
@@ -1307,6 +1307,56 @@ body[data-veg="3"] :is(#screen > .panel:not(.combat-panel):not(.story-floor):fir
 @keyframes ckShake { 0%, 100% { transform: none; } 15% { transform: translate(-7px, 4px); } 30% { transform: translate(6px, -5px); } 45% { transform: translate(-5px, -3px); } 60% { transform: translate(4px, 5px); } 80% { transform: translate(-2px, 1px); } }
 @keyframes ckSway { from { transform: translate(-6px, 2px); } to { transform: translate(6px, -2px); } }
 @keyframes ckFade { from { opacity: 1; } to { opacity: 0; } }
+/* Le cockpit peint (essai) : ui.js, cockpitPeintSVG, repère 2560 × 1126 (les textes un peu plus grands : la vue montre
+   2 000 unités de large au lieu de 1 600). Panneaux tête haute sur le pare-brise ; 4 s : la lumière baisse ; 6,4 s : la
+   coupure, le pare-brise grésille et montre la vraie vue (planète dévastée) ; 9,3 s : le courant revient, tout repasse
+   à « OK » sauf le café, la jauge remonte. L'état de base reste l'image finale (siège de face, écrans « OK », étoiles). */
+.ck-peint .ck-k { font-size: 19px; fill: #a9eef7; } .ck-peint .ck-k.mid { font-size: 16px; fill: #93a7b6; }
+.ck-peint .ck-ok, .ck-peint .ck-err { font-size: 26px; } .ck-peint .ck-hud .ck-ok { fill: #62ffa6; }
+.ck-peint .ck-fuelbox .ck-ok, .ck-peint .ck-fuelbox .ck-err { font-size: 23px; }
+.ck-peint .ck-ok.dim, .ck-peint .ck-err.lamp { font-size: 19px; }
+.ck-peint .ck-tag { font-size: 25px; } .ck-peint .ck-tag.sm { font-size: 19px; } .ck-peint .ck-tag.big { font-size: 31px; letter-spacing: .04em; }
+.ck-hudglass { fill: rgba(6, 34, 46, .55); stroke: rgba(111, 243, 255, .75); stroke-width: 3; }
+.ck-hudred { fill: rgba(96, 8, 8, .55); stroke: #ff5a4f; stroke-width: 3; animation: ckShowA var(--t, 1s) steps(1, end) both; }
+.ck-cop .ck-hudred { fill: rgba(80, 64, 6, .5); stroke: #ffd84a; } .ck-peint .ck-cop .ck-ok { fill: #ffb547; }
+.ck-hudcorner { fill: none; stroke: #c8fcff; stroke-width: 3; opacity: .8; }
+.ck-hud { filter: drop-shadow(0 0 7px rgba(111, 243, 255, .35)); }
+.ck-kok { opacity: 0; animation: ckGone var(--t, 1s) steps(1, end) both; } .ck-kerr { animation: ckShowA var(--t, 1s) steps(1, end) both; }
+/* le retour du courant : les écrans « OK » (sauf le café et le copilote), la jauge pleine, l'alarme éteinte */
+.ck-peint .ck-revient .ck-ok { opacity: 1; animation: ckGone var(--t, 1s) steps(1, end) both, ckOn .01s 9.3s forwards; }
+.ck-peint .ck-revient .ck-err { opacity: 0; animation: ckShowA var(--t, 1s) steps(1, end) both, ckBlink .9s steps(2, jump-none) var(--t, 1s) infinite, ckOff .01s 9.3s forwards; }
+.ck-peint .ck-revient .ck-hudred { opacity: 0; animation: ckShowA var(--t, 1s) steps(1, end) both, ckOff .01s 9.3s forwards; }
+.ck-peint .ck-needle { transform: rotate(25deg); animation: ckFuel 1.2s cubic-bezier(.55, 0, .7, 1) 4s both, ckFuelBack .9s cubic-bezier(.3, 1.4, .5, 1) 9.3s forwards; }
+.ck-peint .ck-alarm { opacity: 0; animation: ckShowAlarm 4.6s steps(1, end) both, ckPulse 1s ease-in-out 4.6s infinite alternate, ckOff .01s 6.4s forwards; }
+.ck-peint .ck-cam { animation: ckShake .55s linear 4.05s both, ckShake .45s linear 6.4s; }
+.ck-peint .ck-eye { fill: url(#ckEdenG); mix-blend-mode: screen; }
+.ck-dim { fill: #03050c; opacity: 0; animation: ckDim .9s linear 4s both, ckDimOut .6s ease-out 9.3s forwards; }
+.ck-black { fill: #010205; opacity: 0; animation: ckBlack 3.2s steps(1, end) 6.4s both; }
+.ck-power { animation: ckPower 3.2s steps(1, end) 6.4s both; }
+.ck-reel { opacity: 0; animation: ckReel 3.2s steps(1, end) 6.4s both; }
+.ck-spill { opacity: 0; mix-blend-mode: screen; animation: ckReel 3.2s steps(1, end) 6.4s both; }
+.ck-scan { opacity: 0; mix-blend-mode: screen; animation: ckScan 3.2s steps(1, end) 6.4s both; }
+.ck-eflick { fill: #02060a; opacity: 0; animation: ckFlick .7s steps(1, end) 4s forwards; }
+.ck-plamp { fill: url(#ckLampG); mix-blend-mode: screen; opacity: 0; animation: ckOn .01s calc(4.6s + var(--d, 0s)) forwards, ckBlink 1s steps(2, jump-none) calc(4.6s + var(--d, 0s)) infinite, ckOff .01s 6.4s forwards; }
+/* bascules instantanées : des images-clés identiques (un « steps » sur .01 s s'arrête à 0,99999… et ne bascule pas) */
+@keyframes ckOff { from, to { opacity: 0; } } @keyframes ckOn { from, to { opacity: 1; } }
+@keyframes ckDim { 0% { opacity: 0; } 15% { opacity: .42; } 25% { opacity: .04; } 40% { opacity: .46; } 55% { opacity: .12; } 100% { opacity: .3; } }
+@keyframes ckDimOut { from { opacity: .3; } to { opacity: 0; } }
+@keyframes ckFlick { 0% { opacity: .9; } 20% { opacity: 0; } 35% { opacity: .85; } 55% { opacity: 0; } 70% { opacity: .6; } 100% { opacity: 0; } }
+@keyframes ckFuelBack { from { transform: rotate(-78deg); } to { transform: rotate(25deg); } }
+/* 3,2 s à partir de 6,4 s : 1 % = 32 ms */
+@keyframes ckBlack { 0% { opacity: 0; } 2% { opacity: .9; } 4% { opacity: .45; } 7% { opacity: .86; } 87% { opacity: .86; } 89% { opacity: .35; } 91% { opacity: .9; } 94% { opacity: .2; } 97%, 100% { opacity: 0; } }
+@keyframes ckPower { 0% { opacity: 1; } 2% { opacity: 0; } 4% { opacity: .55; } 7% { opacity: 0; } 89% { opacity: .7; } 91% { opacity: 0; } 94%, 100% { opacity: 1; } }
+@keyframes ckReel { 0%, 9% { opacity: 0; transform: none; } 10% { opacity: 1; transform: translateX(-16px); } 13% { opacity: 0; transform: none; } 17% { opacity: .9; transform: translateX(12px); }
+  19% { opacity: .2; transform: translateX(-6px); } 23% { opacity: 1; transform: none; } 84% { opacity: 1; transform: none; } 86% { opacity: .2; transform: translateX(14px); } 88% { opacity: .9; transform: translateX(-10px); }
+  90%, 100% { opacity: 0; transform: none; } }
+@keyframes ckScan { 0%, 8% { opacity: 0; } 9% { opacity: .9; } 14% { opacity: .5; } 20% { opacity: .8; } 25%, 83% { opacity: 0; } 84% { opacity: .8; } 88% { opacity: .5; } 92% { opacity: .9; } 95%, 100% { opacity: 0; } }
+/* le sas du duel gagné : l'espace du hublot grésille une fraction de seconde au passage du perdant (une lueur de jour) */
+.peint-hatch .ph-glitch { position: absolute; inset: 0; opacity: 0; pointer-events: none; mix-blend-mode: screen;
+  background: repeating-linear-gradient(0deg, rgba(220, 255, 255, .25) 0 2px, transparent 2px 6px), linear-gradient(rgba(255, 238, 176, .6), rgba(240, 228, 160, .38));
+  animation: phGlitch .36s steps(1, end) calc(var(--lunge-d, 0s) + 2.3s) both; }
+@keyframes phGlitch { 0% { opacity: 0; transform: none; } 12% { opacity: 1; transform: translateX(-7%); } 30% { opacity: .25; transform: translateX(5%); } 45% { opacity: .9; transform: none; }
+  62% { opacity: 0; } 78% { opacity: .6; transform: translateX(-3%); } 100% { opacity: 0; transform: none; } }
 @media (max-width: 700px) { .cockpit { aspect-ratio: 4 / 3; } .cockpit-panel { padding: 6px; } }
 @media (prefers-reduced-motion: reduce) { .cockpit * { animation: none !important; } }
 
@@ -1779,6 +1829,201 @@ body.in-combat .pops { top: 150px; }
 @media (prefers-reduced-motion: reduce) { .sas.run { display: none; } .bn { animation-duration: 1.6s; animation-name: bnFade; } @keyframes bnFade { 0%, 100% { opacity: 0; } 10%, 85% { opacity: 1; } } }
 /* L'autre langue (0.82), en haut du menu principal */
 .lang-btn { align-self: flex-start; padding: 4px 12px; font-size: 13px; border-radius: 14px; margin-bottom: 6px; }
+
+/* ---------- Illustrations peintes (essai, 0.85 ; ui.js, peint.js, dossier sprites/) ---------- */
+/* Un monstre peint : son image (canevas carré, pattes à 92 %) à la place du dessin vectoriel (sol à 94 %), et son
+   calque de lueur posé en addition, qui pulse ; plus vite quand le monstre est irradié. */
+.peint-foe { position: relative; display: block; width: var(--fs); height: var(--fs); margin-bottom: calc(var(--fs) * -.02); transform-origin: 50% 100%; pointer-events: none; }
+.peint-foe .pl, .peint-foe img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.peint-foe img, .fig > .peint-body, .peint-bg img { object-fit: contain; user-select: none; -webkit-user-drag: none; }
+.peint-foe .peint-glow { mix-blend-mode: plus-lighter; opacity: .2; animation: peintGlow 2.8s ease-in-out infinite; animation-delay: var(--clk, 0s); }
+.foe.irradiated .peint-foe .peint-glow { animation-duration: 1.2s; }
+@keyframes peintGlow { 0%, 100% { opacity: .1; } 50% { opacity: .9; } }
+/* le K.O. remplace l'attente à l'impact du coup fatal (--lunge-d) ; l'attaque et le coup reçu sont posés par le script */
+.peint-foe .pl.before { animation: peintHide 0s linear var(--lunge-d, 0s) both; }
+.peint-foe .pl.dead { animation: peintShow 0s linear var(--lunge-d, 0s) both; }
+@keyframes peintHide { from { opacity: 1; } to { opacity: 0; } }
+@keyframes peintShow { from { opacity: 0; } to { opacity: 1; } }
+.peint-foe.clone { scale: .8; opacity: .82; }
+/* le personnage peint en poupée à habiller : des calques alignés sur le corps (1200 × 2000), empilés */
+.peint-doll { position: relative; display: block; aspect-ratio: 3 / 5; }
+.peint-doll > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+.peint-doll > .pd-t3 { filter: drop-shadow(0 0 5px rgba(255, 214, 110, .85)); } /* palier 16 : l'objet brille */
+.peint-doll > .pd-t4 { filter: drop-shadow(0 0 4px rgba(255, 236, 170, .95)) drop-shadow(0 0 12px rgba(255, 190, 80, .8)); } /* palier 36 : il resplendit */
+/* les grandes créatures (canevas de 1536 px à l'échelle 1,5 : à la même taille de boîte, elles rempliraient le cadre comme les
+   autres) : un tiers de plus, elles débordent un peu, comme le demande le cahier */
+.peint-foe:is([data-k="mere"], [data-k="ours"], [data-k="chimere"], [data-k="dionee"]) { width: calc(var(--fs) * 1.35); height: calc(var(--fs) * 1.35); }
+.peint-foe.alt .peint-img { filter: hue-rotate(-16deg) saturate(1.2) brightness(.9); } /* le second membre d'un couple */
+/* les mêmes effets que sur le dessin vectoriel */
+.foe.cryo:not(.trapfall):not(.ko):not(.ko-robot) .fig > .peint-foe { visibility: hidden; }
+.foe.trapfall .fig > .peint-foe { animation: trapFall .78s cubic-bezier(.55, 0, .85, .4) .42s both; }
+.fight .foe.trapfall .fig > .peint-foe { animation-delay: calc(.42s + var(--lunge-d, 0s)); }
+.fight .foe.trapfall.trap-late .fig > .peint-foe { animation-delay: calc(.77s + var(--lunge-d, 0s)); }
+.foe.frozen .fig > .peint-foe { filter: saturate(.35) brightness(1.25) drop-shadow(0 0 6px rgba(160, 225, 245, .9)); }
+.foe.furious:not(.cryo) .fig > .peint-foe { scale: 1.1; }
+.foe.furious:not(.cryo):not(.irradiated) .fig > .peint-foe { filter: drop-shadow(0 0 5px rgba(224, 38, 43, .55)); }
+.foe.enrage-in .fig > .peint-foe { animation: rageSwell .9s ease-out both; }
+.fight .foe.frost-in .fig > .peint-foe { animation: frostTint .3s ease-out var(--lunge-d, 0s) backwards; }
+.stage.lights-out .foe .fig .peint-img { filter: brightness(.3) saturate(.6); }
+/* Le personnage peint (canevas 3:5, pieds à 94 % ; le dessin vectoriel les a à 97 %) : il prend la classe « avatar »,
+   donc ses animations (chute, victoire, gel…) */
+.fig > .peint-body { margin-bottom: calc(var(--fh) * -.03); }
+.foe .fig > .peint-body { margin-bottom: calc(var(--fs) * 1.15 * -.03); }
+/* Le décor peint : le bas de l'image sur le bas de la scène, comme le décor vectoriel */
+.peint-bg img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 100%;
+  -webkit-mask-image: linear-gradient(#000 82%, transparent); mask-image: linear-gradient(#000 82%, transparent); } /* fondu vers la couleur du sol */
+.stage.lights-out .peint-bg img { filter: brightness(.35) saturate(.7); }
+@media (prefers-reduced-motion: reduce) { .foe.trapfall .fig > .peint-foe { visibility: hidden; } .peint-foe .peint-glow { animation: none; opacity: .4; } }
+
+/* ---------- Glisser une carte sur sa cible (0.85 ; ui.js, « Glisser une carte ») ---------- */
+.hand [data-act="card"] { touch-action: pan-x; }
+.hand .card.dragging { opacity: .25; }
+.drag-ghost { position: fixed; z-index: 10000; margin: 0; pointer-events: none; transform-origin: 50% 50%; transform: scale(var(--gz, 1)); transition: none; animation: none;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .35)); }
+body.card-drag, body.card-drag * { cursor: grabbing !important; user-select: none; }
+body.card-drag .foe.drop-ok .fig { filter: drop-shadow(0 0 6px rgba(255, 200, 61, .75)); }
+body.card-drag .fighter.me.drop-ok .fig { filter: drop-shadow(0 0 6px rgba(95, 211, 243, .7)); }
+body.card-drag .foe.drop-hover .fig, body.card-drag .fighter.me.drop-hover .fig { filter: drop-shadow(0 0 4px #ffc83d) drop-shadow(0 0 16px rgba(255, 200, 61, .95)); }
+body.card-drag .foe.drop-hover .plate { outline: 3px solid #ffc83d; outline-offset: 2px; }
+body.card-drag.drop-live .drag-ghost { filter: drop-shadow(0 0 10px rgba(255, 200, 61, .95)) drop-shadow(0 14px 22px rgba(0, 0, 0, .35)); }
+
+/* La trappe de cryogénie peinte (essai, 0.85) : plus large et plus plate que l'image ; les battants vectoriels laissent la
+   place à un fondu fermée → ouverte → fermée, sur le même tempo (trapLeaf), puis un souffle de givre */
+.trap.peint-trap { width: min(178px, 118%); aspect-ratio: 1172 / 449; transform: translate(-50%, 34%) scaleY(.78); }
+.peint-trap img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.peint-trap .tp-open { opacity: 0; }
+.peint-trap .tp-mist { position: absolute; left: 22%; right: 22%; top: -30%; height: 90%; border-radius: 50%; opacity: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(235, 250, 255, .95), rgba(190, 235, 250, .5) 55%, rgba(190, 235, 250, 0)); filter: blur(4px); }
+.foe.trapfall .peint-trap .tp-open { animation: tpOpen 1.25s ease-in-out .3s both; }
+.foe.trapfall .peint-trap .tp-mist { animation: trapPuff .9s ease-out 1.2s both; }
+.foe.trap-late .peint-trap .tp-open { animation-delay: .65s; } .foe.trap-late .peint-trap .tp-mist { animation-delay: 1.55s; }
+.fight .foe.trapfall .peint-trap .tp-open { animation-delay: calc(.3s + var(--lunge-d, 0s)); }
+.fight .foe.trapfall .peint-trap .tp-mist { animation-delay: calc(1.2s + var(--lunge-d, 0s)); }
+.fight .foe.trapfall.trap-late .peint-trap .tp-open { animation-delay: calc(.65s + var(--lunge-d, 0s)); }
+.fight .foe.trapfall.trap-late .peint-trap .tp-mist { animation-delay: calc(1.55s + var(--lunge-d, 0s)); }
+@keyframes tpOpen { 0% { opacity: 0; } 14%, 70% { opacity: 1; } 88%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .peint-trap .tp-open, .peint-trap .tp-mist { animation: none !important; } }
+
+/* Effets et cartes peints (essai, 0.85) : l'effet est peint sur fond noir, posé en « screen » (le noir disparaît) */
+.seq-fx.pfx { mix-blend-mode: screen; }
+.seq-fx .pfx-img { width: 100%; height: 100%; display: block; }
+.seq-fx .pfxo-img { width: 100%; height: 100%; display: block; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(15, 30, 51, .45)); }
+.peint-room img { width: 100%; height: 100%; display: block; object-fit: cover; }
+/* le sas peint du duel gagné : le cadre et l'espace dans une image (hublot calé sur .ko-win), les battants peints, le
+   voyant rouge du cadre qui clignote à la place de l'étiquette « SAS », le bras robot et son balai peints */
+.peint-hatch .ph-sas { position: absolute; left: -14.96%; top: -31.6%; width: 129.75%; height: auto; max-width: none; display: block; pointer-events: none; }
+.peint-hatch .ko-win { top: 4.2%; bottom: 4.2%; border-radius: 9%; }
+.peint-hatch .ko-door { background-size: 100% 200%; box-shadow: inset 0 0 0 1px rgba(30, 35, 38, .5); }
+.peint-hatch .ko-door.up { background-position: 50% 0; } .peint-hatch .ko-door.down { background-position: 50% 100%; }
+.peint-hatch .ph-lamp { position: absolute; left: 50%; top: -27%; width: 34%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 70, 50, .9), rgba(255, 40, 30, 0) 65%); mix-blend-mode: screen; opacity: 0;
+  animation: phLamp .32s steps(2, jump-none) calc(var(--lunge-d, 0s) + 1s) 6; }
+@keyframes phLamp { from { opacity: 1; } to { opacity: .1; } }
+img.ko-arm.peint-arm { object-fit: contain; object-position: 50% 0; filter: drop-shadow(0 4px 5px rgba(15, 30, 51, .35)); }
+.peint-room[data-room="mystery"] img { object-position: 50% 82%; } .peint-room[data-room="lab"] img { object-position: 50% 38%; } .peint-room[data-room="pari"] img { object-position: 50% 62%; }
+/* la table du draft : chaque postulant dans sa cabine de cryogénie peinte (ui_cabine.png) */
+html.pui-has-cabine body.peint-ui .dt-fig { background: var(--pui-cabine) center bottom / contain no-repeat; border-color: transparent; border-radius: 12px; overflow: visible; }
+html.pui-has-cabine body.peint-ui .dt-fig .avatar { height: 74%; margin-bottom: 9%; }
+html.pui-has-cabine body.peint-ui .dt-seat.me .dt-fig { filter: drop-shadow(0 0 5px rgba(255, 196, 60, .9)); }
+html.pui-has-cabine body.peint-ui .dt-seat.boss .dt-fig { filter: drop-shadow(0 0 5px rgba(214, 60, 50, .85)); box-shadow: none; }
+html.pui-has-cabine body.peint-ui .dt-seat.open .dt-fig { box-shadow: none; filter: drop-shadow(0 0 8px rgba(255, 106, 43, .95)); }
+/* l'écran titre peint derrière le menu (l'arche qui quitte la planète) et la scène d'intro en tête du texte d'ÉDEN */
+body.peint-ui .world .pui-world.pui-title { object-position: 72% 50%; }
+body.peint-ui .world[data-sec="title"]::after { background: linear-gradient(90deg, rgba(240, 244, 242, .72), rgba(240, 244, 242, .35) 42%, rgba(240, 244, 242, .05) 70%); }
+.story-intro .intro-peint { display: block; width: calc(100% + 36px); margin: -18px -18px 4px; aspect-ratio: 2560 / 1126; object-fit: cover; border-radius: 14px 14px 0 0; }
+.card .cart .peint-card { object-fit: cover; }
+
+/* ---------- Habillage « console de l'arche contaminée » (essai, 0.85 ; maquette C4, panneaux de PV de C3) ----------
+   Seulement avec body.peint-ui (page d'essai, mode peint). Le contenu reste du vrai texte ; les images peintes (lianes,
+   cadran d'énergie, plastique de console) arrivent par --pui-vine, --pui-dial, --pui-panel. */
+.pui-frame, .pui-vine { display: none; }
+body.peint-ui .pui-frame { display: block; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: 26px;
+  box-shadow: inset 0 0 0 11px #eef2f3, inset 0 0 0 13px rgba(95, 211, 243, .6), inset 0 0 0 14px rgba(15, 30, 51, .25), inset 0 0 30px 14px rgba(15, 30, 51, .22); }
+body.peint-ui .pui-vine { display: block; position: absolute; z-index: 2; pointer-events: none; width: clamp(110px, 15vw, 230px); aspect-ratio: 1;
+  background: var(--pui-vine) no-repeat 0 100% / contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .35)); }
+body.peint-ui .pui-vine.bl { left: -6px; bottom: -6px; }
+body.peint-ui .pui-vine.br { right: -6px; bottom: -6px; transform: scaleX(-1); }
+body.peint-ui .pui-vine.tl { left: -6px; top: -6px; transform: scaleY(-1); width: clamp(80px, 10vw, 150px); }
+body.peint-ui .pui-vine.tr { right: -6px; top: -6px; transform: scale(-1, -1); width: clamp(80px, 10vw, 150px); }
+/* les PV : des panneaux de verre holographiques, liseré cyan */
+body.peint-ui .stage .plate { background: linear-gradient(160deg, rgba(238, 251, 255, .8), rgba(206, 238, 250, .62)); border: 1px solid rgba(150, 230, 255, .95);
+  border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), 0 0 12px rgba(95, 211, 243, .55), 0 6px 16px -8px rgba(15, 30, 51, .45);
+  -webkit-backdrop-filter: blur(5px) saturate(1.15); backdrop-filter: blur(5px) saturate(1.15); }
+/* la console du bas : plastique blanc laqué, cadran d'énergie peint, bouton de fin de tour bordé d'orange */
+body.peint-ui .handbar .pile, body.peint-ui .handbar .energy .lbl { background: var(--pui-panel) center / 220px, linear-gradient(#ffffff, #e4eaed); border-radius: 14px;
+  box-shadow: 0 0 0 1px #c9d3d7, inset 0 0 0 2px rgba(95, 211, 243, .35), 0 8px 14px -8px rgba(15, 30, 51, .5); }
+body.peint-ui .orb { width: 96px; height: 96px; padding-top: 26px; background: var(--pui-dial) center / contain no-repeat; box-shadow: none; color: #eafcff;
+  text-shadow: 0 0 8px rgba(95, 211, 243, .95), 0 1px 0 #0f1e33; }
+body.peint-ui .pip { border-color: #5fd3f3; background: rgba(15, 30, 51, .4); }
+body.peint-ui .pip.on { background: #5fd3f3; border-color: #bff1ff; box-shadow: 0 0 6px #5fd3f3; }
+body.peint-ui .endturn { background: var(--pui-panel) center / 220px, linear-gradient(#ffffff, #e2e8eb); color: #0f1e33; border: 3px solid #ff6a2b; border-radius: 18px;
+  box-shadow: inset 0 0 0 2px #ffffff, 0 0 16px rgba(255, 106, 43, .55), 0 8px 16px -8px rgba(15, 30, 51, .55); text-shadow: none; }
+body.peint-ui .endturn:hover:not(:disabled) { box-shadow: inset 0 0 0 2px #ffffff, 0 0 22px rgba(255, 106, 43, .8), 0 8px 16px -8px rgba(15, 30, 51, .55); }
+
+/* Les autres écrans (menu, classe, draft, garder, inventaire, fins d'étage, vestiaire) : la salle peinte floutée derrière
+   (.pui-world, posée par drawWorld), la paroi de console autour de l'écran et ses lianes, des plaques de plastique laqué
+   aux rivets cyan, les boutons principaux orange cerclés de blanc, les écrans du tableau de bord sous verre */
+.world .pui-world { display: none; }
+body.peint-ui .world { background: #cfd6d4; }
+body.peint-ui .world svg { display: none; }
+body.peint-ui .world .pui-world { display: block; position: absolute; left: -14px; top: -14px; width: calc(100% + 28px); height: calc(100% + 28px); object-fit: cover; object-position: 50% 64%; }
+body.peint-ui .world::after { background: radial-gradient(ellipse 78% 70% at 50% 44%, rgba(248, 250, 249, .2), rgba(236, 240, 238, .5) 68%, rgba(196, 206, 205, .74)); }
+body.peint-ui .world::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: 24px;
+  box-shadow: inset 0 0 0 10px #eef2f3, inset 0 0 0 12px rgba(95, 211, 243, .55), inset 0 0 0 13px rgba(15, 30, 51, .22), inset 0 0 28px 13px rgba(15, 30, 51, .2); }
+body.peint-ui .world .pui-vine { z-index: 3; }
+body.peint-ui .world .pui-vine.tl, body.peint-ui .world .pui-vine.tr { width: clamp(60px, 7vw, 110px); } /* en haut, le texte passe devant : des lianes plus discrètes */
+/* l'aperçu de l'étage (inventaire) : les monstres et l'adversaire peints */
+.enc-art .enc-peint { height: 100%; width: auto; max-width: 50%; flex: 0 1 auto; object-fit: contain; object-position: 50% 100%; user-select: none; -webkit-user-drag: none; }
+.enc-art .enc-peint.enc-pbody { max-width: none; transform: scaleX(-1); }
+.enc-art .enc-peint.alt { filter: hue-rotate(-16deg) saturate(1.2) brightness(.9); }
+body.peint-ui .ms-btn.ms-solo[data-act="peintessai"] { background: linear-gradient(rgba(255, 255, 255, .6), rgba(255, 255, 255, .55)), var(--pui-panel) center / 300px, #f3f6f6; } /* les essais : en blanc, la partie solo reste le seul bouton orange */
+body.peint-ui .ms-btn.ms-solo[data-act="peintessai"] .ms-s { color: #4a565e; }
+body.peint-ui .ms-btn.ms-solo[data-act="peintessai"] .ms-ico { color: #7fe0f7; }
+body.peint-ui #screen .panel:not(.combat-panel):not(.story-floor):not(.menu-screen) { border: 1.5px solid #c3ced2; border-radius: 18px;
+  background: radial-gradient(circle at 13px 13px, #8fe4f8 0 2.5px, #2f8aa3 3px 3.6px, transparent 4.2px),
+    radial-gradient(circle at calc(100% - 13px) 13px, #8fe4f8 0 2.5px, #2f8aa3 3px 3.6px, transparent 4.2px),
+    radial-gradient(circle at 13px calc(100% - 13px), #8fe4f8 0 2.5px, #2f8aa3 3px 3.6px, transparent 4.2px),
+    radial-gradient(circle at calc(100% - 13px) calc(100% - 13px), #8fe4f8 0 2.5px, #2f8aa3 3px 3.6px, transparent 4.2px),
+    linear-gradient(rgba(255, 255, 255, .62), rgba(250, 252, 252, .5)), var(--pui-panel) center / 320px, #f3f6f6;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .85), inset 0 0 0 3px rgba(95, 211, 243, .4), 0 0 0 4px rgba(238, 242, 243, .85), 0 0 0 5px rgba(140, 158, 164, .45), 0 16px 30px -16px rgba(15, 30, 51, .55); }
+body.peint-ui .bd { border: 3px solid #eef2f3; border-radius: 12px; box-shadow: 0 0 0 1px #aab6bb, inset 0 0 0 1px rgba(95, 211, 243, .4), inset 0 0 16px rgba(95, 211, 243, .14), 0 6px 12px -8px rgba(15, 30, 51, .5); }
+body.peint-ui .voice-btn { border: 1.5px solid #aab6bb; background: radial-gradient(circle at 36% 30%, #ffffff, #e3eaec); box-shadow: inset 0 0 0 2px rgba(95, 211, 243, .4), 0 6px 10px -6px rgba(15, 30, 51, .5); }
+body.peint-ui .primary { background: linear-gradient(#ff8b4f, #ff6a2b 55%, #ea5a1b); border: 3px solid #f4f7f8; border-radius: 14px;
+  box-shadow: 0 0 0 1px #aab6bb, inset 0 2px 0 rgba(255, 255, 255, .45), 0 0 14px rgba(255, 106, 43, .4), 0 8px 14px -8px rgba(15, 30, 51, .6); }
+body.peint-ui .primary:hover:not(:disabled) { background: linear-gradient(#ff9a63, #ff7637 55%, #f0661f); box-shadow: 0 0 0 1px #aab6bb, inset 0 2px 0 rgba(255, 255, 255, .5), 0 0 20px rgba(255, 106, 43, .65), 0 8px 14px -8px rgba(15, 30, 51, .6); }
+body.peint-ui .ghost { background: linear-gradient(#ffffff, #eaf0f1); border: 1.5px solid #aab6bb; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(95, 211, 243, .35), 0 4px 8px -6px rgba(15, 30, 51, .45); }
+body.peint-ui .ghost:hover:not(:disabled) { border-color: #5fd3f3; box-shadow: inset 0 0 0 1px rgba(95, 211, 243, .6), 0 0 10px rgba(95, 211, 243, .35); }
+body.peint-ui .gs-tab { border-color: #aab6bb; background: linear-gradient(#ffffff, #eaf0f1); box-shadow: inset 0 0 0 1px rgba(95, 211, 243, .3); }
+body.peint-ui .gs-tab[aria-selected="true"] { background: #0f1e33; border-color: #5fd3f3; color: #d8f6ff; box-shadow: 0 0 9px rgba(95, 211, 243, .45); }
+/* le menu : de grands boutons de console laqués, la partie solo en orange, l'icône dans un cadran */
+body.peint-ui .ms-btn { border: 2px solid #f4f7f8; background: linear-gradient(rgba(255, 255, 255, .6), rgba(255, 255, 255, .55)), var(--pui-panel) center / 300px, #f3f6f6;
+  box-shadow: 0 0 0 1px #aab6bb, inset 0 0 0 1px rgba(95, 211, 243, .45), 0 10px 18px -10px rgba(15, 30, 51, .55); }
+body.peint-ui .ms-btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #8fd9ec, inset 0 0 0 1px rgba(95, 211, 243, .8), 0 0 16px rgba(95, 211, 243, .4), 0 12px 20px -10px rgba(15, 30, 51, .55); }
+body.peint-ui .ms-btn:active { transform: translateY(1px); box-shadow: 0 0 0 1px #aab6bb, 0 4px 8px -6px rgba(15, 30, 51, .55); }
+body.peint-ui .ms-btn.ms-solo { background: linear-gradient(#ff8b4f, #ff6a2b 55%, #ea5a1b); }
+body.peint-ui .ms-btn.ms-solo:hover { box-shadow: 0 0 0 1px #aab6bb, inset 0 2px 0 rgba(255, 255, 255, .4), 0 0 20px rgba(255, 106, 43, .6), 0 12px 20px -10px rgba(15, 30, 51, .55); }
+body.peint-ui .ms-btn.on { background: #0f1e33; border-color: #5fd3f3; box-shadow: 0 0 0 1px #2f8aa3, 0 0 14px rgba(95, 211, 243, .45); }
+body.peint-ui .ms-ico { border-radius: 50%; background: radial-gradient(circle at 40% 35%, #1d3550, #0b1626); color: #7fe0f7; box-shadow: 0 0 0 3px #eef2f3, 0 0 0 4px #aab6bb, inset 0 0 0 2px rgba(95, 211, 243, .55), inset 0 0 10px rgba(95, 211, 243, .3); }
+body.peint-ui .ms-btn.ms-solo .ms-ico { color: #ffd2b8; }
+body.peint-ui .ms-btn.on .ms-ico { background: #5fd3f3; color: #0f1e33; }
+/* le personnage peint du menu, debout sur sa trappe de cryogénie */
+.peint-hero .ph-scene { position: relative; display: block; width: min(330px, 72vw); aspect-ratio: 1 / 1.35; margin: 0 auto; }
+.peint-hero .ph-trap { position: absolute; left: 5%; bottom: 0; width: 90%; height: auto; user-select: none; -webkit-user-drag: none; filter: drop-shadow(0 8px 10px rgba(15, 30, 51, .3)); }
+.peint-hero .ph-body { position: absolute; left: 50%; bottom: 7.2%; height: 92.6%; width: auto; aspect-ratio: 3 / 5; translate: -50% 0; margin: 0; user-select: none; -webkit-user-drag: none;
+  transform-origin: 50% 94%; filter: drop-shadow(0 10px 14px rgba(15, 30, 51, .35)); animation: phBreath 3.4s ease-in-out infinite; }
+.ms-hero .av-hero.peint-hero { animation: none; }
+body.peint-ui .ms-hero .peint-hero figcaption { max-width: 46ch; margin: 6px auto 0; padding: 6px 12px; border-radius: 10px; background: rgba(248, 250, 249, .86); color: #2c363c; text-shadow: none; }
+@keyframes phBreath { 0%, 100% { scale: 1 1; } 50% { scale: .99 1.018; } }
+@media (prefers-reduced-motion: reduce) { .peint-hero .ph-body { animation: none; } }
+@media (max-width: 560px) {
+  body.peint-ui .world::before { border-radius: 14px; box-shadow: inset 0 0 0 5px #eef2f3, inset 0 0 0 6px rgba(95, 211, 243, .55), inset 0 0 16px 6px rgba(15, 30, 51, .18); }
+  body.peint-ui #screen .panel:not(.combat-panel):not(.story-floor):not(.menu-screen) { border-radius: 14px; }
+}
+@media (max-width: 560px) {
+  body.peint-ui .pui-frame { border-radius: 16px; box-shadow: inset 0 0 0 6px #eef2f3, inset 0 0 0 7px rgba(95, 211, 243, .6), inset 0 0 18px 6px rgba(15, 30, 51, .2); }
+  body.peint-ui .pui-vine { width: 90px; } body.peint-ui .pui-vine.tl, body.peint-ui .pui-vine.tr { width: 64px; }
+  body.peint-ui .orb { width: 72px; height: 72px; padding-top: 18px; }
+}
 </style>
 
 <div class="world" id="world" aria-hidden="true"></div>
@@ -1838,7 +2083,7 @@ body.in-combat .pops { top: 150px; }
       <dt>Score</dt><dd>Eliminates no one: added up over the floors you clear, it gives your run points, which will buy skins. 100 × HP left / max HP, plus 10 per achievement, plus 5 per turn ahead of the floor's target, the sum of the targets of its three fights (25 max).</dd>
       <dt>Skin shop</dt><dd>At the end of a run (elimination, final, or a new draft started after clearing a floor), its run points go to EDEN’s wardrobe. There you open crates (cargo, 200 points; captain’s, 450 points, rare and up): each one gives a random skin you don’t have yet, for cards (frames, family tints, backs) or for your character (hair, leaf, outfit, accessory). The odds are shown. Purely cosmetic: no skin changes the game.</dd>
       <dt>Outfit</dt><dd>From 4 points in a family, your main specialization dresses you in a costume (the penguin for Cryo, the chicken for Panic…) and your secondary one puts a prop in your hand; with Jack-of-all-trades, the third fills the other hand. The same items for every class. At tier 16, the item glows. Dormant families aren't worn.</dd>
-      <dt>Credits</dt><dd>Monsters, characters and backgrounds: drawn in SVG for this prototype. Card thumbnails: icons from <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>, by Lorc, Delapouite and their contributors (here: Delapouite, Lorc, Skoll, Sbed, Carl Olsen, Cathelineau, DarkZaitzev, Felbrigg and Priorblue), under the <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">Creative Commons BY 3.0</a> license; colors modified for the game.</dd>
+      <dt>Credits</dt><dd>Illustrations (cards, monsters, characters, outfits, backgrounds, rooms): painted for the game with the Krea image generator, based on the original SVG drawings. Card icons: icons from <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>, by Lorc, Delapouite and their contributors (here: Delapouite, Lorc, Skoll, Sbed, Carl Olsen, Cathelineau, DarkZaitzev, Felbrigg and Priorblue), under the <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">Creative Commons BY 3.0</a> license; colors modified for the game.</dd>
     </dl>
   </details>
 
@@ -5550,7 +5795,8 @@ window.SURBOOKING_ENGINE_FP = 'fc7ef0289d63';
     const st = document.createElement('style'); st.id = 'avatar-style'; st.textContent = CSS; document.head.appendChild(st);
   }
 
-  const api = { FAMILIES, ROLES, ROLE_NAMES, TOUCHE, CLASS_DRAW, OUTFIT_FILES, outfitItems, state, svg, scene, items, itemFor, describe, setCosmetic, setBody, body: () => bodyOf(null) };
+  const api = { FAMILIES, ROLES, ROLE_NAMES, TOUCHE, CLASS_DRAW, OUTFIT_FILES, outfitItems, state, svg, scene, items, itemFor, describe, setCosmetic, setBody, body: () => bodyOf(null),
+    cosmetic: () => COSMETIC }; // le vestiaire porté (ou essayé), pour le personnage peint de l'essai
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (typeof window !== 'undefined') window.Avatar = api;
 })();
@@ -6256,7 +6502,10 @@ window.SURBOOKING_ENGINE_FP = 'fc7ef0289d63';
     const skin = it('skin').vars, hair = it('hair').vars;
     if (skin) vars.push(`--av-skin:${skin.skin}`, `--av-skin-shade:${skin.shade}`);
     if (hair) vars.push(`--av-hair:${hair.hair}`);
-    return { style: vars.join(';'), leaf: it('leaf').svg || '', under: it('outfit').under || {}, over: it('acc').over || {}, overBusy: it('acc').overBusy || null, body: state.body };
+    // ids et teintes : le personnage peint (essai) les lit pour choisir ses calques et recolorer peau et cheveux
+    const ids = {}; ['leaf', 'outfit', 'acc', 'skin', 'hair'].forEach(sl => { ids[sl] = it(sl).id; });
+    return { style: vars.join(';'), leaf: it('leaf').svg || '', under: it('outfit').under || {}, over: it('acc').over || {}, overBusy: it('acc').overBusy || null, body: state.body,
+      ids, skinHex: skin ? skin.skin : '', hairHex: hair ? hair.hair : '' };
   }
   function cardClassFor(eq) { return ['frame', 'tint'].map(s => BY_ID[(eq && eq[s]) || equippedId(s)].cls).filter(Boolean).join(' '); }
   const backOf = eq => ((eq && eq.back) || equippedId('back')).replace(/^dos-/, '');
@@ -7190,6 +7439,10 @@ window.SURBOOKING_NET = window.SURBOOKING_NET || {
 
 </script>
 <script>
+/* ---- peint.js ---- */
+/* Illustrations peintes : généré par tools/peint_build.py depuis sprites/. Ne pas modifier à la main. */
+window.SurbookingPeint = {"foe":{"blattes":{"glow":{},"idle":"peint/foe-blattes-idle-6e3b743c.webp","attack":"peint/foe-blattes-attack-ce9812ac.webp","hit":"peint/foe-blattes-hit-055b3434.webp","death":"peint/foe-blattes-death-248390e6.webp"},"bouc":{"glow":{},"idle":"peint/foe-bouc-idle-65fa7e3c.webp","attack":"peint/foe-bouc-attack-41244972.webp","hit":"peint/foe-bouc-hit-eb924772.webp","death":"peint/foe-bouc-death-197c4ed0.webp"},"capy":{"glow":{},"idle":"peint/foe-capy-idle-44d0becc.webp","attack":"peint/foe-capy-attack-9c6e1926.webp","hit":"peint/foe-capy-hit-ecb690a2.webp","death":"peint/foe-capy-death-04382219.webp"},"chat-boite":{"glow":{"idle":"peint/foe-chat-boite-idle-lueur-eb29dfb1.webp","hit":"peint/foe-chat-boite-hit-lueur-19ce678c.webp"},"idle":"peint/foe-chat-boite-idle-d254a9e1.webp","hit":"peint/foe-chat-boite-hit-67fff731.webp","death":"peint/foe-chat-boite-death-8896999a.webp"},"chat":{"glow":{"idle":"peint/foe-chat-idle-lueur-9a9ee94a.webp","attack":"peint/foe-chat-attack-lueur-3683e995.webp","hit":"peint/foe-chat-hit-lueur-d714bbd4.webp","death":"peint/foe-chat-death-lueur-364ed008.webp"},"idle":"peint/foe-chat-idle-18926d09.webp","attack":"peint/foe-chat-attack-2de8185b.webp","hit":"peint/foe-chat-hit-5ccfc1fd.webp","death":"peint/foe-chat-death-1b19a80f.webp"},"chauvesouris":{"glow":{"idle":"peint/foe-chauvesouris-idle-lueur-52f02222.webp","attack":"peint/foe-chauvesouris-attack-lueur-d1f3e721.webp","hit":"peint/foe-chauvesouris-hit-lueur-4dbc1f03.webp","death":"peint/foe-chauvesouris-death-lueur-6ff3923b.webp"},"idle":"peint/foe-chauvesouris-idle-a96cfe8c.webp","attack":"peint/foe-chauvesouris-attack-1fe3041d.webp","hit":"peint/foe-chauvesouris-hit-2e6a0902.webp","death":"peint/foe-chauvesouris-death-28e3944a.webp"},"chimere":{"glow":{"idle":"peint/foe-chimere-idle-lueur-53b9d757.webp","attack":"peint/foe-chimere-attack-lueur-c3682e7a.webp","hit":"peint/foe-chimere-hit-lueur-d4e49ffa.webp","death":"peint/foe-chimere-death-lueur-64321bfc.webp"},"idle":"peint/foe-chimere-idle-17758a0a.webp","attack":"peint/foe-chimere-attack-6f7728c4.webp","hit":"peint/foe-chimere-hit-c4a4ee2b.webp","death":"peint/foe-chimere-death-3dfa191e.webp"},"cochons-gros":{"glow":{},"idle":"peint/foe-cochons-gros-idle-04a9cef5.webp","attack":"peint/foe-cochons-gros-attack-a2f972d9.webp","hit":"peint/foe-cochons-gros-hit-490f6d6c.webp","death":"peint/foe-cochons-gros-death-ca9d1ef7.webp"},"cochons":{"glow":{},"idle":"peint/foe-cochons-idle-3ca25390.webp","attack":"peint/foe-cochons-attack-4b3c82ac.webp","hit":"peint/foe-cochons-hit-5627a85c.webp","death":"peint/foe-cochons-death-aa61d259.webp"},"colombe":{"glow":{},"idle":"peint/foe-colombe-idle-fcf579f4.webp","attack":"peint/foe-colombe-attack-81ba6ee7.webp","hit":"peint/foe-colombe-hit-2e4659d2.webp","death":"peint/foe-colombe-death-f8adfab4.webp"},"corbeau":{"glow":{},"idle":"peint/foe-corbeau-idle-08f9a0e5.webp","attack":"peint/foe-corbeau-attack-914d7b2f.webp","hit":"peint/foe-corbeau-hit-ed8e3021.webp","death":"peint/foe-corbeau-death-483dcf8d.webp"},"couvee":{"glow":{"idle":"peint/foe-couvee-idle-lueur-ef26b2be.webp","attack":"peint/foe-couvee-attack-lueur-fd5a5a85.webp","hit":"peint/foe-couvee-hit-lueur-fa3d0587.webp","death":"peint/foe-couvee-death-lueur-cb92be7f.webp"},"idle":"peint/foe-couvee-idle-9d05d899.webp","attack":"peint/foe-couvee-attack-d607808a.webp","hit":"peint/foe-couvee-hit-8ea5e494.webp","death":"peint/foe-couvee-death-38b4376b.webp"},"crapauds-mute":{"glow":{"idle":"peint/foe-crapauds-mute-idle-lueur-03daef60.webp","attack":"peint/foe-crapauds-mute-attack-lueur-7a6c9ecf.webp","hit":"peint/foe-crapauds-mute-hit-lueur-7dfbb750.webp","death":"peint/foe-crapauds-mute-death-lueur-e91dcd33.webp"},"idle":"peint/foe-crapauds-mute-idle-6c4221f0.webp","attack":"peint/foe-crapauds-mute-attack-6048a18b.webp","hit":"peint/foe-crapauds-mute-hit-319242d7.webp","death":"peint/foe-crapauds-mute-death-2decd52c.webp"},"crapauds":{"glow":{"idle":"peint/foe-crapauds-idle-lueur-0c5e9634.webp","attack":"peint/foe-crapauds-attack-lueur-8cac39a2.webp","hit":"peint/foe-crapauds-hit-lueur-18d818ea.webp","death":"peint/foe-crapauds-death-lueur-7c5a6026.webp"},"idle":"peint/foe-crapauds-idle-fa2abdcb.webp","attack":"peint/foe-crapauds-attack-2529235e.webp","hit":"peint/foe-crapauds-hit-8ba88d35.webp","death":"peint/foe-crapauds-death-2377f354.webp"},"dionee":{"glow":{"idle":"peint/foe-dionee-idle-lueur-a354e014.webp","attack":"peint/foe-dionee-attack-lueur-dedca385.webp","hit":"peint/foe-dionee-hit-lueur-f57493f0.webp","death":"peint/foe-dionee-death-lueur-be6cbfc0.webp"},"idle":"peint/foe-dionee-idle-de8055e7.webp","attack":"peint/foe-dionee-attack-793decd2.webp","hit":"peint/foe-dionee-hit-8a13d099.webp","death":"peint/foe-dionee-death-9329ef74.webp"},"dolly":{"glow":{"idle":"peint/foe-dolly-idle-lueur-da6924ea.webp","attack":"peint/foe-dolly-attack-lueur-1435d9e3.webp","hit":"peint/foe-dolly-hit-lueur-39992634.webp","death":"peint/foe-dolly-death-lueur-c4212269.webp"},"idle":"peint/foe-dolly-idle-fbac3eb9.webp","attack":"peint/foe-dolly-attack-671ed94e.webp","hit":"peint/foe-dolly-hit-6d2bfb50.webp","death":"peint/foe-dolly-death-efc31ea4.webp"},"eden":{"glow":{},"idle":"peint/foe-eden-idle-015d49bb.webp","attack":"peint/foe-eden-attack-3e9b4ea8.webp","hit":"peint/foe-eden-hit-2a37e294.webp","death":"peint/foe-eden-death-2b02cccf.webp"},"gaston":{"glow":{},"idle":"peint/foe-gaston-idle-bd2cb2ef.webp","attack":"peint/foe-gaston-attack-88a8feba.webp","hit":"peint/foe-gaston-hit-2819d7d4.webp","death":"peint/foe-gaston-death-f52a2730.webp"},"lapins":{"glow":{"idle":"peint/foe-lapins-idle-lueur-a80eab16.webp","attack":"peint/foe-lapins-attack-lueur-6d49f92e.webp","hit":"peint/foe-lapins-hit-lueur-0d1af834.webp","death":"peint/foe-lapins-death-lueur-3c710f77.webp"},"idle":"peint/foe-lapins-idle-3814bc49.webp","attack":"peint/foe-lapins-attack-d81bf5fe.webp","hit":"peint/foe-lapins-hit-89895501.webp","death":"peint/foe-lapins-death-572375ad.webp"},"leviathan":{"glow":{"idle":"peint/foe-leviathan-idle-lueur-efa9fdbe.webp","attack":"peint/foe-leviathan-attack-lueur-ef007471.webp","hit":"peint/foe-leviathan-hit-lueur-dca2c6ff.webp","death":"peint/foe-leviathan-death-lueur-6a46d95b.webp"},"idle":"peint/foe-leviathan-idle-3dabaf55.webp","attack":"peint/foe-leviathan-attack-8f18fe68.webp","hit":"peint/foe-leviathan-hit-e7c29245.webp","death":"peint/foe-leviathan-death-68ad7b03.webp"},"mere":{"glow":{"idle":"peint/foe-mere-idle-lueur-419581c7.webp","attack":"peint/foe-mere-attack-lueur-705aeeff.webp","hit":"peint/foe-mere-hit-lueur-d3888471.webp","death":"peint/foe-mere-death-lueur-f0ae1d79.webp"},"idle":"peint/foe-mere-idle-59e027ac.webp","attack":"peint/foe-mere-attack-218d0f84.webp","hit":"peint/foe-mere-hit-95769a33.webp","death":"peint/foe-mere-death-f11b7a09.webp"},"oies":{"glow":{},"idle":"peint/foe-oies-idle-ed4d4321.webp","attack":"peint/foe-oies-attack-e7149c9c.webp","hit":"peint/foe-oies-hit-2f57ea04.webp","death":"peint/foe-oies-death-599e9260.webp"},"ours":{"glow":{"idle":"peint/foe-ours-idle-lueur-7f09f9fc.webp","attack":"peint/foe-ours-attack-lueur-ca3bdf7e.webp","hit":"peint/foe-ours-hit-lueur-448f44e8.webp","death":"peint/foe-ours-death-lueur-71bb9b9b.webp"},"idle":"peint/foe-ours-idle-2b2482b0.webp","attack":"peint/foe-ours-attack-83081673.webp","hit":"peint/foe-ours-hit-dce13eca.webp","death":"peint/foe-ours-death-91da3805.webp"},"phalenes-mute":{"glow":{"idle":"peint/foe-phalenes-mute-idle-lueur-3fe567cf.webp","attack":"peint/foe-phalenes-mute-attack-lueur-cfda2c11.webp","hit":"peint/foe-phalenes-mute-hit-lueur-fa742ca8.webp","death":"peint/foe-phalenes-mute-death-lueur-ee1a1f31.webp"},"idle":"peint/foe-phalenes-mute-idle-fcb1c8e3.webp","attack":"peint/foe-phalenes-mute-attack-e7c3d7d2.webp","hit":"peint/foe-phalenes-mute-hit-cef6b3ff.webp","death":"peint/foe-phalenes-mute-death-9f3bd84a.webp"},"phalenes":{"glow":{"idle":"peint/foe-phalenes-idle-lueur-e0ba35ec.webp","attack":"peint/foe-phalenes-attack-lueur-49145f6a.webp","hit":"peint/foe-phalenes-hit-lueur-57bef2ef.webp","death":"peint/foe-phalenes-death-lueur-e6d818ae.webp"},"idle":"peint/foe-phalenes-idle-f016f763.webp","attack":"peint/foe-phalenes-attack-e2e3b32a.webp","hit":"peint/foe-phalenes-hit-d19c3a3b.webp","death":"peint/foe-phalenes-death-df142434.webp"},"poule":{"glow":{"idle":"peint/foe-poule-idle-lueur-27e3047d.webp","attack":"peint/foe-poule-attack-lueur-b3e952c7.webp","hit":"peint/foe-poule-hit-lueur-03025647.webp","death":"peint/foe-poule-death-lueur-9088d53b.webp"},"idle":"peint/foe-poule-idle-c8785a87.webp","attack":"peint/foe-poule-attack-5ce60a3b.webp","hit":"peint/foe-poule-hit-0f4e8bae.webp","death":"peint/foe-poule-death-43fa7839.webp"},"rats":{"glow":{},"idle":"peint/foe-rats-idle-bd8ca5ad.webp","attack":"peint/foe-rats-attack-6ad01695.webp","hit":"peint/foe-rats-hit-6fbfbf25.webp","death":"peint/foe-rats-death-1401cbbc.webp"},"rejeton":{"glow":{"idle":"peint/foe-rejeton-idle-lueur-f8e508e4.webp","attack":"peint/foe-rejeton-attack-lueur-34222982.webp","hit":"peint/foe-rejeton-hit-lueur-7bada3b3.webp","death":"peint/foe-rejeton-death-lueur-325af187.webp"},"idle":"peint/foe-rejeton-idle-e846840a.webp","attack":"peint/foe-rejeton-attack-2d5ef454.webp","hit":"peint/foe-rejeton-hit-0bb84ead.webp","death":"peint/foe-rejeton-death-8661c500.webp"},"robot":{"glow":{},"idle":"peint/foe-robot-idle-34f67e6a.webp","attack":"peint/foe-robot-attack-5aa884aa.webp","hit":"peint/foe-robot-hit-05568636.webp","death":"peint/foe-robot-death-90f2ca51.webp"},"sauterelle":{"glow":{"idle":"peint/foe-sauterelle-idle-lueur-e30190a1.webp","attack":"peint/foe-sauterelle-attack-lueur-762abb3a.webp","hit":"peint/foe-sauterelle-hit-lueur-cae22ef4.webp","death":"peint/foe-sauterelle-death-lueur-9ef71acc.webp"},"idle":"peint/foe-sauterelle-idle-dee3ea0c.webp","attack":"peint/foe-sauterelle-attack-326c1919.webp","hit":"peint/foe-sauterelle-hit-80b650ac.webp","death":"peint/foe-sauterelle-death-776c2bfa.webp"},"serpent-mue":{"glow":{"idle":"peint/foe-serpent-mue-idle-lueur-61ba1b6c.webp","attack":"peint/foe-serpent-mue-attack-lueur-dfd7ae6b.webp","hit":"peint/foe-serpent-mue-hit-lueur-75248304.webp","death":"peint/foe-serpent-mue-death-lueur-25ba31bd.webp"},"idle":"peint/foe-serpent-mue-idle-c82987be.webp","attack":"peint/foe-serpent-mue-attack-c42193cf.webp","hit":"peint/foe-serpent-mue-hit-2b46d6cd.webp","death":"peint/foe-serpent-mue-death-f5a56db8.webp"},"serpent":{"glow":{"idle":"peint/foe-serpent-idle-lueur-b84d063d.webp","attack":"peint/foe-serpent-attack-lueur-4259e823.webp","hit":"peint/foe-serpent-hit-lueur-3e81df3a.webp","death":"peint/foe-serpent-death-lueur-f349bfb2.webp"},"idle":"peint/foe-serpent-idle-102077fb.webp","attack":"peint/foe-serpent-attack-1f74a561.webp","hit":"peint/foe-serpent-hit-84c21140.webp","death":"peint/foe-serpent-death-69414515.webp"},"vesses-mute":{"glow":{"idle":"peint/foe-vesses-mute-idle-lueur-61daec8e.webp","attack":"peint/foe-vesses-mute-attack-lueur-5a7cc8c0.webp","hit":"peint/foe-vesses-mute-hit-lueur-2d01568f.webp","death":"peint/foe-vesses-mute-death-lueur-1033e4b5.webp"},"idle":"peint/foe-vesses-mute-idle-ee86d351.webp","attack":"peint/foe-vesses-mute-attack-38088daf.webp","hit":"peint/foe-vesses-mute-hit-45be196b.webp","death":"peint/foe-vesses-mute-death-5d09662f.webp"},"vesses":{"glow":{"idle":"peint/foe-vesses-idle-lueur-af5aa569.webp","attack":"peint/foe-vesses-attack-lueur-51d7d3fc.webp","hit":"peint/foe-vesses-hit-lueur-72505d50.webp","death":"peint/foe-vesses-death-lueur-d5417f6e.webp"},"idle":"peint/foe-vesses-idle-007e9896.webp","attack":"peint/foe-vesses-attack-81b21fbb.webp","hit":"peint/foe-vesses-hit-2f080043.webp","death":"peint/foe-vesses-death-f0bce32a.webp"}},"body":{"m":"peint/corps-m-cd1321ac.webp","f":"peint/corps-f-629dd401.webp"},"bg":{"arene":{"large":"peint/decor-arene-ff9a5964.webp","base":"#a18a80","world":"peint/decor-arene-flou-61104c4f.webp","mobile":"peint/decor-arene-tel-4bae0c0d.webp"},"etable":{"large":"peint/decor-etable-6c1b396a.webp","base":"#806d6c","world":"peint/decor-etable-flou-0981f86f.webp","mobile":"peint/decor-etable-tel-ac9cee44.webp"},"menagerie":{"large":"peint/decor-menagerie-0017602e.webp","base":"#ac8977","world":"peint/decor-menagerie-flou-5ea298dc.webp","mobile":"peint/decor-menagerie-tel-707397bc.webp"},"quarantaine":{"large":"peint/decor-quarantaine-77527576.webp","base":"#8d7166","world":"peint/decor-quarantaine-flou-cf92d996.webp","mobile":"peint/decor-quarantaine-tel-ed48226c.webp"},"serre":{"large":"peint/decor-serre-4bc938b9.webp","base":"#a98b85","world":"peint/decor-serre-flou-4aeadaa9.webp","mobile":"peint/decor-serre-tel-c7479086.webp"}},"trap":{"closed":"peint/trappe-closed-306a5875.webp","open":"peint/trappe-open-937073ce.webp"},"outfit":{"costume":{"blindage-f":"peint/costume-blindage-f-b303ff38.webp","blindage-m":"peint/costume-blindage-m-a1d9b05c.webp","cryo-f":"peint/costume-cryo-f-0a17c12a.webp","cryo-m":"peint/costume-cryo-m-c11f54b8.webp","debrouille-f":"peint/costume-debrouille-f-a0dd93d6.webp","debrouille-m":"peint/costume-debrouille-m-80a89b54.webp","instinct-f":"peint/costume-instinct-f-ff49dafa.webp","instinct-m":"peint/costume-instinct-m-6cd996c4.webp","mutation-f":"peint/costume-mutation-f-bef6fa67.webp","mutation-m":"peint/costume-mutation-m-4d6edaed.webp","panique-f":"peint/costume-panique-f-1282afcc.webp","panique-m":"peint/costume-panique-m-c9932116.webp","sacrifice-f":"peint/costume-sacrifice-f-29a9cbb6.webp","sacrifice-m":"peint/costume-sacrifice-m-019c423f.webp","zizanie-f":"peint/costume-zizanie-f-9fa9d1e7.webp","zizanie-m":"peint/costume-zizanie-m-604c2467.webp"},"prop":{"blindage-f-1":"peint/prop-blindage-f-1-11da5bd0.webp","blindage-f-2":"peint/prop-blindage-f-2-4fe80bf8.webp","blindage-m-1":"peint/prop-blindage-m-1-a95c020e.webp","blindage-m-2":"peint/prop-blindage-m-2-8b28f353.webp","cryo-f-1":"peint/prop-cryo-f-1-32fbdacb.webp","cryo-f-2":"peint/prop-cryo-f-2-2f52a713.webp","cryo-m-1":"peint/prop-cryo-m-1-206e2d8c.webp","cryo-m-2":"peint/prop-cryo-m-2-e6247d8e.webp","debrouille-f-1":"peint/prop-debrouille-f-1-4a7b1ce5.webp","debrouille-f-2":"peint/prop-debrouille-f-2-b816a935.webp","debrouille-m-1":"peint/prop-debrouille-m-1-8d597832.webp","debrouille-m-2":"peint/prop-debrouille-m-2-2577e8fe.webp","instinct-f-1":"peint/prop-instinct-f-1-7c334b3b.webp","instinct-f-2":"peint/prop-instinct-f-2-0d0d5cb7.webp","instinct-m-1":"peint/prop-instinct-m-1-235a935c.webp","instinct-m-2":"peint/prop-instinct-m-2-44711ec7.webp","mutation-f-1":"peint/prop-mutation-f-1-c12e4bca.webp","mutation-f-2":"peint/prop-mutation-f-2-7d984d6b.webp","mutation-m-1":"peint/prop-mutation-m-1-d9a9596a.webp","mutation-m-2":"peint/prop-mutation-m-2-db93e956.webp","panique-f-1":"peint/prop-panique-f-1-0f840036.webp","panique-f-2":"peint/prop-panique-f-2-f9c6a529.webp","panique-m-1":"peint/prop-panique-m-1-7e4ff220.webp","panique-m-2":"peint/prop-panique-m-2-6bd3b18f.webp","sacrifice-f-1":"peint/prop-sacrifice-f-1-ea4f5b97.webp","sacrifice-f-2":"peint/prop-sacrifice-f-2-6c44553e.webp","sacrifice-m-1":"peint/prop-sacrifice-m-1-afa61f7a.webp","sacrifice-m-2":"peint/prop-sacrifice-m-2-9d738eec.webp","zizanie-f-1":"peint/prop-zizanie-f-1-cec997df.webp","zizanie-f-2":"peint/prop-zizanie-f-2-12394402.webp","zizanie-m-1":"peint/prop-zizanie-m-1-c3073f32.webp","zizanie-m-2":"peint/prop-zizanie-m-2-9e378086.webp"},"classe":{"bouchetrou-f":"peint/classe-bouchetrou-f-2ec93dfa.webp","bouchetrou-m":"peint/classe-bouchetrou-m-08ee1e98.webp","clandestin-f":"peint/classe-clandestin-f-f56e329f.webp","clandestin-m":"peint/classe-clandestin-m-e0d5c91e.webp","maintenance-f":"peint/classe-maintenance-f-c9efd8c3.webp","maintenance-m":"peint/classe-maintenance-m-1a3dc26f.webp","mecano-f":"peint/classe-mecano-f-7d9e8a51.webp","mecano-m":"peint/classe-mecano-m-685c7c26.webp","veterinaire-f":"peint/classe-veterinaire-f-b6875750.webp","veterinaire-m":"peint/classe-veterinaire-m-f5e94e18.webp"},"tenue":{"combi-pilote-f":"peint/tenue-combi-pilote-f-87511fec.webp","combi-pilote-m":"peint/tenue-combi-pilote-m-fad2908d.webp","gilet-f":"peint/tenue-gilet-f-72158a8e.webp","gilet-m":"peint/tenue-gilet-m-e7060689.webp","peignoir-f":"peint/tenue-peignoir-f-9a1f5ebe.webp","peignoir-m":"peint/tenue-peignoir-m-3a5d469b.webp","pull-f":"peint/tenue-pull-f-8d9f68a5.webp","pull-m":"peint/tenue-pull-m-19ca1dda.webp","pyjama-f":"peint/tenue-pyjama-f-0dfe5983.webp","pyjama-m":"peint/tenue-pyjama-m-c5adb6f3.webp","smoking-f":"peint/tenue-smoking-f-e58e62fa.webp","smoking-m":"peint/tenue-smoking-m-99066f91.webp","steward-f":"peint/tenue-steward-f-330d8e2e.webp","steward-m":"peint/tenue-steward-m-b27df225.webp","survet-f":"peint/tenue-survet-f-b957402f.webp","survet-m":"peint/tenue-survet-m-18bd291e.webp"},"feuille":{"erable-f":"peint/feuille-erable-f-7c600d47.webp","erable-m":"peint/feuille-erable-m-d051305a.webp","feuille-circuit-f":"peint/feuille-feuille-circuit-f-a7ab5975.webp","feuille-circuit-m":"peint/feuille-feuille-circuit-m-e223f4a1.webp","feuille-or-f":"peint/feuille-feuille-or-f-513f9e99.webp","feuille-or-m":"peint/feuille-feuille-or-m-d4d2c70c.webp","laitue-f":"peint/feuille-laitue-f-8df1fe74.webp","laitue-m":"peint/feuille-laitue-m-50249d8e.webp","ticket-f":"peint/feuille-ticket-f-1f14b98e.webp","ticket-m":"peint/feuille-ticket-m-13334a8a.webp","trefle-f":"peint/feuille-trefle-f-6e1bb3ea.webp","trefle-m":"peint/feuille-trefle-m-7081fc14.webp","vigne-f":"peint/feuille-vigne-f-22a48c81.webp","vigne-m":"peint/feuille-vigne-m-b31a30f2.webp"},"acc":{"bracelet-f":"peint/acc-bracelet-f-9e4f01c0.webp","bracelet-m":"peint/acc-bracelet-m-ee996846.webp","casquette-f":"peint/acc-casquette-f-86900fe2.webp","casquette-m":"peint/acc-casquette-m-ec9c23c3.webp","galons-f":"peint/acc-galons-f-c00d7b5d.webp","galons-m":"peint/acc-galons-m-22095b6a.webp","laurier-f":"peint/acc-laurier-f-e4dbc561.webp","laurier-m":"peint/acc-laurier-m-559a4c33.webp","lunettes-f":"peint/acc-lunettes-f-e60e508d.webp","lunettes-m":"peint/acc-lunettes-m-56440149.webp","moustache-f":"peint/acc-moustache-f-bfc8099c.webp","moustache-m":"peint/acc-moustache-m-9a18ee36.webp","noeud-f":"peint/acc-noeud-f-6cf2819b.webp","noeud-m":"peint/acc-noeud-m-d55027d5.webp","peluche-f":"peint/acc-peluche-f-bf16ae12.webp","peluche-m":"peint/acc-peluche-m-a8575155.webp","perroquet-f":"peint/acc-perroquet-f-e32af7ca.webp","perroquet-m":"peint/acc-perroquet-m-895c6ffd.webp"},"mute":{"f":"peint/mute-f-8d1ca4d8.webp","m":"peint/mute-m-f859b1b2.webp"},"masque":{"cheveux-body-f":"peint/masque-cheveux-body-f-f0e98786.webp","cheveux-body-m":"peint/masque-cheveux-body-m-6150bddc.webp","cheveux-costume-blindage-f":"peint/masque-cheveux-costume-blindage-f-0b51affa.webp","cheveux-costume-blindage-m":"peint/masque-cheveux-costume-blindage-m-a841ff6b.webp","cheveux-costume-cryo-f":"peint/masque-cheveux-costume-cryo-f-08fdec59.webp","cheveux-costume-cryo-m":"peint/masque-cheveux-costume-cryo-m-82b93e82.webp","cheveux-costume-debrouille-f":"peint/masque-cheveux-costume-debrouille-f-448db421.webp","cheveux-costume-debrouille-m":"peint/masque-cheveux-costume-debrouille-m-327bcfdd.webp","cheveux-costume-instinct-f":"peint/masque-cheveux-costume-instinct-f-1498b078.webp","cheveux-costume-instinct-m":"peint/masque-cheveux-costume-instinct-m-309adf3b.webp","cheveux-costume-mutation-f":"peint/masque-cheveux-costume-mutation-f-5aa0bb0a.webp","cheveux-costume-mutation-m":"peint/masque-cheveux-costume-mutation-m-3dcb2fc1.webp","cheveux-costume-panique-f":"peint/masque-cheveux-costume-panique-f-a4f98191.webp","cheveux-costume-panique-m":"peint/masque-cheveux-costume-panique-m-45dc83e0.webp","cheveux-costume-sacrifice-f":"peint/masque-cheveux-costume-sacrifice-f-2cdff99e.webp","cheveux-costume-sacrifice-m":"peint/masque-cheveux-costume-sacrifice-m-c65f27e9.webp","cheveux-costume-zizanie-f":"peint/masque-cheveux-costume-zizanie-f-19371fdd.webp","cheveux-costume-zizanie-m":"peint/masque-cheveux-costume-zizanie-m-61ba4c67.webp","cheveux-tenue-combi-pilote-f":"peint/masque-cheveux-tenue-combi-pilote-f-ba17401a.webp","cheveux-tenue-combi-pilote-m":"peint/masque-cheveux-tenue-combi-pilote-m-5d004538.webp","cheveux-tenue-gilet-f":"peint/masque-cheveux-tenue-gilet-f-b444627b.webp","cheveux-tenue-gilet-m":"peint/masque-cheveux-tenue-gilet-m-04a7bbe0.webp","cheveux-tenue-peignoir-f":"peint/masque-cheveux-tenue-peignoir-f-4d1a3b88.webp","cheveux-tenue-peignoir-m":"peint/masque-cheveux-tenue-peignoir-m-228de76f.webp","cheveux-tenue-pull-f":"peint/masque-cheveux-tenue-pull-f-445ad2bc.webp","cheveux-tenue-pull-m":"peint/masque-cheveux-tenue-pull-m-61fd2a52.webp","cheveux-tenue-pyjama-f":"peint/masque-cheveux-tenue-pyjama-f-aebf3aa8.webp","cheveux-tenue-pyjama-m":"peint/masque-cheveux-tenue-pyjama-m-96853b19.webp","cheveux-tenue-smoking-f":"peint/masque-cheveux-tenue-smoking-f-ae41a460.webp","cheveux-tenue-smoking-m":"peint/masque-cheveux-tenue-smoking-m-d850f703.webp","cheveux-tenue-steward-f":"peint/masque-cheveux-tenue-steward-f-8b7d224c.webp","cheveux-tenue-steward-m":"peint/masque-cheveux-tenue-steward-m-ef69664f.webp","cheveux-tenue-survet-f":"peint/masque-cheveux-tenue-survet-f-d8a06c4f.webp","cheveux-tenue-survet-m":"peint/masque-cheveux-tenue-survet-m-66cea9aa.webp","peau-body-f":"peint/masque-peau-body-f-60bae98a.webp","peau-body-m":"peint/masque-peau-body-m-1d42c90f.webp","peau-costume-blindage-f":"peint/masque-peau-costume-blindage-f-c0500180.webp","peau-costume-blindage-m":"peint/masque-peau-costume-blindage-m-38a72ce4.webp","peau-costume-cryo-f":"peint/masque-peau-costume-cryo-f-1040928f.webp","peau-costume-cryo-m":"peint/masque-peau-costume-cryo-m-dd390f7d.webp","peau-costume-debrouille-f":"peint/masque-peau-costume-debrouille-f-e54b0696.webp","peau-costume-debrouille-m":"peint/masque-peau-costume-debrouille-m-1d85a712.webp","peau-costume-instinct-f":"peint/masque-peau-costume-instinct-f-ecca0cbe.webp","peau-costume-instinct-m":"peint/masque-peau-costume-instinct-m-2587cfef.webp","peau-costume-mutation-f":"peint/masque-peau-costume-mutation-f-10fdd72f.webp","peau-costume-mutation-m":"peint/masque-peau-costume-mutation-m-4e16380d.webp","peau-costume-panique-f":"peint/masque-peau-costume-panique-f-3ea6bd79.webp","peau-costume-panique-m":"peint/masque-peau-costume-panique-m-3b4278ce.webp","peau-costume-sacrifice-f":"peint/masque-peau-costume-sacrifice-f-e6fd25bb.webp","peau-costume-sacrifice-m":"peint/masque-peau-costume-sacrifice-m-3ceac6f7.webp","peau-costume-zizanie-f":"peint/masque-peau-costume-zizanie-f-02acfd94.webp","peau-costume-zizanie-m":"peint/masque-peau-costume-zizanie-m-f2166429.webp","peau-tenue-combi-pilote-f":"peint/masque-peau-tenue-combi-pilote-f-e0bf26b8.webp","peau-tenue-combi-pilote-m":"peint/masque-peau-tenue-combi-pilote-m-42562aa0.webp","peau-tenue-gilet-f":"peint/masque-peau-tenue-gilet-f-b87db037.webp","peau-tenue-gilet-m":"peint/masque-peau-tenue-gilet-m-d29822f1.webp","peau-tenue-peignoir-f":"peint/masque-peau-tenue-peignoir-f-28e2bfa7.webp","peau-tenue-peignoir-m":"peint/masque-peau-tenue-peignoir-m-b9248bfc.webp","peau-tenue-pull-f":"peint/masque-peau-tenue-pull-f-adde4535.webp","peau-tenue-pull-m":"peint/masque-peau-tenue-pull-m-b664453c.webp","peau-tenue-pyjama-f":"peint/masque-peau-tenue-pyjama-f-60e6bb59.webp","peau-tenue-pyjama-m":"peint/masque-peau-tenue-pyjama-m-9970a40b.webp","peau-tenue-smoking-f":"peint/masque-peau-tenue-smoking-f-c0c46b33.webp","peau-tenue-smoking-m":"peint/masque-peau-tenue-smoking-m-da34e3d3.webp","peau-tenue-steward-f":"peint/masque-peau-tenue-steward-f-78250ce0.webp","peau-tenue-steward-m":"peint/masque-peau-tenue-steward-m-dd9f4df3.webp","peau-tenue-survet-f":"peint/masque-peau-tenue-survet-f-35cf7bf4.webp","peau-tenue-survet-m":"peint/masque-peau-tenue-survet-m-4a3ff000.webp"},"feuilleVisible":["pull","gilet"]},"fx":{"bang":"peint/fx-bang-794c278f.webp","bite":"peint/fx-bite-6c1e7e95.webp","bolt":"peint/fx-bolt-afc08033.webp","boom":"peint/fx-boom-098f2891.webp","bubble":"peint/fx-bubble-361ea7fe.webp","claw":"peint/fx-claw-93c4c3ca.webp","cloud":"peint/fx-cloud-ccfaea55.webp","drop":"peint/fx-drop-45f2bf37.webp","flake":"peint/fx-flake-dc0ddb72.webp","glow":"peint/fx-glow-f8bc16c2.webp","heal":"peint/fx-heal-359b845d.webp","orb":"peint/fx-orb-ca2abbf7.webp","shield":"peint/fx-shield-3d0d36e4.webp","star":"peint/fx-star-049a4fa3.webp","wave":"peint/fx-wave-0c2f84e0.webp"},"fxo":{"arrow":"peint/objet-arrow-ac5b5e5f.webp","bill":"peint/objet-bill-a3daf955.webp","boot":"peint/objet-boot-64a3dee5.webp","cart":"peint/objet-cart-358d3d39.webp","crate":"peint/objet-crate-f426f438.webp","dart":"peint/objet-dart-df4036a9.webp","fist":"peint/objet-fist-4b184852.webp","icicle":"peint/objet-icicle-b085b717.webp","paper":"peint/objet-paper-cf4bc0ed.webp","pick":"peint/objet-pick-72f00499.webp","plate":"peint/objet-plate-32bcc1ad.webp","shard":"peint/objet-shard-a672740c.webp","ticket":"peint/objet-ticket-7a783ad5.webp","tray":"peint/objet-tray-349b09f4.webp","wrench":"peint/objet-wrench-90b60515.webp"},"room":{"blackmarket":"peint/salle-blackmarket-56d9c141.webp","capybara":"peint/salle-capybara-6ece6d2c.webp","chest":"peint/salle-chest-86ba01fe.webp","douche":"peint/salle-douche-bd83f975.webp","fountain":"peint/salle-fountain-c5060922.webp","lab":"peint/salle-lab-90a35a95.webp","locker":"peint/salle-locker-b6f199cd.webp","mystery":"peint/salle-mystery-bcda9b71.webp","nurse":"peint/salle-nurse-1f4d681f.webp","pari":"peint/salle-pari-aea1fc3c.webp","radiation":"peint/salle-radiation-86ed8f15.webp","reclamation":"peint/salle-reclamation-a4ac87f0.webp","shop":"peint/salle-shop-3b8cb445.webp","training":"peint/salle-training-54379e95.webp"},"ko":{"bras":"peint/sas-bras-d90beb18.webp","sas":"peint/sas-hublot-025346df.webp","porte":"peint/sas-porte-07ea5fe5.webp"},"title":"peint/titre-1bf1dd7d.webp","intro":"peint/intro-97bf0d90.webp","cockpit":{"vide":"peint/cockpit-cff9cda3.webp","dos":"peint/cockpit-dos-cc6e0177.webp","siege":"peint/cockpit-siege-bc84d481.webp","reel":"peint/cockpit-reel-c0a01d41.webp"},"cards":{"adrenaline":"peint/carte-adrenaline-c562aebe.webp","alarme":"peint/carte-alarme-92bea2ef.webp","alerte":"peint/carte-alerte-10e37d38.webp","archenoe":"peint/carte-archenoe-5ca2cf1d.webp","bache":"peint/carte-bache-85141733.webp","bandage":"peint/carte-bandage-1e33646c.webp","banquet":"peint/carte-banquet-4528db7f.webp","baroud":"peint/carte-baroud-d145bfb3.webp","barricade":"peint/carte-barricade-b1ee2c7a.webp","belier":"peint/carte-belier-dc0adf46.webp","bidon":"peint/carte-bidon-c4ccc591.webp","bousculade":"peint/carte-bousculade-f3bdde23.webp","briseglace":"peint/carte-briseglace-4bbdef9c.webp","buffet":"peint/carte-buffet-4e012a1c.webp","bunker":"peint/carte-bunker-e4e1998e.webp","calesche":"peint/carte-calesche-90c24672.webp","chambrefroide":"peint/carte-chambrefroide-bf0cc7d7.webp","chargeblindee":"peint/carte-chargeblindee-3edef995.webp","chariot":"peint/carte-chariot-204b18f2.webp","chefmeute":"peint/carte-chefmeute-d1a381f5.webp","cle":"peint/carte-cle-f47ea1ab.webp","congere":"peint/carte-congere-15784ff8.webp","coque":"peint/carte-coque-6539fe40.webp","coude":"peint/carte-coude-69e515e3.webp","coupfolie":"peint/carte-coupfolie-986df49c.webp","coupsang":"peint/carte-coupsang-67cf6264.webp","couvee":"peint/carte-couvee-0b66be1b.webp","couverture":"peint/carte-couverture-e993aad4.webp","cri":"peint/carte-cri-2b6a28d3.webp","crise":"peint/carte-crise-bbcd11e3.webp","crochepied":"peint/carte-crochepied-c9811dc7.webp","culture":"peint/carte-culture-9be0f87e.webp","deballage":"peint/carte-deballage-3b4180c8.webp","decharge":"peint/carte-decharge-37496026.webp","dernierevolonte":"peint/carte-dernierevolonte-83136ca9.webp","desserte":"peint/carte-desserte-acf9f9ab.webp","detergent":"peint/carte-detergent-70bc1d2d.webp","devaliser":"peint/carte-devaliser-0403b4cc.webp","divorce":"peint/carte-divorce-9947eea3.webp","donsang":"peint/carte-donsang-e177bd67.webp","dossier":"peint/carte-dossier-bfc9fada.webp","drame":"peint/carte-drame-e6abb685.webp","echauffement":"peint/carte-echauffement-233c312c.webp","eclat":"peint/carte-eclat-8ccddb83.webp","enchainement":"peint/carte-enchainement-1c679033.webp","endirect":"peint/carte-endirect-693e3dbf.webp","endouce":"peint/carte-endouce-c2b1c354.webp","epaule":"peint/carte-epaule-8ce677f5.webp","eperon":"peint/carte-eperon-8bca5ee9.webp","eponge":"peint/carte-eponge-b9b1cde7.webp","esquive":"peint/carte-esquive-877e8428.webp","evacuation":"peint/carte-evacuation-461197ac.webp","extincteur":"peint/carte-extincteur-01af9e6b.webp","fission":"peint/carte-fission-d81db151.webp","flechette":"peint/carte-flechette-d21de8f2.webp","fouiller":"peint/carte-fouiller-26eb51da.webp","foule":"peint/carte-foule-324678f6.webp","fuitecoeur":"peint/carte-fuitecoeur-40dc770e.webp","gilet":"peint/carte-gilet-088a7dfc.webp","givre":"peint/carte-givre-0b153a66.webp","glace":"peint/carte-glace-b74d9470.webp","glaciaire":"peint/carte-glaciaire-535b77d2.webp","grizzli":"peint/carte-grizzli-4d32a570.webp","hiver":"peint/carte-hiver-cfb1e0ee.webp","huile":"peint/carte-huile-8dc38097.webp","humiliation":"peint/carte-humiliation-340eee7c.webp","insulte":"peint/carte-insulte-95d9474b.webp","inventaire":"peint/carte-inventaire-b16fb281.webp","javel":"peint/carte-javel-541f109a.webp","kit":"peint/carte-kit-90958349.webp","lettre":"peint/carte-lettre-6d6b9710.webp","loijungle":"peint/carte-loijungle-955cd1f5.webp","marchenoir":"peint/carte-marchenoir-a239502b.webp","massecritique":"peint/carte-massecritique-28d4a61b.webp","moquerie":"peint/carte-moquerie-ee252c90.webp","morsure":"peint/carte-morsure-2ef31f6a.webp","morsure2":"peint/carte-morsure2-828efb60.webp","mouvement":"peint/carte-mouvement-133336a4.webp","nuage":"peint/carte-nuage-63b4447a.webp","pansement":"peint/carte-pansement-523164c1.webp","patte":"peint/carte-patte-513b00a2.webp","petri":"peint/carte-petri-71612b8b.webp","pic":"peint/carte-pic-f517d9cb.webp","pillage":"peint/carte-pillage-ce24c6b6.webp","planque":"peint/carte-planque-0f38df43.webp","plateau":"peint/carte-plateau-e623e915.webp","poing":"peint/carte-poing-50b6e38a.webp","poingnu":"peint/carte-poingnu-09c05ff7.webp","pomme":"peint/carte-pomme-928e7b56.webp","potdevin":"peint/carte-potdevin-868c0786.webp","prisesang":"peint/carte-prisesang-44e6c152.webp","protoeco":"peint/carte-protoeco-e1dec852.webp","protoregle":"peint/carte-protoregle-fc71a6fa.webp","prototri":"peint/carte-prototri-4e8f5297.webp","rage":"peint/carte-rage-492676ff.webp","ragot":"peint/carte-ragot-e08bc66f.webp","rationnement":"peint/carte-rationnement-1e502479.webp","reacteur":"peint/carte-reacteur-bd6954af.webp","recroq":"peint/carte-recroq-9eb561d2.webp","reglement":"peint/carte-reglement-5d173353.webp","ruee":"peint/carte-ruee-20e1f6b7.webp","rumeur":"peint/carte-rumeur-e4a14589.webp","saignee":"peint/carte-saignee-42463fca.webp","scandale":"peint/carte-scandale-2fcb83b6.webp","scene":"peint/carte-scene-df44fe64.webp","sirene":"peint/carte-sirene-c56f443e.webp","soins":"peint/carte-soins-dd755848.webp","spray":"peint/carte-spray-0e764f58.webp","stalactite":"peint/carte-stalactite-c09afa2d.webp","temoignage":"peint/carte-temoignage-5a8044b3.webp","ticket":"peint/carte-ticket-88f924dc.webp","tole":"peint/carte-tole-f22519fc.webp","toutpourplace":"peint/carte-toutpourplace-697bbb4f.webp","transfusion":"peint/carte-transfusion-3cafad30.webp","uppercut":"peint/carte-uppercut-c0a7ed8b.webp","valise":"peint/carte-valise-c4c32308.webp","veille":"peint/carte-veille-3f063a0e.webp","zerokelvin":"peint/carte-zerokelvin-2874f77d.webp"},"ui":{"cabine":"peint/ui-cabine-833c8bef.webp","dial":"peint/ui-dial-a205f51d.webp","panel":"peint/ui-panel-f0b0840c.webp","vine":"peint/ui-vine-3822615d.webp"}};
+
 /* ---- art.js ---- */
 /* Surbooking · illustrations des monstres, dessinées à la main en SVG (aucune image externe).
    Style : aplat vectoriel en cel-shading, contour sombre épais, deux ou trois tons d'ombre, proportions de bande dessinée.
@@ -13911,6 +14164,13 @@ body.rp-on { overflow: hidden; }
     finaleDraft: 'Two booster packs, two finalists. Whatever you don’t take, the other one takes, and plays against you. Same principle as before, only more intimate.',
     finaleDraftEnd: 'Draft over. Whatever you let pass, your opponent will play against you. I hope you were selfish.',
     lastFloorCleared: 'Floor cleared. Only two candidates left on the ark, and one seat. I’ll be waiting for you in the arena.',
+    // le cockpit peint (essai) : avant la coupure, puis après, comme si de rien n'était (voix à enregistrer)
+    cockpitPeint: {
+      avant: ['Your seat. The previous copilot left nothing but their leaf.', 'Your seat. Still warm. The previous copilot left nothing but their leaf.'],
+      apres: ['Right. Where were we? Ah, yes: we are in space. Fasten your seatbelt.',
+        'Brief power cut. Nothing to report. The stars are back where they belong. Buckle up.',
+        'All indicators are green. Except the coffee. Fasten your seatbelt and enjoy the view.'],
+    },
     cockpit: ['Your seat. The previous co-pilot left no instructions and no fuel. Sit down, and don’t look at the gauge.',
       'Welcome to the cockpit. All these red lights are normal. Well, there are a lot of them, which amounts to the same thing. Buckle up.'],
     finaleWon: ['The last seat is yours. It’s the co-pilot seat, right next to me. Fasten your seatbelt: I’ve never flown an ark.', 'Congratulations. You are the last passenger of The Last Seat. I saved you the seat next to mine. It’s not a favor, it’s the only one left.', 'Congratulations. Noah brought his whole family aboard; you get me. We all have our constraints.'],
@@ -14576,7 +14836,8 @@ body.rp-on { overflow: hidden; }
   const CI = window.SurbookingCardIcons || null, CA = window.SurbookingCardArt || null;
   function cardArt(id, c, archHTML) {
     const base = E.baseOf ? E.baseOf(id) : id;
-    const pic = CA ? CA.art(base, c) : CI && CI.has(base) ? CI.svg(base) : '';
+    const pic = peintOn && PEINT.cards && PEINT.cards[base] ? `<img class="cardart peint-card" src="${PEINT.cards[base]}" alt="" draggable="false">` // essai : illustration peinte
+      : CA ? CA.art(base, c) : CI && CI.has(base) ? CI.svg(base) : '';
     return `<span class="cart">${pic}${archHTML}</span>`;
   }
   function cardHTML(id, o) {
@@ -14673,6 +14934,114 @@ body.rp-on { overflow: hidden; }
   /* ---------- le postulant et sa tenue (voir avatar.js) ---------- */
   const outfitState = ids => AV ? AV.state(E, ids, myClassKey()) : null;
   const SART = window.SurbookingArt || null; // illustrations des monstres (art.js)
+  /* Illustrations peintes (essai, 0.85) : présentes seulement dans la page d'essai (SURB_PEINT=1 node build.js, peint.js,
+     dossier sprites/). Un monstre peint a ses poses (attente, attaque, coup reçu, K.O.) et un calque de lueur qui pulse ;
+     le personnage peint n'a pas encore ses tenues : on le compare au dessin vectoriel avec le bouton du combat. */
+  const PEINT = window.SurbookingPeint || null;
+  const peintOn = !!PEINT; // 0.85 : le jeu est peint (plus de bascule vers le dessin vectoriel, qui reste en repli si une image manque)
+  // L'habillage « console de l'arche contaminée » (maquette C4, panneaux de PV holographiques de C3) : ses images passent
+  // par des variables CSS posées une fois (--pui-vine, --pui-dial, --pui-panel), la classe body.peint-ui l'allume
+  if (PEINT && PEINT.ui) { const rs = document.documentElement.style; Object.keys(PEINT.ui).forEach(k => { rs.setProperty('--pui-' + k, `url("${PEINT.ui[k]}")`); document.documentElement.classList.add('pui-has-' + k); }); }
+  // 0.85 : les images peintes sont des fichiers à côté de la page (dist/peint/, tools/peint_build.py). Celles d'un écran se
+  // chargent avec lui ; toutes les autres sont préchargées en tâche de fond, quatre à la fois, dans l'ordre où une partie
+  // en a besoin (cartes, personnage, décors…), pour qu'aucune n'arrive en retard. Rien à faire si elles sont intégrées.
+  if (PEINT && typeof Image !== 'undefined') (() => {
+    const phone = !!(window.matchMedia && window.matchMedia('(max-width: 560px)').matches), urls = [], seen = new Set();
+    const walk = o => { if (typeof o === 'string') { if (/^peint\/[^:]+\.webp$/.test(o) && !seen.has(o)) { seen.add(o); urls.push(o); } } else if (o && typeof o === 'object') Object.values(o).forEach(walk); };
+    // un décor : sa version floutée et celle de l'écran (téléphone ou grand écran, comme la balise <picture>)
+    const bgs = Object.values(PEINT.bg || {}).map(b => [b.world, phone && b.mobile ? b.mobile : b.large]);
+    [PEINT.cards, PEINT.body, PEINT.title, PEINT.intro, PEINT.trap, PEINT.fx, PEINT.fxo, bgs, PEINT.foe, PEINT.room, PEINT.ko, PEINT.outfit, PEINT.cockpit].forEach(walk);
+    if (!urls.length) return;
+    let i = 0;
+    const next = () => { if (i >= urls.length) return; const im = new Image(), go = () => setTimeout(next, 0); im.onload = go; im.onerror = go; im.src = urls[i++]; };
+    const start = () => { for (let k = 0; k < 4; k++) next(); };
+    setTimeout(() => (window.requestIdleCallback ? window.requestIdleCallback(start, { timeout: 2000 }) : start()), 1200);
+  })();
+  const peintFoeOn = k => !!(peintOn && PEINT.foe[k] && PEINT.foe[k].idle);
+  const peintBodyOn = () => !!(peintOn && PEINT.body && PEINT.body.m);
+  const peintBgOf = sec => (peintOn && PEINT.bg && PEINT.bg[sec]) || null;
+  const peintLayer = (P, pose, cls) => `<span class="pl ${cls}"><img class="peint-img" src="${P[pose]}" alt="" draggable="false">${P.glow[pose] ? `<img class="peint-glow" src="${P.glow[pose]}" alt="" draggable="false">` : ''}</span>`;
+  // Au rendu : l'attente, ou le K.O. qui ne remplace l'attente qu'à l'impact du coup fatal (--lunge-d, posé par playCardFx).
+  // L'attaque et le coup reçu sont posés par peintFlash, au moment exact du geste ou de l'impact.
+  const peintFoe = (k, pose, extra) => { const P = PEINT.foe[k], dead = pose === 'death' && !!P.death;
+    return `<span class="peint-foe${extra ? ' ' + extra : ''}" data-k="${k}" data-pose="${dead ? 'death' : 'idle'}">${peintLayer(P, 'idle', dead ? 'rest before' : 'rest')}${dead ? peintLayer(P, 'death', 'dead') : ''}</span>`; };
+  // Les variantes peintes d'un monstre (le partenaire muté, le chat dans sa boîte, le serpent après la mue, le cochon
+  // goinfre) : foe_<clé>-<variante>, quand elles existent ; sinon le dessin de base
+  const peintVar = (k, v) => { const t = String(v || ''); for (const x of ['boite', 'mute', 'mue', 'gros']) if (new RegExp(`\\b${x}\\b`).test(t) && PEINT.foe[`${k}-${x}`] && PEINT.foe[`${k}-${x}`].idle) return `${k}-${x}`; return k; };
+  // La trappe de cryogénie peinte : fermée, puis ouverte le temps de la chute (fondu), puis refermée, dans un souffle de givre
+  const trapHTML = () => (peintOn && PEINT.trap ? `<span class="trap peint-trap" aria-hidden="true"><img class="tp-closed" src="${PEINT.trap.closed}" alt="" draggable="false"><img class="tp-open" src="${PEINT.trap.open}" alt="" draggable="false"><i class="tp-mist"></i></span>` : TRAP_HTML);
+  // Le personnage peint, en poupée à habiller (calques alignés sur le corps, 1200 × 2000) : le costume de la famille
+  // principale remplace le corps, le signe de la classe se pose dessus, les accessoires des familles suivantes vont dans
+  // la main principale (-1) puis dans l'autre (-2). Sans calques peints pour un objet, il manque simplement.
+  const PEINT_FAM = { 'Cryogénie': 'cryo', 'Blindage': 'blindage', 'Mutation': 'mutation', 'Zizanie': 'zizanie', 'Panique': 'panique', 'Instinct': 'instinct', 'Débrouille': 'debrouille', 'Sacrifice': 'sacrifice' };
+  // o.cos : le vestiaire du joueur (tenue de base, feuille, accessoire, teint et cheveux) ; o.mute : le postulant muté de la finale
+  // le pied à perfusion est posé au sol à côté du personnage, derrière lui (il ne le tient pas) ;
+  // les autres objets sont tenus devant (2 novembre 2026, retours de Raphaël)
+  const PROP_BACK = new Set(['Sacrifice']);
+  const peintBody = (b, cls, st, classe, o) => {
+    o = o || {};
+    const O = PEINT.outfit || {}, worn = (st && st.worn) || [], glow = t => (t >= 4 ? ' pd-t4' : t >= 3 ? ' pd-t3' : '');
+    const C = o.cos && AV && AV.cosmetic ? AV.cosmetic() : null, ids = (C && C.ids) || {};
+    const cos = worn.find(w => w.role === 'costume'), cosSrc = cos && O.costume && O.costume[`${PEINT_FAM[cos.arch]}-${b}`];
+    const tenue = !cosSrc && ids.outfit && ids.outfit !== 'nu' && O.tenue && O.tenue[`${ids.outfit}-${b}`] ? ids.outfit : '';
+    const baseKey = cosSrc ? `costume-${PEINT_FAM[cos.arch]}-${b}` : tenue ? `tenue-${tenue}-${b}` : `body-${b}`;
+    const baseSrc = cosSrc || (tenue ? O.tenue[`${tenue}-${b}`] : PEINT.body[b] || PEINT.body.m);
+    const img = (c, src, extra) => `<img class="${c}" src="${src}" alt="" draggable="false"${extra || ''}>`;
+    const props = worn.filter(w => w.role !== 'costume').map(w => ({ w, src: O.prop && O.prop[`${PEINT_FAM[w.arch]}-${b}-${w.role === 'prop2' ? 2 : 1}`] })).filter(x => x.src);
+    const cl = classe && O.classe && O.classe[`${classe}-${b}`];
+    const leafOn = !cosSrc && (!tenue || (O.feuilleVisible || []).includes(tenue)) && ids.leaf && ids.leaf !== 'figuier';
+    const leaf = leafOn && O.feuille && O.feuille[`${ids.leaf}-${b}`];
+    const busyFar = props.some(x => x.w.role === 'prop2'), acc = ids.acc && ids.acc !== 'aucun' && !(ids.acc === 'peluche' && busyFar) && O.acc && O.acc[`${ids.acc}-${b}`];
+    const rc = C && (C.skinHex || C.hairHex) ? peintRecolor(baseKey, baseSrc, C.skinHex, C.hairHex) : null;
+    return `<span class="avatar peint-body peint-doll ${cls}" data-b="${b}" data-body="${b}"${classe ? ` data-classe="${classe}"` : ''}>` // data-body / data-classe : comme le dessin (avatar.js)
+      + props.filter(x => PROP_BACK.has(x.w.arch)).map(x => img(`pd-prop pd-back${glow(x.w.tier)}`, x.src)).join('') // les grands objets posés au sol, derrière le corps
+      + img(`pd-base${cosSrc ? glow(cos.tier) : ''}`, rc ? rc.src : baseSrc, rc && rc.key ? ` data-rc="${rc.key}"` : '')
+      + (leaf ? img('pd-feuille', leaf) : '')
+      + (o.mute && O.mute && O.mute[b] ? img('pd-mute', O.mute[b]) : '')
+      + (cl ? img('pd-classe', cl) : '')
+      + (acc ? img('pd-acc', acc) : '')
+      + props.filter(x => !PROP_BACK.has(x.w.arch)).map(x => img(`pd-prop${glow(x.w.tier)}`, x.src)).join('')
+      + '</span>';
+  };
+  // Teint et cheveux du vestiaire sur la peinture : les masques (peau, cheveux) du calque de base disent où recolorer ; on
+  // garde l'ombrage (la luminance de chaque point, rapportée à celle de la zone) et on pose la teinte choisie. Calculé une
+  // fois par calque et par teinte, dans un canevas ; en attendant, l'image d'origine (data-rc la remplace dès que c'est prêt).
+  const RECOLOR = new Map();
+  const hexRgb = h => { const v = parseInt(String(h || '').replace('#', ''), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+  const loadImg = src => new Promise((ok, ko) => { const im = new Image(); im.onload = () => ok(im); im.onerror = ko; im.src = src; });
+  function peintRecolor(layerKey, src, skinHex, hairHex) {
+    const M = (PEINT.outfit && PEINT.outfit.masque) || {}, ms = skinHex && M[`peau-${layerKey}`], mh = hairHex && M[`cheveux-${layerKey}`];
+    if (!ms && !mh) return { src };
+    const key = `${layerKey}|${ms ? skinHex : ''}|${mh ? hairHex : ''}`, got = RECOLOR.get(key);
+    if (typeof got === 'string') return { src: got };
+    if (!got && typeof document !== 'undefined') {
+      RECOLOR.set(key, Promise.all([loadImg(src), ms ? loadImg(ms) : null, mh ? loadImg(mh) : null]).then(([im, a, h]) => {
+        const w = im.naturalWidth, hgt = im.naturalHeight, cv = document.createElement('canvas'); cv.width = w; cv.height = hgt;
+        const g = cv.getContext('2d', { willReadFrequently: true });
+        const read = x => { if (!x) return null; g.clearRect(0, 0, w, hgt); g.drawImage(x, 0, 0, w, hgt); return g.getImageData(0, 0, w, hgt).data; };
+        const ma = read(a), mb = read(h); g.clearRect(0, 0, w, hgt); g.drawImage(im, 0, 0); const id = g.getImageData(0, 0, w, hgt), d = id.data;
+        const zone = [[ma, skinHex], [mb, hairHex]].filter(z => z[0]).map(([m, hex]) => { // luminance moyenne de la zone, pour garder l'ombrage relatif
+          let sum = 0, n = 0; for (let i = 0; i < d.length; i += 4) { const k = m[i] / 255; if (k > .5 && d[i + 3] > 0) { sum += .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; n++; } }
+          return { m, rgb: hexRgb(hex), avg: n ? sum / n : 128 }; });
+        for (let i = 0; i < d.length; i += 4) {
+          if (!d[i + 3]) continue;
+          for (const z of zone) {
+            const k = z.m[i] / 255; if (k <= 0.02) continue;
+            const L = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2], f = Math.min(1.9, L / z.avg);
+            for (let c = 0; c < 3; c++) d[i + c] = Math.round(d[i + c] * (1 - k) + Math.min(255, z.rgb[c] * f) * k);
+          }
+        }
+        g.putImageData(id, 0, 0);
+        const url = cv.toDataURL('image/webp', .85); RECOLOR.set(key, url);
+        document.querySelectorAll('img[data-rc]').forEach(x => { if (x.dataset.rc === key) x.src = url; });
+        return url;
+      }).catch(() => { RECOLOR.set(key, src); return src; }));
+    }
+    return { src, key };
+  }
+  // Le personnage, peint (essai) ou dessiné : mêmes arguments que AV.svg
+  const avFig = (st, o) => (peintBodyOn() ? peintBody(o.body || myBody(), o.cls || '', st, o.classe || null, { cos: !!o.cos }) : AV.svg(st, o));
+  const peintBg = B => `<picture class="backdrop peint-bg" style="background:${B.base || '#2b2f36'}">${B.mobile ? `<source media="(max-width: 560px)" srcset="${B.mobile}">` : ''}<img src="${B.large}" alt="" draggable="false"></picture>`;
   // Silhouette du joueur (postulant ou postulante) : gardée au vestiaire, sinon par l'avatar
   const myBody = () => (ui.bodyOverride || (AV && AV.body ? AV.body() : 'm')); // bodyOverride : un duel revu (replay.js)
   // Nom du joueur : son pseudo s'il en a choisi un, sinon Adam ou Ève (selon la silhouette) suivi de son numéro
@@ -14687,6 +15056,8 @@ body.rp-on { overflow: hidden; }
   const myClassKey = () => (run && E.classOf ? E.classOf(run) : null);
   function heroHTML() {
     if (!AV) return '';
+    // essai peint : le personnage peint, debout sur la trappe de cryogénie peinte dont il vient de sortir
+    if (peintBodyOn()) return `<figure class="av-hero peint-hero"><span class="ph-scene" aria-hidden="true">${PEINT.trap ? `<img class="ph-trap" src="${PEINT.trap.closed}" alt="" draggable="false">` : ''}${peintBody(myBody(), 'ph-body', null, null, { cos: true })}</span><figcaption>${esc(myName())}, fresh out of the cryo cabin. EDEN incinerated your clothes; she left you a fig leaf, the original model.</figcaption></figure>`;
     return `<figure class="av-hero">${AV.scene(ui.num, { name: myName() })}<figcaption>${esc(myName())}, fresh out of the cryo cabin. EDEN incinerated your clothes; she left you a fig leaf, the original model.</figcaption></figure>`;
   }
   function outfitHTML(ids) {
@@ -14694,7 +15065,7 @@ body.rp-on { overflow: hidden; }
     const st = outfitState(ids), byArch = [];
     AV.items(st).forEach(x => byArch.push({ arch: x.arch, tier: x.tier, names: [x.name], where: x.role === 'costume' ? 'main, costume' : x.role === 'prop' ? 'secondary, in hand' : 'third, in the other hand' }));
     const rows = byArch.map(g => `<li><span class="of">${esc(g.arch)}${g.tier ? ` · ${E.tierPts(g.tier)} points` : ''}${g.where ? ` · ${esc(g.where)}` : ''}</span><span>${g.names.map(esc).join(', ')}</span></li>`).join('');
-    return `<div class="outfit"><h3>Your outfit</h3><p class="cl-mark"><span class="chip spec">${esc(myClass().name)}</span> <span class="muted">${esc(myClass().talent.name)}</span></p>${AV.svg(st, { classe: myClassKey() })}${rows ? `<ul>${rows}<li><span class="of">EDEN’s dress code</span><span>The fig leaf, at all times</span></li></ul>` : `<p class="none">A leaf, nothing more. From 4 points in a family, your main specialization dresses you in an outfit found in the hold, and your secondary one puts a prop in your hand. At tier 16, the item glows.</p>`}</div>`;
+    return `<div class="outfit"><h3>Your outfit</h3><p class="cl-mark"><span class="chip spec">${esc(myClass().name)}</span> <span class="muted">${esc(myClass().talent.name)}</span></p>${avFig(st, { classe: myClassKey(), cos: true })}${rows ? `<ul>${rows}<li><span class="of">EDEN’s dress code</span><span>The fig leaf, at all times</span></li></ul>` : `<p class="none">A leaf, nothing more. From 4 points in a family, your main specialization dresses you in an outfit found in the hold, and your secondary one puts a prop in your hand. At tier 16, the item glows.</p>`}</div>`;
   }
   function miniAvatarHTML() {
     if (!AV || !run || !run.combat) return '';
@@ -14907,7 +15278,7 @@ body.rp-on { overflow: hidden; }
   function classCardHTML(k) {
     const C = E.CLASSES[k], hp = [E.classHp(k, E.FLOOR_HP[1]), E.classHp(k, E.FINALE_PLAYER_HP)], pct = Math.round(100 * C.hpMult);
     return `<li class="classopt">
-      ${AV ? `<span class="cl-av">${AV.svg(null, { classe: k, label: `${myBody() === 'f' ? 'The candidate' : 'The candidate'} en ${C.name}` })}</span>` : ''}
+      ${AV ? `<span class="cl-av">${avFig(null, { classe: k, cos: true, label: `${myBody() === 'f' ? 'The candidate' : 'The candidate'} en ${C.name}` })}</span>` : ''}
       <div class="cl-head"><h3>${esc(C.name)}</h3><span class="chip hp">${hp[0]} HP${pct !== 100 ? ` · ${pct} %` : ''}</span><span class="chip">${esc(C.style)}</span></div>
       <p class="muted">${esc(C.pitch)}</p>
       <p class="cl-talent"><b>${C.drawback ? 'Perk · ' : ''}${esc(C.talent.name)}</b> · ${esc(C.talent.text)}</p>
@@ -15158,7 +15529,7 @@ body.rp-on { overflow: hidden; }
       const tags = [tag, s === E.DUEL_SEAT ? 'your opponent' : '', name === known ? 'from your previous table' : ''].filter(Boolean).map(esc).join(' · ');
       const ids = s === 0 ? outfitIdsNow() : ((d.picks && d.picks[s]) || []).map(c => c.id);
       let fig = '';
-      try { fig = AV ? AV.svg(AV.state(E, ids, cls || null), { cls: 'dt-av', classe: cls || null, body: s === 0 ? myBody() : (isFem(name) ? 'f' : 'm') }) : ''; } catch (e) { fig = ''; }
+      try { fig = AV ? avFig(AV.state(E, ids, cls || null), { cls: 'dt-av', classe: cls || null, cos: s === 0, body: s === 0 ? myBody() : (isFem(name) ? 'f' : 'm') }) : ''; } catch (e) { fig = ''; }
       const n = ((d.held && d.held[s]) || []).length;
       const fams = seatFams(s);
       return `<li class="dt-seat s${s}${s === 0 ? ' me' : ''}${s === E.DUEL_SEAT ? ' boss' : ''}${s === origin ? ' open' : ''}">
@@ -15334,8 +15705,10 @@ body.rp-on { overflow: hidden; }
     try {
       if (e.boss && e.rivalSeat) {
         const seat = e.rivalSeat, name = E.rivalsOf(run)[seat - 1], cls = E.rivalClassOf(run, seat), ids = ((run.draft && run.draft.picks && run.draft.picks[seat]) || []).map(c => c.id);
-        art = AV ? AV.svg(AV.state(E, ids, cls || null), { cls: 'enc-av', classe: cls || null, body: isFem(name) ? 'f' : 'm' }) : '';
-      } else art = (e.monsters || []).slice(0, 3).map((m, k) => { const mm = Object.assign({ i: k, alive: true }, m), key = artKey(mm, e);
+        art = peintBodyOn() ? peintBody(isFem(name) ? 'f' : 'm', 'enc-pbody', AV ? AV.state(E, ids, cls || null) : null, cls || null) // essai peint
+          : AV ? AV.svg(AV.state(E, ids, cls || null), { cls: 'enc-av', classe: cls || null, body: isFem(name) ? 'f' : 'm' }) : '';
+      } else art = (e.monsters || []).slice(0, 3).map((m, k, all) => { const mm = Object.assign({ i: k, alive: true }, m), key = artKey(mm, e);
+        if (peintFoeOn(key)) return `<img class="enc-peint${k && artKey(Object.assign({ i: 0, alive: true }, all[0]), e) === key ? ' alt' : ''}" src="${PEINT.foe[key].idle}" alt="" draggable="false">`; // essai peint : le second d'un couple, teinté
         return SART && SART.has(key) ? SART.foe(key, SART.variantOf(mm, e, artCtx())) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[key] || ART.rejeton}</svg>`; }).join('');
     } catch (x) { art = ''; }
     return `<span class="enc-art" aria-hidden="true">${art}</span>`;
@@ -15496,7 +15869,7 @@ body.rp-on { overflow: hidden; }
   }
 
   /* ---------- la scène de combat : décor de la section, le joueur à gauche, les ennemis à droite ---------- */
-  const SECTION = () => run.finale ? 'arene' : ({ 1: 'quarantaine', 2: 'etable', 3: 'serre', 4: 'menagerie' })[E.floorOf(run)] || 'quarantaine';
+  const SECTION = () => run.essaiSec && E.floorOf(run) === run.essaiFloor ? run.essaiSec : run.finale ? 'arene' : ({ 1: 'quarantaine', 2: 'etable', 3: 'serre', 4: 'menagerie' })[E.floorOf(run)] || 'quarantaine';
   const rep = (n, f) => Array.from({ length: n }, (_, k) => f(k)).join('');
   // Le vaisseau abandonné : des coursives blanches, un néon à moitié mort, une bouche d'aération,
   // et la végétation des mutations qui rentre (de plus en plus haut dans l'arche). Tout est fixe pour une section donnée.
@@ -15632,6 +16005,11 @@ body.rp-on { overflow: hidden; }
       + '<g fill="#7f8884"><circle cx="5" cy="5" r="1.3"/><circle cx="65" cy="5" r="1.3"/><circle cx="5" cy="79" r="1.3"/><circle cx="65" cy="79" r="1.3"/></g></svg>'
       + '<span class="ko-win"><span class="ko-door up"></span><span class="ko-door down"></span></span><span class="ko-sign">SAS</span></span></span>'
   };
+  // Essai peint : le même sas et le même bras, peints (sprites/ko_*.png, journal.md) ; le hublot grésille au passage du
+  // perdant (l'espace n'est qu'un écran d'ÉDEN : le vaisseau n'a jamais décollé, voir cockpitPeintSVG)
+  const koBackOf = k => (k === 'ko' && peintOn && PEINT && PEINT.ko ? `<span class="ko-back" aria-hidden="true"><span class="ko-hatch peint-hatch"><img class="ph-sas" src="${PEINT.ko.sas}" alt="" draggable="false"><i class="ph-lamp"></i>`
+    + `<span class="ko-win"><i class="ph-glitch"></i><span class="ko-door up" style="background-image:url('${PEINT.ko.porte}')"></span><span class="ko-door down" style="background-image:url('${PEINT.ko.porte}')"></span></span></span></span>` : KO_BACK[k]);
+  const koHtmlOf = k => (k === 'ko' && peintOn && PEINT && PEINT.ko ? KO_HTML.ko.replace(/<svg class="ko-arm"[\s\S]*?<\/svg>/, `<img class="ko-arm peint-arm" src="${PEINT.ko.bras}" alt="" draggable="false">`) : KO_HTML[k]);
   const KO_HTML = {
     ko: '<span class="ko-fx" aria-hidden="true"><span class="ko-stars"><i></i><i></i><i></i></span>'
       // le bras : support au plafond, rotule, bras, coude, avant-bras, pince, et le balai
@@ -15721,15 +16099,19 @@ body.rp-on { overflow: hidden; }
       const ko = m.duel && !m.alive ? (k === 'human' ? 'ko' : k === 'eden' ? 'ko-robot' : '') : '';
       const kind = k === 'robot' || k === 'eden' ? 'machine' : (TOXIC.has(k) || m.mutated || m.poison > 0 || m.variant === 'mute') ? 'toxic' : k === 'human' ? 'human' : '';
       const avSt = k === 'human' && AV ? AV.state(E, m.deckIds || [], m.cls || null) : null, sbVar = !avSt && SART && SART.has(k) ? SART.variantOf(m, e, artCtx()) + (k === 'leviathan' && c.player.swallowed > 0 ? ' plein' : '') : null;
-      const fig = () => (avSt ? AV.svg(avSt, { cls: 'avatar-stage foe-av', body: isFem(m.name) ? 'f' : 'm', classe: m.cls || null })
+      const pz = !avSt && peintFoeOn(k) ? (!m.alive ? 'death' : 'idle') : null;
+      const pb = !!avSt && peintBodyOn();
+      const fig = () => (avSt ? (pb ? peintBody(isFem(m.name) ? 'f' : 'm', 'avatar-stage foe-av', avSt, m.cls || null, { mute: m.variant === 'mute' }) : AV.svg(avSt, { cls: 'avatar-stage foe-av', body: isFem(m.name) ? 'f' : 'm', classe: m.cls || null }))
+        // couple de la même espèce : le second membre reprend le dessin, dans une autre teinte
+        : pz ? peintFoe(peintVar(k, sbVar), pz, [/\bclone\b/.test(sbVar || '') ? 'clone' : '', /\bb\b/.test(sbVar || '') && c.monsters.filter(x => artKey(x, e) === k).length > 1 ? 'alt' : ''].filter(Boolean).join(' '))
         : sbVar != null ? SART.foe(k, sbVar) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true">${ART[k] || ART.rejeton}</svg>`);
-      const figSig = [k, kind, avSt ? JSON.stringify(avSt) + isFem(m.name) + (m.cls || '') : sbVar, raging, ko, m.alive, falling].join('|');
+      const figSig = [k, kind, avSt ? JSON.stringify(avSt) + isFem(m.name) + (m.cls || '') : sbVar, raging, ko, m.alive, falling, pz || '', pb, peintOn].join('|');
       const sg = statusChips(m, false, !!m.duel, true);
       const cls = ['monster', 'foe', m.alive ? '' : 'cryo', can ? 'targetable' : '', m.alive && m.away ? 'away' : '', m.alive && m.frozen > 0 ? 'frozen' : '', m.alive && m.poison > 0 ? 'irradiated' : '', raging ? 'furious' : '', flash.monsters.includes(m.i) ? 'hit' : '', ko].concat(fx ? [...fx.cls] : []).filter(x => x && !(ko && x === 'trapfall'));
       return `<button type="button" class="${[...new Set(cls)].join(' ')}" data-act="target" data-i="${m.i}" ${can ? '' : 'disabled'} aria-label="${esc(m.name)}${can ? ', target' : ''}">
         <span class="stand"><span class="foe-intent">${m.alive ? (m.duel ? duelHud(m) : intentHTML(m)) : `<span class="cryo-label">${ko === 'ko' ? 'Application rejected' : ko ? 'Out of order' : 'In cryosleep'}</span>`}</span>
         ${floatsHTML(fx)}${pfxHTML(m)}
-        ${keepNode(`foe:${m.i}`, figSig, () => `<span class="fig foe-art ${kind}" data-art="${k}">${ko && KO_BACK[ko] ? KO_BACK[ko] : ''}${fig()}${raging ? RAGE_HTML : ''}${ko ? KO_HTML[ko] : !m.alive || falling ? TRAP_HTML : ''}</span>`)}</span>
+        ${keepNode(`foe:${m.i}`, figSig, () => `<span class="fig foe-art ${kind}" data-art="${k}">${ko && KO_BACK[ko] ? koBackOf(ko) : ''}${fig()}${raging ? RAGE_HTML : ''}${ko ? koHtmlOf(ko) : !m.alive || falling ? trapHTML() : ''}</span>`)}</span>
         <span class="plate">
           <span class="m-head"><span class="m-name">${esc(m.name)}</span><span class="m-species">${esc(m.species || e.species)}${m.duel && !['eden', 'echappe'].includes(m.variant) && rivalClassTag(m.cls, m.name) ? ` · ${esc(rivalClassTag(m.cls, m.name))}` : ''}</span></span>
           <span class="hp-line"><span>HP</span><span>${m.hp} / ${m.maxHp}</span></span>
@@ -15762,12 +16144,13 @@ body.rp-on { overflow: hidden; }
     const logItems = ui.log.filter(l => l.kind === 'eden' ? nEv < 9 : nEv++ < 9).map(l => `<li class="${l.kind}">${esc(l.text)}</li>`).join('');
     const lost = !!(ui.outro && ui.outro.kind === 'defeat'), me = FX.me, meCls = ['fighter', 'me', 'player', flash.player ? 'hit' : '', c.player.swallowed > 0 ? 'swallowed' : '', ui.outro ? (lost ? 'ko-me' : 'victory') : ''].concat([...me.cls]).filter(Boolean);
     const mySt = AV ? outfitState(E.activeCards(run).map(x => x.id)) : null;
-    const myFig = () => (AV ? AV.svg(mySt, { cls: 'avatar-stage', classe: myClassKey(), body: myBody() }) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="26" r="12"/><path d="M26 90c2-24 12-40 24-40s22 16 24 40"/></svg>`);
+    const myFig = () => (peintBodyOn() ? peintBody(myBody(), 'avatar-stage', mySt, myClassKey(), { cos: true }) : AV ? AV.svg(mySt, { cls: 'avatar-stage', classe: myClassKey(), body: myBody() }) : `<svg class="foe-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="26" r="12"/><path d="M26 90c2-24 12-40 24-40s22 16 24 40"/></svg>`);
     const out = !!ui.outro; // fin de combat gagné : la scène reste un instant, rien n'est cliquable
     const hint = targeting ? `<div class="target-hint note"><span>Choose a target for <b>${esc(E.CARDS[targeting.id].name)}</b>.</span><button type="button" class="ghost" data-act="cancel">Cancel</button></div>` : '';
     return `<div class="split fight${out ? ' outro' : ''}"><section class="panel combat-panel">
       <div class="stage st-${SECTION()}${c.dark ? ' lights-out' : ''}" style="--foes:${shown.length}">
-        ${keepNode('backdrop', SECTION(), () => `<svg class="backdrop" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${(SCENE[SECTION()] || SCENE.quarantaine)()}</svg>`)}
+        ${keepNode('backdrop', SECTION() + (peintBgOf(SECTION()) ? ':peint' : ''), () => peintBgOf(SECTION()) ? peintBg(peintBgOf(SECTION())) : `<svg class="backdrop" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${(SCENE[SECTION()] || SCENE.quarantaine)()}</svg>`)}
+        ${PEINT && PEINT.ui ? '<i class="pui-frame" aria-hidden="true"></i><i class="pui-vine tl" aria-hidden="true"></i><i class="pui-vine tr" aria-hidden="true"></i><i class="pui-vine bl" aria-hidden="true"></i><i class="pui-vine br" aria-hidden="true"></i>' : ''}
         <div class="combat-head stage-head">
           <div class="sh-title"><span class="eyebrow">${e.finale ? 'Arena · final · a single duel' : `${esc(E.floorInfo(run).short)} · encounter ${run.encounter + 1} of 3 · ${e.diff}${E.turbOf(run) ? ` · Turbulence ${E.turbOf(run)}` : ''}`}</span><div class="sh-line"><h2>${esc(E.encName(run, e))}</h2>
             <div class="sh-tools"><button type="button" class="ghost cb-journal-btn" data-act="cbdrawer" aria-expanded="${!!ui.drawer}" aria-controls="cb-drawer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 10h8M8 14h8M8 18h5"></path></svg>Log</button>${cbPills(c, p)}</div></div>${noeOf(e) ? `<p class="sh-noe" title="Noah’s manifest: ${esc(noeOf(e))}"><span class="noe-k">Noah’s manifest</span> ${esc(noeOf(e))}</p>` : ''}</div>
@@ -15776,7 +16159,7 @@ body.rp-on { overflow: hidden; }
         <div class="side me-side">
           <div class="${[...new Set(meCls)].join(' ')}">
             <span class="stand">${floatsHTML(me)}${pfxHTML({ frozen: p.frozen, poison: p.poison })}
-            ${keepNode('me', [JSON.stringify(mySt), myClassKey(), myBody(), lost, out].join('|'), () => `<span class="fig">${myFig()}${lost ? ME_KO_HTML : out ? CONFETTI_HTML : ''}</span>`)}</span>
+            ${keepNode('me', [JSON.stringify(mySt), myClassKey(), myBody(), lost, out, peintBodyOn(), peintBodyOn() && AV && AV.cosmetic ? JSON.stringify(AV.cosmetic().ids || {}) : ''].join('|'), () => `<span class="fig">${myFig()}${lost ? ME_KO_HTML : out ? CONFETTI_HTML : ''}</span>`)}</span>
             <span class="plate">
               <span class="hp-big"><span class="hp-line"><span class="eyebrow">${esc(myName())}${E.classOf(run) !== 'postulant' ? ` · ${esc(E.className(E.classOf(run), myBody() === 'f'))}` : ''}</span><span><b>${run.hp}</b> / ${E.maxHpOf(run)} HP</span></span>
                 <span class="bar"><span style="width:${Math.round(100 * run.hp / E.maxHpOf(run))}%"></span></span></span>
@@ -15842,7 +16225,8 @@ body.rp-on { overflow: hidden; }
   }
 
   // L'illustration d'une salle (porte ou événement), dessinée comme les cartes (cardart.js)
-  const roomArtHTML = (kind, cls) => { const CA = window.SurbookingCardArt; const a = CA && CA.roomArt ? CA.roomArt(kind) : ''; return a ? `<span class="${cls}" aria-hidden="true">${a}</span>` : ''; };
+  const roomArtHTML = (kind, cls) => { if (peintOn && PEINT && PEINT.room && (PEINT.room[kind] || PEINT.room.mystery)) return `<span class="${cls} peint-room" data-room="${PEINT.room[kind] ? kind : 'mystery'}" aria-hidden="true"><img src="${PEINT.room[kind] || PEINT.room.mystery}" alt="" draggable="false"></span>`; // essai peint
+    const CA = window.SurbookingCardArt; const a = CA && CA.roomArt ? CA.roomArt(kind) : ''; return a ? `<span class="${cls}" aria-hidden="true">${a}</span>` : ''; };
   const DOOR_INFO = {
     shop: { name: 'Shop', sub: 'EDEN’s vending machine', text: 'Buy cards, remove one from your deck, heal.' },
     chest: { name: 'Chest', sub: 'A cargo crate', text: 'Pick 1 card out of 3, or take tickets.' },
@@ -16061,6 +16445,7 @@ body.rp-on { overflow: hidden; }
   function renderIntro() {
     const t = ST.intro(run, ui.num, E, meStory());
     return `<section class="panel story-intro">
+      ${peintOn && PEINT && PEINT.intro ? `<img class="intro-peint" src="${PEINT.intro}" alt="" draggable="false">` : ''}
       ${voiceTag('EDEN · ark loudspeakers')}
       <span class="eyebrow">${esc(t.eyebrow)}</span>
       <h2>${esc(t.title)}</h2>
@@ -16233,7 +16618,10 @@ body.rp-on { overflow: hidden; }
     const svg = (SCENE[sec] || SCENE.quarantaine)().replace(/id="(vegglow|cagefade)"/g, 'id="w-$1"').replace(/url\(#(vegglow|cagefade)\)/g, 'url(#w-$1)'); // pas deux fois le même id
     let dust = '';
     for (let i = 0; i < 18; i++) dust += `<i style="left:${(i * 53 + 7) % 100}%;top:${30 + (i * 37) % 65}%;--t:${11 + (i * 7) % 9}s;--d:-${(i * 1.7).toFixed(1)}s;--dx:${((i % 5) - 2) * 26}px"></i>`;
-    worldEl.innerHTML = `<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">${svg}</svg><div class="w-dust">${dust}</div>`;
+    // essai peint : la salle peinte floutée et les lianes aux quatre coins, montrées seulement avec l'habillage (body.peint-ui)
+    const PB = PEINT && PEINT.ui && PEINT.bg ? (PEINT.bg[sec] || PEINT.bg.quarantaine) : null;
+    const pui = PB && PB.world ? `<img class="pui-world${sec === 'title' && PEINT.title ? ' pui-title' : ''}" src="${sec === 'title' && PEINT.title ? PEINT.title : PB.world}" alt="" draggable="false"><i class="pui-vine bl"></i><i class="pui-vine br"></i><i class="pui-vine tl"></i><i class="pui-vine tr"></i>` : '';
+    worldEl.innerHTML = `<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">${svg}</svg>${pui}<div class="w-dust">${dust}</div>`;
   }
   // L'écran affiché (pour le sas) : la scène de fin de combat compte encore comme le combat
   function screenKey() {
@@ -16413,6 +16801,16 @@ body.rp-on { overflow: hidden; }
     const floor = Math.max(60, Math.min(H - 30, feet - Math.round(.18 * ((fig && fig.offsetHeight) || 180))));
     // Version jeu : le décor déborde de la scène jusqu'aux bords de la fenêtre (la scène est centrée, le décor la prolonge)
     const VW = Math.max(W, (window.innerWidth || 0) / z), VH = Math.max(H, (window.innerHeight || 0) / z), top0 = Math.max(0, sr.top), bottom0 = Math.max(H - floor, VH - (sr.top + floor));
+    // Décor peint (essai, 0.85) : son sol commence à 68 % de l'image, qui couvre la largeur et le haut de la fenêtre ; plus bas,
+    // la couleur du bas de l'image prolonge le sol (fond de l'élément), sans agrandir le décor à l'excès
+    const pim = bd.classList.contains('peint-bg') && bd.querySelector('img');
+    if (pim) {
+      const R = (pim.naturalWidth || 2560) / (pim.naturalHeight || 1126), F = .68, h = Math.max(VW / R, (floor + top0) / F), top = floor - F * h;
+      Object.assign(bd.style, { inset: 'auto', left: `${Math.round((VW - R * h) / 2 - sr.left)}px`, top: `${Math.round(top)}px`, width: `${Math.ceil(R * h)}px`, height: `${Math.ceil(Math.max(h, floor + bottom0 - top))}px` });
+      Object.assign(pim.style, { inset: 'auto', left: '0', top: '0', width: '100%', height: `${Math.ceil(h)}px`, objectFit: 'fill' });
+      if (!pim.complete) pim.addEventListener('load', layoutBackdrop, { once: true });
+      return;
+    }
     const k = Math.max(VW / 1000, (floor + top0) / 300, bottom0 / 300);
     Object.assign(bd.style, { inset: 'auto', left: `${Math.round((VW - 1000 * k) / 2 - sr.left)}px`, top: `${Math.round(floor - 300 * k)}px`, width: `${Math.ceil(1000 * k)}px`, height: `${Math.ceil(600 * k)}px` });
   }
@@ -16455,6 +16853,7 @@ body.rp-on { overflow: hidden; }
     let html;
     try { html = shop ? window.Shop.render(shopCtx) : outro ? renderCombat() : cockpit ? renderCockpit() : ST && ui.intro && run ? renderIntro() : storyTop() + VIEWS[phase](); } finally { KEEP.on = false; }
     screenEl.innerHTML = html;
+    document.body.classList.toggle('peint-ui', !!(PEINT && PEINT.ui && peintOn)); // essai : l'habillage de la console de l'arche
     keepSwap();
     if (outro) ui.outro.drawn = true;
     if (cockpit && !ui.cockpit.drawn) { ui.cockpit.drawn = true; startCockpit(); }
@@ -16513,11 +16912,11 @@ body.rp-on { overflow: hidden; }
     let sd = 7;
     const rr = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
     const stars = Array.from({ length: 90 }, (_, i) => `<circle cx="${Math.round(50 + rr() * 1500)}" cy="${Math.round(75 + rr() * 360)}" r="${(rr() < 0.85 ? 1.3 + rr() * 1.5 : 3).toFixed(1)}"${i % 8 === 0 ? ` class="ck-tw" style="--d:${(rr() * 3).toFixed(2)}s"` : ''}/>`).join('');
-    const SCR = [[40, 462, 'NAVIGATION', 'PERDUE'], [225, 462, 'ENGINE 1', 'ERREUR'], [410, 462, 'ENGINE 2', 'INTROUVABLE'],
-      [1025, 462, 'OXYGEN', 'WE’LL SEE'], [1210, 462, 'AUTOPILOT', 'ON LEAVE'], [1395, 462, 'BLACK BOX', 'PLEINE'], [40, 556, 'COFFEE', 'FATAL ERROR', 200]];
+    const SCR = [[40, 462, 'NAVIGATION', 'LOST'], [225, 462, 'ENGINE 1', 'ERROR'], [410, 462, 'ENGINE 2', 'MISSING'],
+      [1025, 462, 'OXYGEN', 'WE’LL SEE'], [1210, 462, 'AUTOPILOT', 'ON LEAVE'], [1395, 462, 'BLACK BOX', 'FULL'], [40, 556, 'COFFEE', 'FATAL ERROR', 200]];
     const screen = (x, y, k, ok, err, t, cls, w) => `<g class="ck-scr${cls ? ' ' + cls : ''}" style="--t:${t}s"><rect x="${x}" y="${y}" width="${w || 165}" height="76" rx="7" class="ck-glass"/>
       <text x="${x + 12}" y="${y + 24}" class="ck-k">${k}</text><text x="${x + 12}" y="${y + 59}" class="ck-ok">${ok}</text><text x="${x + 12}" y="${y + 59}" class="ck-err">${err}</text></g>`;
-    const screens = SCR.map(([x, y, k, err, w], i) => screen(x, y, k, 'OK', err, (1.2 + i * 0.36).toFixed(2), '', w)).join('') + screen(1395, 556, 'COPILOTE', 'ABSENT', 'YOU', '3.3', 'ck-cop');
+    const screens = SCR.map(([x, y, k, err, w], i) => screen(x, y, k, 'OK', err, (1.2 + i * 0.36).toFixed(2), '', w)).join('') + screen(1395, 556, 'COPILOT', 'ABSENT', 'YOU', '3.3', 'ck-cop');
     const lamps = Array.from({ length: 16 }, (_, i) => `<circle cx="${210 + i * 76}" cy="36" r="9" class="ck-lamp${i % 3 ? '' : ' amb'}" style="--d:${(rr() * 1.6).toFixed(2)}s"/>`).join('');
     // un siège vu de dos (x : centre)
     const seatBack = x => `<rect x="${x - 60}" y="575" width="120" height="82" rx="28" class="ck-seat"/><rect x="${x - 25}" y="652" width="10" height="16" fill="#4c535b"/><rect x="${x + 15}" y="652" width="10" height="16" fill="#4c535b"/>
@@ -16569,9 +16968,85 @@ body.rp-on { overflow: hidden; }
       <rect width="1600" height="900" fill="#000" class="ck-fade" pointer-events="none"/>
     </svg>`;
   }
+  /* Le même gag, peint (essai), avec la chute (2 novembre 2026) : le vaisseau n'a jamais décollé. Le siège du copilote
+     pivote (cockpit_dos, puis cockpit_siege : la feuille du copilote précédent sur le coussin), les écrans lâchent un par
+     un (panneaux tête haute sur le pare-brise), le courant baisse, puis tout s'éteint : le pare-brise, qui n'était qu'un
+     écran, grésille et laisse voir la planète dévastée (cockpit_reel), l'arche posée au sol. Le courant revient, les
+     étoiles aussi, tous les écrans repassent à « OK » (sauf le café) et ÉDEN fait comme si de rien n'était.
+     Repère : le décor, 2560 × 1126 (journal.md). */
+  const peintCockpitOn = () => !!(peintOn && PEINT && PEINT.cockpit && PEINT.cockpit.vide);
+  function cockpitPeintSVG() {
+    const C = PEINT.cockpit, capy = PEINT.foe.capy && PEINT.foe.capy.idle;
+    let sd = 11;
+    const rr = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    const win = 'M270 590 L262 520 L270 460 L294 400 L325 340 L359 280 L402 220 L463 160 L500 150 L600 165 L800 192 L1000 210 L1300 217 L1600 206 L1800 188 L2000 161 L2110 155 L2147 190 L2194 250 L2233 310 L2266 370 L2295 430 L2317 490 L2334 550 L2338 600 L2100 598 L1900 574 L1700 548 L1500 556 L1280 556 L1060 556 L800 545 L600 576 L400 590 Z';
+    const tw = Array.from({ length: 16 }, () => `<circle cx="${Math.round(420 + rr() * 1760)}" cy="${Math.round(190 + rr() * 330)}" r="${(2 + rr() * 2).toFixed(1)}" class="ck-tw" style="--d:${(rr() * 3).toFixed(2)}s"/>`).join('');
+    // le numéro du copilote précédent : un autre postulant
+    const num = ui.num, h = (num * 7919 + 4111) % 9000, prev = 1000 + h === num ? 1000 + ((h + 1) % 9000) : 1000 + h;
+    // les panneaux tête haute : colonne, rangée, intitulé, erreur ; ils repassent à « OK » quand le courant revient, sauf le café
+    const W = 236, H = 88, xs = [548, 794, 1328, 1574], ys = [326, 424];
+    const HUD = [[0, 0, 'NAVIGATION', 'LOST'], [1, 0, 'ENGINE 1', 'ERROR'], [0, 1, 'ENGINE 2', 'MISSING'], [2, 0, 'OXYGEN', 'WE’LL SEE'],
+      [3, 0, 'AUTOPILOT', 'ON LEAVE'], [2, 1, 'BLACK BOX', 'FULL'], [1, 1, 'COFFEE', 'FATAL ERROR']];
+    const hud = (c, r, k, ok, err, t, cls, k2) => { const x = xs[c], y = ys[r];
+      const key = k2 ? `<text x="${x + 16}" y="${y + 32}" class="ck-k ck-kok">${k}</text><text x="${x + 16}" y="${y + 32}" class="ck-k ck-kerr">${k2}</text>` : `<text x="${x + 16}" y="${y + 32}" class="ck-k">${k}</text>`;
+      return `<g class="ck-scr ck-hud ${cls}" style="--t:${t}s"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="10" class="ck-hudglass"/><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="10" class="ck-hudred"/>
+        <path d="M${x + 8} ${y + 22} v-14 h14 M${x + W - 22} ${y + 8} h14 v14" class="ck-hudcorner"/>
+        ${key}<text x="${x + 16}" y="${y + 70}" class="ck-ok">${ok}</text><text x="${x + 16}" y="${y + 70}" class="ck-err">${err}</text></g>`; };
+    const huds = HUD.map(([c, r, k, err], i) => hud(c, r, k, 'OK', err, (1.2 + i * 0.36).toFixed(2), i === 6 ? 'ck-cafe' : 'ck-revient')).join('')
+      + hud(3, 1, `COPILOT NO. ${prev}`, 'ABSENT', 'YOU', '3.3', 'ck-cop', `COPILOT NO. ${num}`);
+    // voyants d'alarme sur l'arceau du plafond (ils s'allument avec l'alarme et s'éteignent à la coupure)
+    const lamps = [[781, 109], [1114, 151], [1446, 151], [1792, 109], [470, 70], [2100, 70]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="26" class="ck-plamp" style="--d:${(i * 0.17).toFixed(2)}s"/>`).join('');
+    const GX = 1280, GY = 948; // la jauge, sur le caisson entre les sièges
+    const arc = a => `${(GX + 54 * Math.cos(a * Math.PI / 180)).toFixed(1)} ${(GY - 54 * Math.sin(a * Math.PI / 180)).toFixed(1)}`;
+    const SX = 1672, SO = 'transform-origin:1672px 1000px'; // le siège du copilote : centre et axe du pivot
+    // les mots affichés, à part : la version anglaise les traduit (i18n/extra.json pour les mots seuls)
+    const T = { pilot: 'PILOT: EDEN', reserved: 'RESERVED', fuel: 'FUEL', normal: 'NORMAL', low: 'VERY LOW', alarm: 'ALARM',
+      aria: 'The ark’s cockpit: the empty copilot seat swivels to face you; every screen shows an error, then the power cuts out and for a moment the windscreen shows a devastated planet, before the stars come back.' };
+    return `<svg class="ck-svg ck-peint" viewBox="0 0 2560 1126" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${T.aria}">
+      <defs><clipPath id="ckWinP"><path d="${win}"/></clipPath>
+        <mask id="ckCabin" maskUnits="userSpaceOnUse" x="0" y="0" width="2560" height="1126"><rect width="2560" height="1126" fill="#fff"/><path d="${win}" fill="#000"/></mask>
+        <pattern id="ckScanP" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="3" fill="#dcffff" fill-opacity=".4"/></pattern>
+        <radialGradient id="ckAlarmG" cx="50%" cy="50%" r="70%"><stop offset="55%" stop-color="#ff2a2a" stop-opacity="0"/><stop offset="100%" stop-color="#ff2a2a" stop-opacity=".8"/></radialGradient>
+        <radialGradient id="ckVigG" cx="50%" cy="45%" r="75%"><stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+        <radialGradient id="ckEdenG"><stop offset="0%" stop-color="#6ff3ff" stop-opacity=".55"/><stop offset="100%" stop-color="#6ff3ff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ckSpillG"><stop offset="0%" stop-color="#f4f6b8" stop-opacity=".55"/><stop offset="100%" stop-color="#f4f6b8" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ckLampG"><stop offset="0%" stop-color="#ffe0d0"/><stop offset="30%" stop-color="#ff4a3a" stop-opacity=".95"/><stop offset="100%" stop-color="#ff2a1a" stop-opacity="0"/></radialGradient></defs>
+      <g class="ck-cam"><g class="ck-sway">
+      <rect width="2560" height="1126" fill="#11151b"/>
+      <image href="${C.vide}" width="2560" height="1126" preserveAspectRatio="none"/>
+      <g clip-path="url(#ckWinP)"><g fill="#e6eeff">${tw}</g>
+        ${capy ? `<g transform="translate(200 -113) rotate(4.4) scale(1.25)"><g class="ck-capy" style="animation-delay:4s"><image href="${capy}" x="185" y="195" width="110" height="110" transform="translate(480 0) scale(-1 1)"/></g></g>` : ''}</g>
+      ${C.reel ? `<image href="${C.reel}" x="250" y="146" width="2094" height="468" preserveAspectRatio="none" class="ck-reel"/>` : ''}
+      <rect width="2560" height="640" fill="url(#ckScanP)" clip-path="url(#ckWinP)" class="ck-scan"/>
+      <g transform="rotate(-2 825 708)"><rect x="738" y="690" width="174" height="36" rx="5" fill="#d9d1bd" stroke="#6d6250" stroke-width="3"/><text x="825" y="716" class="ck-tag sm">${T.pilot}</text></g>
+      <g class="ck-seatB" style="${SO}"><image href="${C.dos}" x="1407" y="538" width="531" height="588" preserveAspectRatio="none"/></g>
+      <g class="ck-seatF" style="${SO}"><image href="${C.siege}" x="${SX - 445}" y="501" width="891" height="891"/>
+        <g transform="rotate(-3 ${SX + 5} 575)"><rect x="${SX - 70}" y="575" width="150" height="92" rx="8" fill="#efe6cf" stroke="#8a7a5a" stroke-width="3"/>
+        <rect x="${SX - 62}" y="583" width="134" height="76" rx="5" fill="none" stroke="#b9a97f" stroke-width="2" stroke-dasharray="7 5"/>
+        <circle cx="${SX + 5}" cy="592" r="6" fill="#6d6250"/><text x="${SX + 5}" y="638" class="ck-tag big">${T.reserved}</text></g></g>
+      <g mask="url(#ckCabin)"><rect width="2560" height="1126" class="ck-dim" pointer-events="none"/><rect width="2560" height="1126" class="ck-black" pointer-events="none"/></g>
+      <ellipse cx="1300" cy="380" rx="1400" ry="620" fill="url(#ckSpillG)" class="ck-spill" pointer-events="none"/>
+      <g class="ck-power">
+      <ellipse cx="1280" cy="677" rx="230" ry="110" fill="url(#ckEdenG)" class="ck-eye"/>
+      <rect x="1092" y="592" width="376" height="172" rx="30" class="ck-eflick"/>
+      ${huds}
+      <path d="M${GX - 66} ${GY} A66 66 0 0 1 ${GX + 66} ${GY} Z" fill="#0b0f14" stroke="#4a5562" stroke-width="6"/>
+      <path d="M${arc(180)} A54 54 0 0 1 ${arc(150)}" class="ck-arc" stroke="#e5413a"/><path d="M${arc(150)} A54 54 0 0 1 ${arc(120)}" class="ck-arc" stroke="#f0a43a"/><path d="M${arc(120)} A54 54 0 0 1 ${arc(0)}" class="ck-arc" stroke="#3fae6a"/>
+      <g class="ck-needle" style="transform-origin:${GX}px ${GY}px"><path d="M${GX} ${GY} L${GX} ${GY - 50}" stroke="#f4f1e8" stroke-width="7" stroke-linecap="round"/></g><circle cx="${GX}" cy="${GY}" r="9" fill="#c9cfd6"/>
+      <text x="${GX}" y="${GY + 26}" class="ck-k mid">${T.fuel}</text>
+      <g class="ck-scr ck-fuelbox ck-revient" style="--t:4.6s"><rect x="${GX - 84}" y="${GY + 36}" width="168" height="40" rx="7" class="ck-glass"/><text x="${GX}" y="${GY + 64}" class="ck-ok mid">${T.normal}</text><text x="${GX}" y="${GY + 64}" class="ck-err mid">${T.low}</text></g>
+      <g class="ck-scr ck-revient" style="--t:4.6s"><rect x="1078" y="804" width="104" height="40" rx="6" fill="#2a1414" stroke="#6a2a2a" stroke-width="3"/><text x="1130" y="831" class="ck-ok mid dim">${T.alarm}</text><text x="1130" y="831" class="ck-err mid lamp">${T.alarm}</text></g>
+      <g class="ck-plamps">${lamps}</g>
+      </g>
+      <rect width="2560" height="1126" fill="url(#ckVigG)" pointer-events="none"/>
+      <rect width="2560" height="1126" fill="url(#ckAlarmG)" class="ck-alarm" pointer-events="none"/>
+      </g></g>
+      <rect width="2560" height="1126" fill="#000" class="ck-fade" pointer-events="none"/>
+    </svg>`;
+  }
   function renderCockpit() {
     return `<section class="panel cockpit-panel">
-      <div class="cockpit">${cockpitSVG()}</div>
+      <div class="cockpit">${peintCockpitOn() ? cockpitPeintSVG() : cockpitSVG()}</div>
       <div class="cockpit-bar"><span class="eyebrow">The Last Seat · the cockpit</span><button type="button" class="primary" data-act="cockpitdone">Take your seat</button></div>
     </section>`;
   }
@@ -16580,24 +17055,35 @@ body.rp-on { overflow: hidden; }
     const later = (ms, f) => cockpitTimers.push(setTimeout(f, ms));
     const moving = motionOK();
     const SND = window.SurbookingSound;
+    // la version peinte a sa chute : coupure à 6,4 s, la vraie vue, puis le courant revient à 9,3 s (cockpitPeintSVG)
+    const peint = peintCockpitOn();
     if (moving && SND && SND.play) {
       for (let i = 0; i < 7; i++) SND.play('nope', 1.2 + i * 0.36);
-      [[2.0, 'servo'], [2.5, 'creak'], [2.95, 'servoBack'], [3.3, 'edenBlip'], [4.0, 'powerDown'], [4.6, 'alarm'], [6.2, 'alarm'], [7.8, 'alarm']].forEach(([t, n]) => SND.play(n, t));
+      [[2.0, 'servo'], [2.5, 'creak'], [2.95, 'servoBack'], [3.3, 'edenBlip'], [4.0, 'powerDown'], [4.6, 'alarm']]
+        .concat(peint ? [[5.5, 'alarm'], [6.4, 'powerDown'], [6.6, 'fizzle'], [6.75, 'zap'], [9.12, 'fizzle'], [9.3, 'power'], [9.55, 'paChime']] : [[6.2, 'alarm'], [7.8, 'alarm']])
+        .forEach(([t, n]) => SND.play(n, t));
     }
     // ÉDEN parle quand le siège vous fait face, sans couper la réplique de la victoire
-    const line = rnd(LINES.cockpit), CH = window.SurbookingChatter, t0 = Date.now();
+    const line = rnd(peint ? LINES.cockpitPeint.avant : LINES.cockpit), CH = window.SurbookingChatter, t0 = Date.now();
     // la scène se termine seule après COCKPIT_MS, et jamais avant la fin de la réplique
     let endT = null;
     const planEnd = ms => { clearTimeout(endT); endT = setTimeout(endCockpit, ms); cockpitTimers.push(endT); };
     const sayLine = () => { if (!ui.cockpit) return; if (CH && CH.busy && CH.busy() && Date.now() - t0 < 9000) { later(300, sayLine); return; } say(line); log(ui.line, 'eden');
       planEnd(Math.max(COCKPIT_MS - (Date.now() - t0), line.length * 66 + 2500)); };
     later(moving ? 3400 : 500, sayLine);
+    // … puis, après la coupure, elle fait comme si de rien n'était
+    const after = rnd(LINES.cockpitPeint.apres);
+    const sayAfter = () => { if (!ui.cockpit) return; if (CH && CH.busy && CH.busy() && Date.now() - t0 < 12500) { later(250, sayAfter); return; } say(after); log(ui.line, 'eden');
+      planEnd(Math.max(COCKPIT_MS - (Date.now() - t0), after.length * 66 + 2500)); };
+    if (peint && moving) later(9800, sayAfter);
     planEnd(COCKPIT_MS);
   }
   function endCockpit() {
     cockpitTimers.forEach(clearTimeout); cockpitTimers = [];
     if (!ui.cockpit) return;
+    const essai = ui.cockpit.essai; // le bouton d'essai peint : sans finale jouée, retour au menu
     ui.cockpit = null;
+    if (essai) run = null;
     render();
     try { toTop(); } catch (e) { /* rien */ }
   }
@@ -16630,7 +17116,7 @@ body.rp-on { overflow: hidden; }
       cardEl = el; to = card.target === 'self' ? 'me' : card.target === 'all' ? 'foes' : (alive[0] ? alive[0].i : 'foes');
     } else if (a === 'target' && ui.targeting) { cardEl = screenEl.querySelector('.hand .card.selected'); to = +el.dataset.i; }
     if (!cardEl) return null;
-    const r = cardEl.getBoundingClientRect();
+    const r = dropRect || cardEl.getBoundingClientRect(); // glisser-déposer (0.85) : l'envol part de la carte lâchée
     return r.width ? { html: cardEl.outerHTML, r, to } : null;
   }
   /* ---------- fin du tour et pioche, animées (navigateur seulement) : la main part vers la défausse, chaque monstre
@@ -16769,7 +17255,7 @@ body.rp-on { overflow: hidden; }
   function ghost(html, r, cls) { const g = ghostAt(html, r, cls); SEQ.ghosts.push(g); return g; }
   function fxSvg(cls, svg, cx, cy, w, h) {
     const g = document.createElement('div');
-    g.className = 'seq-fx ' + cls; g.setAttribute('aria-hidden', 'true'); g.innerHTML = svg;
+    g.className = 'seq-fx ' + cls + (svg.indexOf('pfx-img') >= 0 ? ' pfx' : ''); g.setAttribute('aria-hidden', 'true'); g.innerHTML = svg;
     g.style.left = Math.round(cx - w / 2) + 'px'; g.style.top = Math.round(cy - h / 2) + 'px'; g.style.width = w + 'px'; g.style.height = h + 'px';
     document.body.appendChild(g); SEQ.ghosts.push(g);
     return g;
@@ -16870,7 +17356,7 @@ body.rp-on { overflow: hidden; }
         run.combat.monsters.filter(m => m.alive).forEach(m => {
         const r = rectOf(foeFig(m.i)); if (!r) return;
         seqFloat(r, `+${ev.amount}`, 'blk', at, 0);
-        const sh = fxSvg('shield', SVG_SHIELD, centerOf(r).x, r.top + r.height * .45, r.width * .75, r.width * .75);
+        const sh = fxSvg('shield', svgOf('shield'), centerOf(r).x, r.top + r.height * .45, r.width * .75, r.width * .75);
         anim(sh, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1.08)', offset: .35 }, { opacity: 0, transform: 'scale(1.2)' }], { duration: 560, delay: at - 120, fill: 'both' });
         });
       }
@@ -16905,22 +17391,24 @@ body.rp-on { overflow: hidden; }
         for (let k = 0; k < n; k++) anim(fig, [{ transform: 'none' }, { transform: `translate(${dx * (n > 1 ? .22 : .32)}px, -6px) rotate(-5deg)`, offset: .45 }, { transform: 'none' }], { duration: one, delay: t1 + k * one, easing: 'ease-out' });
         impact = t1 + one * .45; dur = Math.max(400, n * one + 60);
       }
+      peintFlash(st.i, 'attack', t1, Math.max(380, impact - t1 + 240)); // illustrations peintes : la pose d'attaque le temps du geste
       snd('enemySwoosh', impact - 100);
       // l'effet sur vous : mâchoires, griffures, coup de bec, lianes, spores ou étoile d'impact
       const hits = Math.max(1, st.fx.filter(e => e.type === 'hitPlayer').length), gap = style === 'sit' || style === 'dash' ? 0 : (dur - 60) / hits;
       for (let k = 0; k < hits; k++) {
         const at = impact + k * gap, jitter = k % 2 ? 14 : -10;
-        if (style === 'bite') { const g = fxSvg('jaw', SVG_JAW, m.x + jitter, m.y - meR.height * .12, size, size);
+        if (style === 'bite' && pfxHit('jaw', m.x + jitter, m.y - meR.height * .12, size, at - 140, 400)) { /* morsure peinte */ } else if (style === 'claw' && pfxHit('claw', m.x + jitter, m.y - meR.height * .08, size, at - 40, 420)) { /* griffes peintes */ }
+        else if (style === 'bite') { const g = fxSvg('jaw', SVG_JAW, m.x + jitter, m.y - meR.height * .12, size, size);
           anim(g.querySelector('.jaw-up'), [{ transform: 'translateY(-30px)', opacity: 0 }, { transform: 'translateY(-30px)', opacity: 1, offset: .2 }, { transform: 'translateY(2px)', opacity: 1, offset: .5 }, { transform: 'translateY(0)', opacity: 0 }], { duration: 360, delay: at - 140, fill: 'both' });
           anim(g.querySelector('.jaw-down'), [{ transform: 'translateY(30px)', opacity: 0 }, { transform: 'translateY(30px)', opacity: 1, offset: .2 }, { transform: 'translateY(-2px)', opacity: 1, offset: .5 }, { transform: 'translateY(0)', opacity: 0 }], { duration: 360, delay: at - 140, fill: 'both' });
         } else if (style === 'claw') { const g = fxSvg('claw', SVG_CLAW, m.x + jitter, m.y - meR.height * .08, size, size);
           g.querySelectorAll('.slash').forEach((sl, j) => anim(sl, [{ transform: 'scale(1, 0)', opacity: 1 }, { transform: 'scale(1, 1)', opacity: 1, offset: .4 }, { transform: 'scale(1, 1)', opacity: 0 }], { duration: 380, delay: at + j * 40, fill: 'both' }));
         } else if (style === 'vine') { const g = fxSvg('vine', `<svg viewBox="0 0 ${Math.abs(dx) + 40} 120" preserveAspectRatio="none"><path d="M${Math.abs(dx) + 20} 60 C ${Math.abs(dx) * .7} 0, ${Math.abs(dx) * .4} 120, 20 60" fill="none" stroke="#4e7f3a" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>`, (f.x + m.x) / 2, m.y, Math.abs(dx) + 40, 120);
           anim(g.querySelector('path'), [{ strokeDashoffset: 100, opacity: 1 }, { strokeDashoffset: 0, opacity: 1, offset: .5 }, { strokeDashoffset: 0, opacity: 0 }], { duration: 520, delay: at - 200, fill: 'both' });
-        } else if (style === 'spore') { const g = fxSvg('orb', SVG_ORB, f.x, f.y, 34, 34);
+        } else if (style === 'spore') { const g = fxSvg('orb', svgOf('orb'), f.x, f.y, 34, 34);
           anim(g, [{ transform: 'translate(0, 0) scale(.5)', opacity: 0 }, { transform: 'translate(0, 0) scale(1)', opacity: .9, offset: .15 }, { transform: `translate(${dx}px, ${dy}px) scale(1.6)`, opacity: .2 }], { duration: 300, delay: at - 260, fill: 'both', easing: 'ease-in' });
         }
-        if (style !== 'bite' && style !== 'claw' && style !== 'vine') { const g = fxSvg('star', SVG_STAR, m.x + jitter, m.y - meR.height * .1, size * (style === 'dash' || style === 'sit' ? 1 : .7), size * (style === 'dash' || style === 'sit' ? 1 : .7));
+        if (style !== 'bite' && style !== 'claw' && style !== 'vine') { const g = fxSvg('star', svgOf('star'), m.x + jitter, m.y - meR.height * .1, size * (style === 'dash' || style === 'sit' ? 1 : .7), size * (style === 'dash' || style === 'sit' ? 1 : .7));
           anim(g, [{ transform: 'scale(.2) rotate(-20deg)', opacity: 0 }, { transform: 'scale(.3) rotate(-16deg)', opacity: 1, offset: .05 }, { transform: 'scale(1.1) rotate(8deg)', opacity: 1, offset: .4 }, { transform: 'scale(1.3) rotate(14deg)', opacity: 0 }], { duration: 320, delay: at, fill: 'both' });
         }
       }
@@ -16929,7 +17417,7 @@ body.rp-on { overflow: hidden; }
     }
     if (st.kind === 'radiate') { // un projectile vert, en cloche, jusqu'à vous
       anim(fig, [{ transform: 'none' }, { transform: 'translateY(-10px) scale(1.06)', offset: .4 }, { transform: 'none' }], { duration: 280, delay: t1 });
-      const g = fxSvg('orb', SVG_ORB, f.x, f.y - fr.height * .2, 54, 54);
+      const g = fxSvg('orb', svgOf('orb'), f.x, f.y - fr.height * .2, 54, 54);
       anim(g, [{ transform: 'translate(0, 0) scale(.4)', opacity: 0 }, { transform: `translate(${dx * .5}px, ${dy * .5 - 90}px) scale(1)`, opacity: 1, offset: .5 }, { transform: `translate(${dx}px, ${dy + fr.height * .2}px) scale(1.4)`, opacity: .3 }],
         { duration: 420, delay: t1 + 80, fill: 'both', easing: 'ease-in' });
       stepFloats(st, t1 + 480, meR, meFig);
@@ -17035,7 +17523,19 @@ body.rp-on { overflow: hidden; }
     return atk ? 'fist' : c.target === 'self' ? 'guard' : 'shout';
   }
   // Un dessin posé à l'écran, animé ; tout passe par le registre SEQ (fini d'un coup au clic, retiré à la fin)
-  const svgOf = n => CSVG[n] || { star: SVG_STAR, shield: SVG_SHIELD, orb: SVG_ORB, ring: SVG_RING, plus: SVG_PLUS, zzz: SVG_ZZZ }[n] || SVG_STAR;
+  // Essai des illustrations peintes : un effet peint sur fond noir remplace le dessin vectoriel (le calque est posé en « screen »)
+  const PFX_NAME = { heart: 'heal', plus: 'heal', jaw: 'bite' };
+  const pfxOf = n => (peintOn && PEINT.fx ? PEINT.fx[PFX_NAME[n] || n] : null);
+  // les objets lancés peints (essai) : des sprites détourés, posés tels quels (pas de fondu « screen »)
+  const pfxoOf = n => (peintOn && PEINT.fxo ? PEINT.fxo[n] : null);
+  const svgOf = n => (pfxoOf(n) ? `<img class="pfxo-img" src="${pfxoOf(n)}" alt="">` : pfxOf(n) ? `<img class="pfx-img" src="${pfxOf(n)}" alt="">` : CSVG[n] || { star: SVG_STAR, shield: SVG_SHIELD, orb: SVG_ORB, ring: SVG_RING, plus: SVG_PLUS, zzz: SVG_ZZZ }[n] || SVG_STAR);
+  // Un effet peint (essai) qui jaillit à l'endroit voulu : remplace les dessins animés par morceaux (mâchoires, griffes)
+  function pfxHit(name, x, y, w, at, dur, flip) {
+    if (!pfxOf(name)) return false;
+    const g = fxSvg('cfx ' + name, svgOf(name), x, y, w, w), f = flip ? ' scaleX(-1)' : '';
+    anim(g, [{ transform: `scale(.45)${f}`, opacity: 0 }, { transform: `scale(1.05)${f}`, opacity: 1, offset: .3 }, { transform: `scale(1.18)${f}`, opacity: 0 }], { duration: dur || 400, delay: at, fill: 'both' });
+    return true;
+  }
   function sprite(name, x, y, w, frames, o) { const g = fxSvg('cfx ' + name, svgOf(name), x, y, w, w); if (o && o.origin) g.style.transformOrigin = o.origin; anim(g, frames, Object.assign({ fill: 'both' }, o, { origin: undefined })); return g; }
   const burst = (name, p, w, at, d) => sprite(name, p.x, p.y, w, [{ transform: 'scale(.2) rotate(-18deg)', opacity: 0 }, { transform: 'scale(1.1) rotate(6deg)', opacity: 1, offset: .35 }, { transform: 'scale(1.25) rotate(12deg)', opacity: 0 }], { duration: d || 340, delay: at });
   // Un objet lancé de a vers b, en cloche, qui tourne s'il le faut ; il arrive à `at`
@@ -17106,7 +17606,8 @@ body.rp-on { overflow: hidden; }
         marks((x, k, j, a) => { const p = spot(x.r); toss('fist', { x: p.x - Math.sign(dx) * 46, y: p.y }, p, sz(x.r) * .7, a, { fly: 120, arc: 0 }); burst('star', p, sz(x.r) * .8, a); }); break;
       case 'claw': case 'bite': impact = t1 + gesture(o.src, 'lunge', dx, t1, hits);
         marks((x, k, j, a) => { const p = spot(x.r, .4), w = sz(x.r), jit = j % 2 ? 12 : -10;
-          if (style === 'bite') { const g = fxSvg('jaw', SVG_JAW, p.x + jit, p.y, w, w);
+          if (pfxHit(style === 'bite' ? 'jaw' : 'claw', p.x + jit, p.y, w, a - (style === 'bite' ? 140 : 60), 380, style === 'claw' && j % 2)) { /* effet peint */ }
+          else if (style === 'bite') { const g = fxSvg('jaw', SVG_JAW, p.x + jit, p.y, w, w);
             anim(g.querySelector('.jaw-up'), [{ transform: 'translateY(-30px)', opacity: 0 }, { transform: 'translateY(-30px)', opacity: 1, offset: .2 }, { transform: 'translateY(2px)', opacity: 1, offset: .5 }, { transform: 'translateY(0)', opacity: 0 }], { duration: 340, delay: a - 140, fill: 'both' });
             anim(g.querySelector('.jaw-down'), [{ transform: 'translateY(30px)', opacity: 0 }, { transform: 'translateY(30px)', opacity: 1, offset: .2 }, { transform: 'translateY(-2px)', opacity: 1, offset: .5 }, { transform: 'translateY(0)', opacity: 0 }], { duration: 340, delay: a - 140, fill: 'both' });
           } else { const g = fxSvg('claw', SVG_CLAW, p.x + jit, p.y, w, w); if (j % 2) g.style.transform = 'scaleX(-1)';
@@ -17184,6 +17685,17 @@ body.rp-on { overflow: hidden; }
     if (o.mine && c.draw) { const pile = screenEl.querySelector('.pile.draw .pile-back'); anim(pile, [{ transform: 'none' }, { transform: 'rotate(-6deg) scale(1.08)', offset: .3 }, { transform: 'rotate(4deg)', offset: .6 }, { transform: 'none' }], { duration: 400, delay: self }); }
     return { impact, at, self, end: Math.max(lastHit, after) + 260, style };
   }
+  // Illustrations peintes (essai) : une pose le temps d'un geste (attaque) ou d'un coup (coup reçu), puis l'attente revient
+  function peintFlash(i, pose, at, dur) {
+    if (!peintOn || !motionOK()) return;
+    setTimeout(() => {
+      const pf = screenEl.querySelector(`.foe[data-i="${i}"] .peint-foe[data-pose="idle"]`), P = pf && PEINT.foe[pf.dataset.k];
+      if (!P || !P[pose]) return;
+      const img = pf.querySelector('.rest .peint-img'), gl = pf.querySelector('.rest .peint-glow');
+      img.src = P[pose]; if (gl && P.glow[pose]) gl.src = P.glow[pose];
+      setTimeout(() => { if (!img.isConnected) return; img.src = P.idle; if (gl && P.glow.idle) gl.src = P.glow.idle; }, dur);
+    }, Math.max(0, at));
+  }
   // Vous jouez une carte : elle vole vers sa cible (flyTo), puis son effet ; les chiffres, secousses et PV attendent l'impact
   function playCardFx(f, pre) {
     if (!f || !pre || !canAnimate() || !run || !run.combat || !(run.phase === 'combat' || ui.outro)) return 0;
@@ -17200,6 +17712,9 @@ body.rp-on { overflow: hidden; }
     // le rendu (CSS) attend l'impact : secousse, chiffres, chute dans la trappe, givre ; et sur vous, l'effet sur soi
     tg.forEach((x, k) => { const el = screenEl.querySelector(`.foe[data-i="${x.i}"]`); if (el) el.style.setProperty('--lunge-d', `${fx.at(k, 0) / 1000}s`); });
     if (meEl) meEl.style.setProperty('--hit-d', `${fx.self / 1000}s`);
+    // illustrations peintes : la cible touchée (et encore debout) prend sa pose de coup reçu au premier impact, jusqu'au dernier
+    tg.forEach((x, k) => { const n = hitsBy.get(x.i) || 0, m = run.combat.monsters.find(q => q.i === x.i);
+      if (n && m && m.alive) peintFlash(x.i, 'hit', fx.at(k, 0), fx.at(k, Math.min(n, 6) - 1) - fx.at(k, 0) + 460); });
     // les PV des cibles baissent coup après coup
     tg.forEach((x, k) => {
       const m = run.combat.monsters.find(q => q.i === x.i), b = pre.foes[run.combat.monsters.indexOf(m)];
@@ -17405,6 +17920,21 @@ body.rp-on { overflow: hidden; }
       case 'unbench': E.unbenchCard(run, el.dataset.id); break;
       // Aux étages, l'adversaire d'en face joue le deck qu'il a drafté (Raphaël, 0.77) : plus de deck réel d'un autre joueur
       // ni d'un de vos anciens runs en duel d'étage. Les decks réels ne servent plus qu'à la finale (déposés juste avant).
+      case 'peintessai': { // essai des illustrations peintes : un combat prêt à jouer, sans passer par les étages
+        run = E.newRun(); ui.log = []; ui.targeting = null;
+        if (el && el.dataset.k === 'cockpit') { run.phase = 'champion'; ui.cockpit = { drawn: false, essai: true }; toTop(); break; } // la victoire de la finale, directement
+        while (run.phase === 'draft') E.draftPick(run, 0); E.keepAuto(run);
+        if (el && el.dataset.k === 'dolly') {
+          run.phase = 'end'; run.qualified = true; E.nextFloor(run); while (run.phase === 'draft') E.draftPick(run, 0); E.keepAuto(run);
+          const base = E.encountersFor(Object.assign({}, run, { fixedEnc: true }), 2).map(x => x.id);
+          run.encIds = { 2: [base[0], base[1], 'dolly'] }; run.encounter = 2;
+          run.results = [{ enc: base[0], name: E.encountersOf(run)[0].name, turns: 4, par: 5, hpLoss: 0 }, { enc: base[1], name: E.encountersOf(run)[1].name, turns: 4, par: 4, hpLoss: 0 }];
+        } else if (el && ['quarantaine', 'etable', 'serre', 'menagerie'].includes(el.dataset.k)) { // les monstres d'un étage, puis son boss (tirés au sort, comme en partie)
+          const fl = ['quarantaine', 'etable', 'serre', 'menagerie'].indexOf(el.dataset.k) + 1;
+          while (E.floorOf(run) < fl) { run.phase = 'end'; run.qualified = true; E.nextFloor(run); while (run.phase === 'draft') E.draftPick(run, 0); E.keepAuto(run); }
+          run.encounter = 1; run.results = [{ enc: E.encountersOf(run)[0].id, name: E.encountersOf(run)[0].name, turns: 4, par: 5, hpLoss: 0 }];
+        } else run.encounter = 0;
+        E.startCombat(run); processEvents(); toTop(); break; }
       case 'nextfloor': ui.log = []; ui.targeting = null; if (run.pvp) delete run.pvp; E.nextFloor(run); processEvents(); toTop(); break;
       case 'finale':
         ui.log = []; ui.targeting = null;
@@ -17464,12 +17994,14 @@ body.rp-on { overflow: hidden; }
     }
     if (window.Shop) window.Shop.afterAction(a, run, shopCtx);
     modCall('afterAction', a, el, modCtx());
-    if (PV && run && (run.phase === 'defeat' || run.phase === 'champion') && !run.pvpSaved) PV.save(run); // PvP : deck de fin
     if (pre && run && run.phase === 'combat' && flash.fx) fxDiff(pre);
     if (pre && run && run.phase !== 'combat' && run.combat && run.combat.over && run.combat.result === 'victoire' && motionOK()) { // un vrai adversaire : la scène du sas dure un peu plus ; ÉDEN battue s'éteint plus vite
       const ko = run.combat.monsters.filter(m => m.duel && !m.alive && m.variant !== 'echappe');
       startOutro(ko.some(m => m.variant !== 'eden') ? 4600 : ko.length ? 3300 : OUTRO_MS);
     } else if (pre && run && run.phase !== 'combat' && run.combat && run.combat.over && run.combat.result !== 'victoire' && motionOK()) startOutro(DEFEAT_MS, 'defeat'); // vous êtes battu : on voit ce qui vous a eu
+    // PvP : deck de fin. Après le début de la scène de fin de combat : l'enregistrement redessine l'écran, et sans la scène
+    // posée il voyait déjà l'écran de défaite et lançait le sas, avant même le coup qui vous a battu (1er novembre 2026)
+    if (PV && run && (run.phase === 'defeat' || run.phase === 'champion') && !run.pvpSaved) PV.save(run);
     armCockpit(); // pas de scène de fin de combat : le cockpit tout de suite
     render();
     flyTo(fly);
@@ -17508,6 +18040,84 @@ body.rp-on { overflow: hidden; }
     }
     act(a, el);
   });
+  /* ---------- Glisser une carte sur sa cible (0.85) : à la souris comme au doigt ----------
+     Une carte à cible unique se lâche sur un ennemi (ou n'importe où au-dessus de la main s'il n'en reste qu'un) ; une carte
+     pour soi se lâche sur le personnage, et les autres (armure, cartes sur tous) partout au-dessus de la main. Lâchée
+     ailleurs, elle revient. Le clic (puis la cible) marche toujours. Au doigt, un glissé surtout horizontal fait défiler la main. */
+  let drag = null, dropRect = null, swallowClick = 0;
+  const dragZ = () => { const r = drag.el.getBoundingClientRect(); return r.width / (drag.el.offsetWidth || r.width); };
+  function dropAt(x, y) {
+    const under = document.elementFromPoint(x, y), hand = screenEl.querySelector('.hand'), hr = hand && hand.getBoundingClientRect();
+    const foe = under && under.closest && under.closest('.foe[data-i]'), me = under && under.closest && under.closest('.fighter.me');
+    const zone = !!(screenEl.querySelector('.stage') && hr && y < hr.top + 12);
+    return { foe: foe && foe.classList.contains('drop-ok') ? foe : null, me: !!me, zone };
+  }
+  function dragMarks(on) {
+    screenEl.querySelectorAll('.drop-ok, .drop-hover').forEach(x => x.classList.remove('drop-ok', 'drop-hover'));
+    document.body.classList.toggle('card-drag', on);
+    if (!on) return;
+    const ok = run.combat.monsters.filter(m => m.alive && !m.away).map(m => m.i);
+    if (drag.kind === 'pick' || drag.kind === 'one') screenEl.querySelectorAll('.foe[data-i]').forEach(f => { if (ok.includes(+f.dataset.i)) f.classList.add('drop-ok'); });
+    if (drag.kind === 'self') { const me = screenEl.querySelector('.fighter.me'); if (me) me.classList.add('drop-ok'); }
+  }
+  function startDrag() {
+    const ci = run.combat.hand[+drag.el.dataset.h], card = ci && E.CARDS[ci.id];
+    if (!card) { drag = null; return; }
+    const foes = run.combat.monsters.filter(m => m.alive && !m.away);
+    drag.uid = ci.uid; drag.kind = card.target === 'enemy' ? (foes.length > 1 ? 'pick' : 'one') : card.target === 'self' ? 'self' : 'any';
+    const r = drag.el.getBoundingClientRect(), z = dragZ(), g = drag.el.cloneNode(true);
+    g.classList.add('drag-ghost'); g.classList.remove('selected'); g.removeAttribute('data-act'); g.setAttribute('aria-hidden', 'true');
+    const ow = drag.el.offsetWidth || r.width, oh = drag.el.offsetHeight || r.height; // la copie suit l'échelle de l'interface, centrée sur la carte
+    Object.assign(g.style, { left: `${r.left + (r.width - ow) / 2}px`, top: `${r.top + (r.height - oh) / 2}px`, width: `${ow}px`, height: `${oh}px` }); g.style.setProperty('--gz', String(z));
+    document.body.appendChild(g);
+    drag.g = g; drag.r = r; drag.on = true; drag.el.classList.add('dragging');
+    dragMarks(true);
+  }
+  function moveDrag(x, y) {
+    const dx = x - drag.x0, dy = y - drag.y0;
+    drag.g.style.transform = `translate(${dx}px, ${dy}px) scale(var(--gz)) rotate(${Math.max(-8, Math.min(8, dx / 40)).toFixed(1)}deg)`;
+    const t = dropAt(x, y);
+    screenEl.querySelectorAll('.drop-hover').forEach(f => f.classList.remove('drop-hover'));
+    if (t.foe) t.foe.classList.add('drop-hover');
+    else if (drag.kind === 'self' && (t.me || t.zone)) { const me = screenEl.querySelector('.fighter.me'); if (me) me.classList.add('drop-hover'); }
+    document.body.classList.toggle('drop-live', !!(t.foe || (drag.kind !== 'pick' && t.zone)));
+  }
+  function endDrag(x, y) {
+    const d = drag, t = dropAt(x, y), gr = d.g.getBoundingClientRect();
+    drag = null; swallowClick = performance.now();
+    dragMarks(false); document.body.classList.remove('drop-live');
+    const play = d.kind === 'pick' ? !!t.foe : d.kind === 'one' ? !!(t.foe || t.zone) : !!(t.zone || t.me || t.foe);
+    const h = run && run.phase === 'combat' ? run.combat.hand.findIndex(c => c.uid === d.uid) : -1;
+    if (!play || h < 0) { // la carte revient dans la main
+      d.g.style.transition = 'transform .18s ease-out, opacity .18s'; d.g.style.transform = 'scale(var(--gz))'; d.g.style.opacity = '.4';
+      setTimeout(() => { d.g.remove(); d.el.classList.remove('dragging'); }, 190); return;
+    }
+    d.g.remove(); dropRect = gr;
+    try {
+      if (d.kind === 'pick') { ui.targeting = { uid: d.uid }; d.el.classList.add('selected'); act('target', t.foe); }
+      else { ui.targeting = null; d.el.dataset.h = String(h); act('card', d.el); }
+    } finally { dropRect = null; }
+  }
+  screenEl.addEventListener('pointerdown', ev => {
+    if (drag || ev.button !== 0 || !run || run.phase !== 'combat' || ui.outro) return;
+    const el = ev.target.closest && ev.target.closest('.hand [data-act="card"]');
+    if (!el || el.disabled) return;
+    drag = { el, id: ev.pointerId, x0: ev.clientX, y0: ev.clientY, on: false, touch: ev.pointerType === 'touch' };
+  });
+  window.addEventListener('pointermove', ev => {
+    if (!drag || ev.pointerId !== drag.id) return;
+    if (!drag.on) {
+      const dx = ev.clientX - drag.x0, dy = ev.clientY - drag.y0;
+      if (Math.hypot(dx, dy) < 10) return;
+      if (drag.touch && (dy > 4 || Math.abs(dx) > 1.6 * Math.abs(dy))) { drag = null; return; } // au doigt, un glissé surtout de côté (ou vers le bas) fait défiler la main
+      startDrag(); if (!drag) return;
+    }
+    moveDrag(ev.clientX, ev.clientY);
+  });
+  window.addEventListener('pointerup', ev => { if (!drag || ev.pointerId !== drag.id) return; if (drag.on) endDrag(ev.clientX, ev.clientY); else drag = null; });
+  window.addEventListener('pointercancel', ev => { if (!drag || ev.pointerId !== drag.id) return; if (drag.on) { drag.g.remove(); drag.el.classList.remove('dragging'); dragMarks(false); } drag = null; });
+  // le clic qui suit un lâcher ne doit rien déclencher d'autre
+  screenEl.addEventListener('click', ev => { if (performance.now() - swallowClick < 350) { ev.stopPropagation(); ev.preventDefault(); } }, true);
   // Clavier ou souris : les bulles qui s'ouvrent au survol s'ouvrent aussi au focus, mais seulement au clavier
   document.addEventListener('keydown', ev => { if (ev.key === 'Tab') document.body.classList.add('kbd'); }, true);
   document.addEventListener('pointerdown', () => document.body.classList.remove('kbd'), true);
