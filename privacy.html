@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surbooking · Privacy</title><link rel="stylesheet" href="fonts/fonts.css"><style>
+:root { --bg: #f4f6f3; --ink: #1e2326; --muted: #4c5559; --line: #d0d6d1; --accent: #b4470f; }
+@media (prefers-color-scheme: dark) { :root { --bg: #11161a; --ink: #e8edf0; --muted: #a8b3b9; --line: #2b353b; --accent: #ffb27a; } }
+html { background: var(--bg); color: var(--ink); }
+body { margin: 0 auto; max-width: 760px; padding: 32px 16px 64px; font: 16px/1.55 'Saira Semi Condensed', system-ui, sans-serif; }
+h1 { font-family: 'Saira Condensed', sans-serif; font-weight: 800; font-size: 34px; text-transform: uppercase; margin: 0 0 4px; }
+h2 { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 21px; text-transform: uppercase; margin: 28px 0 8px; }
+.maj { color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 13px; margin: 0 0 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); }
+th { font-family: 'Saira Condensed', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 14px; color: var(--muted); }
+a { color: var(--accent); }
+.lang { float: right; font-family: 'Share Tech Mono', monospace; font-size: 13px; }
+@media (max-width: 560px) { table, tbody, tr, td, th { display: block; } thead { display: none; } td { border: 0; padding: 2px 0; } tr { border-bottom: 1px solid var(--line); padding: 8px 0; } }
+</style></head><body>
+<a class="lang" href="confidentialite.html">Français</a>
+<h1>Privacy</h1>
+<p class="maj">Surbooking · updated November 2, 2026</p>
+<p>Surbooking is a game made by Raphaël Dubois (France). It never asks for an account, a name or an e-mail address. This page
+explains what the online version of the game (web page, itch.io page, Windows version) keeps, why, and for how long.</p>
+
+<h2>What the game server keeps</h2>
+<table><thead><tr><th>Data</th><th>Why</th><th>How long</th></tr></thead><tbody>
+<tr><td>A player ID: the fingerprint of a random key created on your device</td><td>Recognize you without an account, so that you can only change your own data</td><td>As long as your data is on the server</td></tr>
+<tr><td>Your nickname, if you choose one</td><td>Show it to other players</td><td>Until you change or erase it</td></tr>
+<tr><td>Your last 5 end-of-run decks</td><td>Other players face them, played by the bot</td><td>Only the last 5</td></tr>
+<tr><td>Your daily session results</td><td>The daily leaderboard</td><td>Your most recent days</td></tr>
+<tr><td>Game summaries (floors, encounters, cards, HP lost), <b>only if you agree</b> when EDEN asks</td><td>Balancing the game; only the game's creator reads them</td><td>Your last 60 runs</td></tr>
+<tr><td>Live drafts and duels (nickname, picked cards, actions)</td><td>Playing live with others; the server referees the duel</td><td>Deleted 3 hours after the game</td></tr>
+<tr><td>A duel you share (the "Share" button)</td><td>Watching it again from a link</td><td>Until you ask for it to be deleted</td></tr>
+</tbody></table>
+
+<h2>What is never collected</h2>
+<p>No real name, no e-mail address, no account, no location, no contacts. No ads, no trackers, no analytics. Fonts, images and
+voices ship with the game: no third-party service is called while you play, apart from the game server.</p>
+
+<h2>Where the data lives</h2>
+<p>The game server is hosted by Supabase, in Europe (Paris). The web page is hosted by GitHub Pages and the Windows version by
+itch.io: like any website, these hosts see your IP address when you open the page or download the game (see their own
+policies). The game server also sees your IP address while it answers; the game does not keep it.</p>
+
+<h2>On your device</h2>
+<p>Your progress, settings, current run and player key stay in your browser's or the app's storage. Clearing the site's data or
+uninstalling the game deletes them, and makes you a new player.</p>
+
+<h2>Legal basis</h2>
+<p>Online data is used to run the online features you use (legitimate interest). Game summaries rely on your consent, which
+you can withdraw at any time in the game.</p>
+
+<h2>Your rights</h2>
+<p>You can access, correct or erase your data, or object to its use. The simplest way: in the game,
+<b>Rules → With friends → Erase my online data</b> removes your decks, daily results, game summaries and nickname from the
+server. For a shared duel or any other request, write to the creator from the
+<a href="https://chowshove.itch.io/surbooking">game's itch.io page</a> or the
+<a href="https://github.com/Shokchow/surbooking">GitHub repository</a>. You can also contact the French data protection
+authority, the <a href="https://www.cnil.fr">CNIL</a>.</p>
+</body></html>
