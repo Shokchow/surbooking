@@ -1,6 +1,6 @@
 # Surbooking
 
-Le jeu, version navigateur (0.85.4) : **https://shokchow.github.io/surbooking/**
+Le jeu, version navigateur (0.86.0) : **https://shokchow.github.io/surbooking/**
 
 - Sur téléphone : ouvrir le lien dans Safari ou Chrome (pas dans Messenger), puis « Partager → Sur l'écran d'accueil » :
   le jeu s'ouvre comme une appli, et la partie, le pseudo, les succès et les skins sont gardés.
