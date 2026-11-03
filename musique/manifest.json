@@ -1,0 +1,17 @@
+{
+ "v": 1,
+ "xf": 3,
+ "tracks": {
+  "arene_calme": "arene_calme.mp3",
+  "arene_combat": "arene_combat.mp3",
+  "embarquement_calme": "embarquement_calme.mp3",
+  "etable_calme": "etable_calme.mp3",
+  "etable_combat": "etable_combat.mp3",
+  "menagerie_calme": "menagerie_calme.mp3",
+  "menagerie_combat": "menagerie_combat.mp3",
+  "quarantaine_calme": "quarantaine_calme.mp3",
+  "quarantaine_combat": "quarantaine_combat.mp3",
+  "serre_calme": "serre_calme.mp3",
+  "serre_combat": "serre_combat.mp3"
+ }
+}

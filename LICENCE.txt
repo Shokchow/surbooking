@@ -6,8 +6,8 @@ sans autorisation écrite de l'auteur.
 
 Composants de tiers, sous leur propre licence :
 - polices Saira Condensed, Saira Semi Condensed, Share Tech Mono et Audiowide : SIL Open Font License 1.1 (fonts/OFL.txt) ;
-- icônes de game-icons.net (Lorc, Delapouite et leurs contributeurs) : Creative Commons BY 3.0, auteurs crédités dans le jeu ;
-- voix d'ÉDEN : synthèse Kokoro-82M (Apache 2.0), voix issue du corpus SIWIS (Creative Commons BY 4.0).
+- icônes de game-icons.net (Lorc, Delapouite et leurs contributeurs) : Creative Commons BY 3.0, auteurs crédités dans le jeu.
+La voix d'ÉDEN et la musique ont été créées pour le jeu avec ElevenLabs.
 
 ---
 
@@ -18,5 +18,5 @@ may not be copied, modified, republished, sold or reused, in whole or in part, w
 
 Third-party components, under their own licenses:
 - Saira Condensed, Saira Semi Condensed, Share Tech Mono and Audiowide fonts: SIL Open Font License 1.1 (fonts/OFL.txt);
-- icons from game-icons.net (Lorc, Delapouite and contributors): Creative Commons BY 3.0, authors credited in the game;
-- EDEN's voice: Kokoro-82M speech synthesis (Apache 2.0), voice from the SIWIS corpus (Creative Commons BY 4.0).
+- icons from game-icons.net (Lorc, Delapouite and contributors): Creative Commons BY 3.0, authors credited in the game.
+EDEN's voice (French and English) and the music were created for the game with ElevenLabs.
