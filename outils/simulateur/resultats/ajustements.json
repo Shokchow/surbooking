@@ -1,0 +1,1934 @@
+{
+ "genere": "2026-11-04T00:34:40.258Z",
+ "echantillon": 600,
+ "cartes": [
+  {
+   "id": "toutpourplace",
+   "nom": "Tout pour la place",
+   "rarete": "violette",
+   "famille": "Sacrifice",
+   "sens": -1,
+   "beta": 0.5133378227639482,
+   "betaBrut": 0.6891752217352325,
+   "effet": 0.17229380543380812,
+   "z": 12.040970148613058,
+   "echantillon": 600,
+   "ecartMoy": 1.0333333333333334,
+   "tvPorteurOrig": 0.63,
+   "tvPorteurBase": 0.63,
+   "rejeuIdentique": 1,
+   "cible": -0.5304490835227466,
+   "essais": [
+    {
+     "cle": "halfMult=2",
+     "modifs": [
+      {
+       "champ": "halfMult",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "multiplicateur de dégâts 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.525,
+     "delta": -0.10499999999999998,
+     "dLogit": -0.4321333551903256,
+     "bascules": 85,
+     "betaApres": 0.09514425322492354
+    },
+    {
+     "cle": "halfMult=1",
+     "modifs": [
+      {
+       "champ": "halfMult",
+       "avant": 3,
+       "valeur": 1
+      }
+     ],
+     "desc": "multiplicateur de dégâts 3 → 1",
+     "cout": false,
+     "tvPorteur": 0.41333333333333333,
+     "delta": -0.21666666666666667,
+     "dLogit": -0.8824192431804231,
+     "bascules": 172,
+     "betaApres": -0.34061628353968687
+    },
+    {
+     "cle": "halfCap=19",
+     "modifs": [
+      {
+       "champ": "halfCap",
+       "avant": 20,
+       "valeur": 19
+      }
+     ],
+     "desc": "plafond de PV perdus 20 → 19",
+     "cout": false,
+     "tvPorteur": 0.6133333333333333,
+     "delta": -0.01666666666666672,
+     "dLogit": -0.07087124724468752,
+     "bascules": 16,
+     "betaApres": 0.44475274478521837
+    },
+    {
+     "cle": "halfMult=2&halfCap=19",
+     "modifs": [
+      {
+       "champ": "halfMult",
+       "avant": 3,
+       "valeur": 2
+      },
+      {
+       "champ": "halfCap",
+       "avant": 20,
+       "valeur": 19
+      }
+     ],
+     "desc": "multiplicateur de dégâts 3 → 2 et plafond de PV perdus 20 → 19",
+     "cout": false,
+     "tvPorteur": 0.52,
+     "delta": -0.10999999999999999,
+     "dLogit": -0.4521741060737717,
+     "bascules": 88,
+     "betaApres": 0.07574997817642731
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.5033333333333333,
+     "delta": -0.1266666666666667,
+     "dLogit": -0.5188832828778432,
+     "bascules": 88,
+     "betaApres": 0.01119271030151936
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.5033333333333333,
+    "delta": -0.1266666666666667,
+    "dLogit": -0.5188832828778432,
+    "bascules": 88,
+    "betaApres": 0.01119271030151936
+   }
+  },
+  {
+   "id": "grizzli",
+   "nom": "Furie du grizzli",
+   "rarete": "violette",
+   "famille": "Instinct",
+   "sens": -1,
+   "beta": 0.41152384005154663,
+   "betaBrut": 0.5873612390228309,
+   "effet": 0.14684030975570772,
+   "z": 10.244207197552889,
+   "echantillon": 600,
+   "ecartMoy": 1.0366666666666666,
+   "tvPorteurOrig": 0.6566666666666666,
+   "tvPorteurBase": 0.6566666666666666,
+   "rejeuIdentique": 1,
+   "cible": -0.4266130475201033,
+   "essais": [
+    {
+     "cle": "dmg=2",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "dégâts 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.6433333333333333,
+     "delta": -0.013333333333333308,
+     "dLogit": -0.05861338606537325,
+     "bascules": 24,
+     "betaApres": 0.35498359625858206
+    },
+    {
+     "cle": "dmg=1",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 3,
+       "valeur": 1
+      }
+     ],
+     "desc": "dégâts 3 → 1",
+     "cout": false,
+     "tvPorteur": 0.64,
+     "delta": -0.016666666666666607,
+     "dLogit": -0.0731105956047906,
+     "bascules": 32,
+     "betaApres": 0.3409991497575364
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.5516666666666666,
+     "delta": -0.10499999999999998,
+     "dLogit": -0.4410677447331288,
+     "bascules": 91,
+     "betaApres": -0.013943437826069605
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.5516666666666666,
+    "delta": -0.10499999999999998,
+    "dLogit": -0.4410677447331288,
+    "bascules": 91,
+    "betaApres": -0.013943437826069605
+   }
+  },
+  {
+   "id": "transfusion",
+   "nom": "Transfusion d’urgence",
+   "rarete": "violette",
+   "famille": "Sacrifice",
+   "sens": -1,
+   "beta": 0.3759300034142714,
+   "betaBrut": 0.5517674023855557,
+   "effet": 0.13794185059638892,
+   "z": 9.698525906089483,
+   "echantillon": 600,
+   "ecartMoy": 1.015,
+   "tvPorteurOrig": 0.5883333333333334,
+   "tvPorteurBase": 0.5883333333333334,
+   "rejeuIdentique": 1,
+   "cible": -0.3815689534654854,
+   "essais": [
+    {
+     "cle": "block=3",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 4,
+       "valeur": 3
+      }
+     ],
+     "desc": "armure 4 → 3",
+     "cout": false,
+     "tvPorteur": 0.585,
+     "delta": -0.0033333333333334103,
+     "dLogit": -0.01374639330416172,
+     "bascules": 2,
+     "betaApres": 0.36238675877962934
+    },
+    {
+     "cle": "block=2",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 4,
+       "valeur": 2
+      }
+     ],
+     "desc": "armure 4 → 2",
+     "cout": false,
+     "tvPorteur": 0.5833333333333334,
+     "delta": -0.0050000000000000044,
+     "dLogit": -0.020607483684106753,
+     "bascules": 5,
+     "betaApres": 0.35562706382401843
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.5416666666666666,
+     "delta": -0.046666666666666745,
+     "dLogit": -0.1900256356421537,
+     "bascules": 68,
+     "betaApres": 0.1887126283973712
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.5416666666666666,
+    "delta": -0.046666666666666745,
+    "dLogit": -0.1900256356421537,
+    "bascules": 68,
+    "betaApres": 0.1887126283973712
+   }
+  },
+  {
+   "id": "humiliation",
+   "nom": "Humiliation publique",
+   "rarete": "bleue",
+   "famille": "Panique",
+   "sens": -1,
+   "beta": 0.3563255056896241,
+   "betaBrut": 0.4242698698949955,
+   "effet": 0.10606746747374887,
+   "z": 10.664143759580348,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.6466666666666666,
+   "tvPorteurBase": 0.6466666666666666,
+   "rejeuIdentique": 1,
+   "cible": -0.3563255056896241,
+   "essais": [
+    {
+     "cle": "dmg=14",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 15,
+       "valeur": 14
+      }
+     ],
+     "desc": "dégâts 15 → 14",
+     "cout": false,
+     "tvPorteur": 0.6433333333333333,
+     "delta": -0.0033333333333332993,
+     "dLogit": -0.014557710508281474,
+     "bascules": 6,
+     "betaApres": 0.34176779518134265
+    },
+    {
+     "cle": "dmg=13",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 15,
+       "valeur": 13
+      }
+     ],
+     "desc": "dégâts 15 → 13",
+     "cout": false,
+     "tvPorteur": 0.635,
+     "delta": -0.011666666666666603,
+     "dLogit": -0.0506914196410605,
+     "bascules": 9,
+     "betaApres": 0.3056340860485636
+    },
+    {
+     "cle": "dmg=11",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 15,
+       "valeur": 11
+      }
+     ],
+     "desc": "dégâts 15 → 11",
+     "cout": false,
+     "tvPorteur": 0.6183333333333333,
+     "delta": -0.02833333333333332,
+     "dLogit": -0.12193900589806544,
+     "bascules": 17,
+     "betaApres": 0.23438649979155868
+    },
+    {
+     "cle": "dmg=8",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 15,
+       "valeur": 8
+      }
+     ],
+     "desc": "dégâts 15 → 8",
+     "cout": false,
+     "tvPorteur": 0.61,
+     "delta": -0.036666666666666625,
+     "dLogit": -0.1571068469075959,
+     "bascules": 34,
+     "betaApres": 0.1992186587820282
+    },
+    {
+     "cle": "vuln=2",
+     "modifs": [
+      {
+       "champ": "vuln",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "Vulnérabilité 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.63,
+     "delta": -0.016666666666666607,
+     "dLogit": -0.07220225120395252,
+     "bascules": 14,
+     "betaApres": 0.2841232544856716
+    },
+    {
+     "cle": "dmg=11&vuln=2",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 15,
+       "valeur": 11
+      },
+      {
+       "champ": "vuln",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "dégâts 15 → 11 et Vulnérabilité 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.6,
+     "delta": -0.046666666666666634,
+     "dLogit": -0.19895395684309652,
+     "bascules": 34,
+     "betaApres": 0.1573715488465276
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.5866666666666667,
+     "delta": -0.05999999999999994,
+     "dLogit": -0.2542166355181458,
+     "bascules": 66,
+     "betaApres": 0.10210887017147835
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.5866666666666667,
+    "delta": -0.05999999999999994,
+    "dLogit": -0.2542166355181458,
+    "bascules": 66,
+    "betaApres": 0.10210887017147835
+   }
+  },
+  {
+   "id": "sirene",
+   "nom": "Sirène d'évacuation",
+   "rarete": "bleue",
+   "famille": "Panique",
+   "sens": -1,
+   "beta": 0.3254800259418236,
+   "betaBrut": 0.393424390147195,
+   "effet": 0.09835609753679875,
+   "z": 8.246190845176669,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.585,
+   "tvPorteurBase": 0.585,
+   "rejeuIdentique": 1,
+   "cible": -0.3254800259418236,
+   "essais": [
+    {
+     "cle": "weak=1",
+     "modifs": [
+      {
+       "champ": "weak",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "Faiblesse 2 → 1",
+     "cout": false,
+     "tvPorteur": 0.56,
+     "delta": -0.02499999999999991,
+     "dLogit": -0.1021712701842698,
+     "bascules": 31,
+     "betaApres": 0.22330875575755382
+    },
+    {
+     "cle": "vuln=1",
+     "modifs": [
+      {
+       "champ": "vuln",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "Vulnérabilité 2 → 1",
+     "cout": false,
+     "tvPorteur": 0.5566666666666666,
+     "delta": -0.02833333333333332,
+     "dLogit": -0.11568864280615679,
+     "bascules": 31,
+     "betaApres": 0.20979138313566684
+    },
+    {
+     "cle": "weak=1&vuln=1",
+     "modifs": [
+      {
+       "champ": "weak",
+       "avant": 2,
+       "valeur": 1
+      },
+      {
+       "champ": "vuln",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "Faiblesse 2 → 1 et Vulnérabilité 2 → 1",
+     "cout": false,
+     "tvPorteur": 0.54,
+     "delta": -0.04499999999999993,
+     "dLogit": -0.18299067692597856,
+     "bascules": 45,
+     "betaApres": 0.14248934901584506
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.5433333333333333,
+     "delta": -0.04166666666666663,
+     "dLogit": -0.16956405202252062,
+     "bascules": 55,
+     "betaApres": 0.155915973919303
+    }
+   ],
+   "choix": {
+    "cle": "weak=1&vuln=1",
+    "modifs": [
+     {
+      "champ": "weak",
+      "avant": 2,
+      "valeur": 1
+     },
+     {
+      "champ": "vuln",
+      "avant": 2,
+      "valeur": 1
+     }
+    ],
+    "desc": "Faiblesse 2 → 1 et Vulnérabilité 2 → 1",
+    "cout": false,
+    "tvPorteur": 0.54,
+    "delta": -0.04499999999999993,
+    "dLogit": -0.18299067692597856,
+    "bascules": 45,
+    "betaApres": 0.14248934901584506
+   }
+  },
+  {
+   "id": "chargeblindee",
+   "nom": "Charge blindée",
+   "rarete": "verte",
+   "famille": "Blindage",
+   "sens": -1,
+   "beta": 0.27819029658478944,
+   "betaBrut": 0.23952348548902355,
+   "effet": 0.05988087137225589,
+   "z": 11.441220780073312,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.5083333333333333,
+   "tvPorteurBase": 0.5083333333333333,
+   "rejeuIdentique": 1,
+   "cible": -0.27819029658478944,
+   "essais": [
+    {
+     "cle": "block=7",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 8,
+       "valeur": 7
+      }
+     ],
+     "desc": "armure 8 → 7",
+     "cout": false,
+     "tvPorteur": 0.5033333333333333,
+     "delta": -0.0050000000000000044,
+     "dLogit": -0.020002889398126764,
+     "bascules": 17,
+     "betaApres": 0.25818740718666267
+    },
+    {
+     "cle": "block=6",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 8,
+       "valeur": 6
+      }
+     ],
+     "desc": "armure 8 → 6",
+     "cout": false,
+     "tvPorteur": 0.4816666666666667,
+     "delta": -0.026666666666666616,
+     "dLogit": -0.10670264433439364,
+     "bascules": 32,
+     "betaApres": 0.1714876522503958
+    },
+    {
+     "cle": "block=4",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 8,
+       "valeur": 4
+      }
+     ],
+     "desc": "armure 8 → 4",
+     "cout": false,
+     "tvPorteur": 0.45666666666666667,
+     "delta": -0.05166666666666664,
+     "dLogit": -0.20710569524622907,
+     "bascules": 49,
+     "betaApres": 0.07108460133856037
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.44,
+     "delta": -0.0683333333333333,
+     "dLogit": -0.27449847708447983,
+     "bascules": 65,
+     "betaApres": 0.003691819500309612
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.44,
+    "delta": -0.0683333333333333,
+    "dLogit": -0.27449847708447983,
+    "bascules": 65,
+    "betaApres": 0.003691819500309612
+   }
+  },
+  {
+   "id": "moquerie",
+   "nom": "Moquerie cruelle",
+   "rarete": "verte",
+   "famille": "Panique",
+   "sens": -1,
+   "beta": 0.2769663793191423,
+   "betaBrut": 0.23829956822337642,
+   "effet": 0.059574892055844104,
+   "z": 12.462352713206378,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.5866666666666667,
+   "tvPorteurBase": 0.5866666666666667,
+   "rejeuIdentique": 1,
+   "cible": -0.2769663793191423,
+   "essais": [
+    {
+     "cle": "dmg=8",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 9,
+       "valeur": 8
+      }
+     ],
+     "desc": "dégâts 9 → 8",
+     "cout": false,
+     "tvPorteur": 0.5783333333333334,
+     "delta": -0.008333333333333304,
+     "dLogit": -0.03426713821377597,
+     "bascules": 11,
+     "betaApres": 0.24269924110536634
+    },
+    {
+     "cle": "dmg=7",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 9,
+       "valeur": 7
+      }
+     ],
+     "desc": "dégâts 9 → 7",
+     "cout": false,
+     "tvPorteur": 0.5633333333333334,
+     "delta": -0.023333333333333317,
+     "dLogit": -0.095501037711193,
+     "bascules": 28,
+     "betaApres": 0.1814653416079493
+    },
+    {
+     "cle": "dmg=6",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 9,
+       "valeur": 6
+      }
+     ],
+     "desc": "dégâts 9 → 6",
+     "cout": false,
+     "tvPorteur": 0.5516666666666666,
+     "delta": -0.03500000000000003,
+     "dLogit": -0.1427954336578913,
+     "bascules": 37,
+     "betaApres": 0.134170945661251
+    },
+    {
+     "cle": "dmg=5",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 9,
+       "valeur": 5
+      }
+     ],
+     "desc": "dégâts 9 → 5",
+     "cout": false,
+     "tvPorteur": 0.535,
+     "delta": -0.05166666666666664,
+     "dLogit": -0.20997308812446466,
+     "bascules": 47,
+     "betaApres": 0.06699329119467765
+    },
+    {
+     "cle": "vuln=1",
+     "modifs": [
+      {
+       "champ": "vuln",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "Vulnérabilité 2 → 1",
+     "cout": false,
+     "tvPorteur": 0.56,
+     "delta": -0.026666666666666616,
+     "dLogit": -0.10904037261622673,
+     "bascules": 30,
+     "betaApres": 0.16792600670291558
+    },
+    {
+     "cle": "dmg=6&vuln=1",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 9,
+       "valeur": 6
+      },
+      {
+       "champ": "vuln",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "dégâts 9 → 6 et Vulnérabilité 2 → 1",
+     "cout": false,
+     "tvPorteur": 0.5216666666666666,
+     "delta": -0.06500000000000006,
+     "dLogit": -0.2634814546525831,
+     "bascules": 59,
+     "betaApres": 0.013484924666559206
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.49666666666666665,
+     "delta": -0.09000000000000002,
+     "dLogit": -0.36353596030258034,
+     "bascules": 88,
+     "betaApres": -0.08656958098343803
+    }
+   ],
+   "choix": {
+    "cle": "dmg=6&vuln=1",
+    "modifs": [
+     {
+      "champ": "dmg",
+      "avant": 9,
+      "valeur": 6
+     },
+     {
+      "champ": "vuln",
+      "avant": 2,
+      "valeur": 1
+     }
+    ],
+    "desc": "dégâts 9 → 6 et Vulnérabilité 2 → 1",
+    "cout": false,
+    "tvPorteur": 0.5216666666666666,
+    "delta": -0.06500000000000006,
+    "dLogit": -0.2634814546525831,
+    "bascules": 59,
+    "betaApres": 0.013484924666559206
+   }
+  },
+  {
+   "id": "evacuation",
+   "nom": "Évacuation générale",
+   "rarete": "orange",
+   "famille": "Panique",
+   "sens": -1,
+   "beta": 0.2721013341428014,
+   "betaBrut": 0.4465749183211967,
+   "effet": 0.11164372958029918,
+   "z": 6.672130375274767,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.5616666666666666,
+   "tvPorteurBase": 0.5616666666666666,
+   "rejeuIdentique": 1,
+   "cible": -0.2721013341428014,
+   "essais": [
+    {
+     "cle": "dmg=7",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 8,
+       "valeur": 7
+      }
+     ],
+     "desc": "dégâts 8 → 7",
+     "cout": false,
+     "tvPorteur": 0.555,
+     "delta": -0.006666666666666599,
+     "dLogit": -0.027035066594402718,
+     "bascules": 8,
+     "betaApres": 0.2450662675483987
+    },
+    {
+     "cle": "dmg=6",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 8,
+       "valeur": 6
+      }
+     ],
+     "desc": "dégâts 8 → 6",
+     "cout": false,
+     "tvPorteur": 0.5533333333333333,
+     "delta": -0.008333333333333304,
+     "dLogit": -0.03378090976896528,
+     "bascules": 11,
+     "betaApres": 0.23832042437383613
+    },
+    {
+     "cle": "dmg=4",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 8,
+       "valeur": 4
+      }
+     ],
+     "desc": "dégâts 8 → 4",
+     "cout": false,
+     "tvPorteur": 0.5483333333333333,
+     "delta": -0.013333333333333308,
+     "dLogit": -0.05398996828892616,
+     "bascules": 20,
+     "betaApres": 0.21811136585387525
+    },
+    {
+     "cle": "weak=2",
+     "modifs": [
+      {
+       "champ": "weak",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "Faiblesse 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.5516666666666666,
+     "delta": -0.010000000000000009,
+     "dLogit": -0.04052190239937348,
+     "bascules": 12,
+     "betaApres": 0.23157943174342793
+    },
+    {
+     "cle": "dmg=6&weak=2",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 8,
+       "valeur": 6
+      },
+      {
+       "champ": "weak",
+       "avant": 3,
+       "valeur": 2
+      }
+     ],
+     "desc": "dégâts 8 → 6 et Faiblesse 3 → 2",
+     "cout": false,
+     "tvPorteur": 0.545,
+     "delta": -0.016666666666666607,
+     "dLogit": -0.06744052246230334,
+     "bascules": 16,
+     "betaApres": 0.20466081168049807
+    },
+    {
+     "cle": "cost=2",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "coût 1 → 2",
+     "cout": true,
+     "tvPorteur": 0.51,
+     "delta": -0.05166666666666664,
+     "dLogit": -0.20792356356089794,
+     "bascules": 39,
+     "betaApres": 0.06417777058190346
+    }
+   ],
+   "choix": {
+    "cle": "cost=2",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 2
+     }
+    ],
+    "desc": "coût 1 → 2",
+    "cout": true,
+    "tvPorteur": 0.51,
+    "delta": -0.05166666666666664,
+    "dLogit": -0.20792356356089794,
+    "bascules": 39,
+    "betaApres": 0.06417777058190346
+   }
+  },
+  {
+   "id": "eperon",
+   "nom": "Éperon de proue",
+   "rarete": "violette",
+   "famille": "Blindage",
+   "sens": 1,
+   "beta": -0.43553580315000845,
+   "betaBrut": -0.2596984041787242,
+   "effet": -0.06492460104468105,
+   "z": -4.426488687979849,
+   "echantillon": 600,
+   "ecartMoy": 1.03,
+   "tvPorteurOrig": 0.415,
+   "tvPorteurBase": 0.415,
+   "rejeuIdentique": 1,
+   "cible": 0.44860187724450873,
+   "essais": [
+    {
+     "cle": "cost=1",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "coût 2 → 1",
+     "cout": true,
+     "tvPorteur": 0.4766666666666667,
+     "delta": 0.0616666666666667,
+     "dLogit": 0.2499321519127574,
+     "bascules": 59,
+     "betaApres": -0.19288322847742848
+    }
+   ],
+   "choix": {
+    "cle": "cost=1",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 2,
+      "valeur": 1
+     }
+    ],
+    "desc": "coût 2 → 1",
+    "cout": true,
+    "tvPorteur": 0.4766666666666667,
+    "delta": 0.0616666666666667,
+    "dLogit": 0.2499321519127574,
+    "bascules": 59,
+    "betaApres": -0.19288322847742848
+   }
+  },
+  {
+   "id": "archenoe",
+   "nom": "Arche de Noé",
+   "rarete": "rouge",
+   "famille": "Blindage",
+   "sens": 1,
+   "beta": -0.35914188093618016,
+   "betaBrut": -0.08072575954503888,
+   "effet": -0.02018143988625972,
+   "z": -1.221114070184377,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.4483333333333333,
+   "tvPorteurBase": 0.4483333333333333,
+   "rejeuIdentique": 1,
+   "cible": 0.35914188093618016,
+   "essais": [
+    {
+     "cle": "block=13",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 12,
+       "valeur": 13
+      }
+     ],
+     "desc": "armure 12 → 13",
+     "cout": false,
+     "tvPorteur": 0.4533333333333333,
+     "delta": 0.0050000000000000044,
+     "dLogit": 0.02019545368707759,
+     "bascules": 9,
+     "betaApres": -0.33894642724910257
+    },
+    {
+     "cle": "block=14",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 12,
+       "valeur": 14
+      }
+     ],
+     "desc": "armure 12 → 14",
+     "cout": false,
+     "tvPorteur": 0.45666666666666667,
+     "delta": 0.00833333333333336,
+     "dLogit": 0.033637720796586695,
+     "bascules": 13,
+     "betaApres": -0.3255041601395935
+    },
+    {
+     "cle": "block=16",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 12,
+       "valeur": 16
+      }
+     ],
+     "desc": "armure 12 → 16",
+     "cout": false,
+     "tvPorteur": 0.475,
+     "delta": 0.026666666666666672,
+     "dLogit": 0.10732353721824141,
+     "bascules": 26,
+     "betaApres": -0.25181834371793876
+    },
+    {
+     "cle": "block=18",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 12,
+       "valeur": 18
+      }
+     ],
+     "desc": "armure 12 → 18",
+     "cout": false,
+     "tvPorteur": 0.495,
+     "delta": 0.04666666666666669,
+     "dLogit": 0.18740632906855453,
+     "bascules": 38,
+     "betaApres": -0.17173555186762562
+    },
+    {
+     "cle": "hits=3",
+     "modifs": [
+      {
+       "champ": "hits",
+       "avant": 2,
+       "valeur": 3
+      }
+     ],
+     "desc": "nombre de coups 2 → 3",
+     "cout": false,
+     "tvPorteur": 0.49333333333333335,
+     "delta": 0.04500000000000004,
+     "dLogit": 0.1807387486930629,
+     "bascules": 37,
+     "betaApres": -0.17840313224311727
+    },
+    {
+     "cle": "block=16&hits=3",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 12,
+       "valeur": 16
+      },
+      {
+       "champ": "hits",
+       "avant": 2,
+       "valeur": 3
+      }
+     ],
+     "desc": "armure 12 → 16 et nombre de coups 2 → 3",
+     "cout": false,
+     "tvPorteur": 0.5316666666666666,
+     "delta": 0.08333333333333331,
+     "dLogit": 0.33424342922632266,
+     "bascules": 58,
+     "betaApres": -0.024898451709857494
+    },
+    {
+     "cle": "cost=1",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "coût 2 → 1",
+     "cout": true,
+     "tvPorteur": 0.49,
+     "delta": 0.041666666666666685,
+     "dLogit": 0.16740166116152483,
+     "bascules": 51,
+     "betaApres": -0.19174021977465533
+    }
+   ],
+   "choix": {
+    "cle": "block=16&hits=3",
+    "modifs": [
+     {
+      "champ": "block",
+      "avant": 12,
+      "valeur": 16
+     },
+     {
+      "champ": "hits",
+      "avant": 2,
+      "valeur": 3
+     }
+    ],
+    "desc": "armure 12 → 16 et nombre de coups 2 → 3",
+    "cout": false,
+    "tvPorteur": 0.5316666666666666,
+    "delta": 0.08333333333333331,
+    "dLogit": 0.33424342922632266,
+    "bascules": 58,
+    "betaApres": -0.024898451709857494
+   }
+  },
+  {
+   "id": "coque",
+   "nom": "Coque de l’arche",
+   "rarete": "violette",
+   "famille": "Blindage",
+   "sens": 1,
+   "beta": -0.3539242389976397,
+   "betaBrut": -0.17808684002635544,
+   "effet": -0.04452171000658886,
+   "z": -3.1936449039981527,
+   "echantillon": 600,
+   "ecartMoy": 1.025,
+   "tvPorteurOrig": 0.4583333333333333,
+   "tvPorteurBase": 0.4583333333333333,
+   "rejeuIdentique": 1,
+   "cible": 0.36277234497258065,
+   "essais": [
+    {
+     "cle": "block=17",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 16,
+       "valeur": 17
+      }
+     ],
+     "desc": "armure 16 → 17",
+     "cout": false,
+     "tvPorteur": 0.46,
+     "delta": 0.0016666666666667052,
+     "dLogit": 0.006711434587986953,
+     "bascules": 5,
+     "betaApres": -0.347376497936189
+    },
+    {
+     "cle": "block=18",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 16,
+       "valeur": 18
+      }
+     ],
+     "desc": "armure 16 → 18",
+     "cout": false,
+     "tvPorteur": 0.465,
+     "delta": 0.00666666666666671,
+     "dLogit": 0.026824743354516317,
+     "bascules": 10,
+     "betaApres": -0.3277537576761604
+    },
+    {
+     "cle": "block=21",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 16,
+       "valeur": 21
+      }
+     ],
+     "desc": "armure 16 → 21",
+     "cout": false,
+     "tvPorteur": 0.4766666666666667,
+     "delta": 0.018333333333333368,
+     "dLogit": 0.07365290957476556,
+     "bascules": 15,
+     "betaApres": -0.28206774185152694
+    },
+    {
+     "cle": "block=24",
+     "modifs": [
+      {
+       "champ": "block",
+       "avant": 16,
+       "valeur": 24
+      }
+     ],
+     "desc": "armure 16 → 24",
+     "cout": false,
+     "tvPorteur": 0.48333333333333334,
+     "delta": 0.025000000000000022,
+     "dLogit": 0.10036271016449427,
+     "bascules": 27,
+     "betaApres": -0.2560093998127672
+    },
+    {
+     "cle": "cost=1",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "coût 2 → 1",
+     "cout": true,
+     "tvPorteur": 0.51,
+     "delta": 0.051666666666666694,
+     "dLogit": 0.20705941927686553,
+     "bascules": 59,
+     "betaApres": -0.15191504945923429
+    }
+   ],
+   "choix": {
+    "cle": "cost=1",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 2,
+      "valeur": 1
+     }
+    ],
+    "desc": "coût 2 → 1",
+    "cout": true,
+    "tvPorteur": 0.51,
+    "delta": 0.051666666666666694,
+    "dLogit": 0.20705941927686553,
+    "bascules": 59,
+    "betaApres": -0.15191504945923429
+   }
+  },
+  {
+   "id": "crise",
+   "nom": "Crise de jalousie",
+   "rarete": "violette",
+   "famille": "Zizanie",
+   "sens": 1,
+   "beta": -0.2931018387117912,
+   "betaBrut": -0.1172644397405069,
+   "effet": -0.029316109935126726,
+   "z": -2.003437444808176,
+   "echantillon": 600,
+   "ecartMoy": 1.0183333333333333,
+   "tvPorteurOrig": 0.43,
+   "tvPorteurBase": 0.43,
+   "rejeuIdentique": 1,
+   "cible": 0.29847537242150735,
+   "essais": [
+    {
+     "cle": "grudgeGain=5",
+     "modifs": [
+      {
+       "champ": "grudgeGain",
+       "avant": 4,
+       "valeur": 5
+      }
+     ],
+     "desc": "Rancune 4 → 5",
+     "cout": false,
+     "tvPorteur": 0.44166666666666665,
+     "delta": 0.011666666666666659,
+     "dLogit": 0.047450446302143595,
+     "bascules": 11,
+     "betaApres": -0.24650565576369599
+    },
+    {
+     "cle": "grudgeGain=6",
+     "modifs": [
+      {
+       "champ": "grudgeGain",
+       "avant": 4,
+       "valeur": 6
+      }
+     ],
+     "desc": "Rancune 4 → 6",
+     "cout": false,
+     "tvPorteur": 0.43833333333333335,
+     "delta": 0.00833333333333336,
+     "dLogit": 0.033922253966390814,
+     "bascules": 17,
+     "betaApres": -0.25979029635526996
+    },
+    {
+     "cle": "cost=0",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 0
+      }
+     ],
+     "desc": "coût 1 → 0",
+     "cout": true,
+     "tvPorteur": 0.4716666666666667,
+     "delta": 0.041666666666666685,
+     "dLogit": 0.1683962759069449,
+     "bascules": 47,
+     "betaApres": -0.12773724698647704
+    }
+   ],
+   "choix": {
+    "cle": "cost=0",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 0
+     }
+    ],
+    "desc": "coût 1 → 0",
+    "cout": true,
+    "tvPorteur": 0.4716666666666667,
+    "delta": 0.041666666666666685,
+    "dLogit": 0.1683962759069449,
+    "bascules": 47,
+    "betaApres": -0.12773724698647704
+   }
+  },
+  {
+   "id": "bidon",
+   "nom": "Mutation incontrôlée",
+   "rarete": "bleue",
+   "famille": "Mutation",
+   "sens": 1,
+   "beta": -0.24872234111867708,
+   "betaBrut": -0.1807779769133057,
+   "effet": -0.04519449422832642,
+   "z": -3.633793358423862,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.42333333333333334,
+   "tvPorteurBase": 0.42333333333333334,
+   "rejeuIdentique": 1,
+   "cible": 0.24872234111867708,
+   "essais": [
+    {
+     "cle": "poison=4",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 3,
+       "valeur": 4
+      }
+     ],
+     "desc": "Radiation 3 → 4",
+     "cout": false,
+     "tvPorteur": 0.43,
+     "delta": 0.006666666666666654,
+     "dLogit": 0.02725335589819977,
+     "bascules": 10,
+     "betaApres": -0.2214689852204773
+    },
+    {
+     "cle": "poison=5",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 3,
+       "valeur": 5
+      }
+     ],
+     "desc": "Radiation 3 → 5",
+     "cout": false,
+     "tvPorteur": 0.43166666666666664,
+     "delta": 0.008333333333333304,
+     "dLogit": 0.03405009245520846,
+     "bascules": 21,
+     "betaApres": -0.21467224866346862
+    },
+    {
+     "cle": "poisonMult=4",
+     "modifs": [
+      {
+       "champ": "poisonMult",
+       "avant": 3,
+       "valeur": 4
+      }
+     ],
+     "desc": "multiplicateur de Radiation 3 → 4",
+     "cout": false,
+     "tvPorteur": 0.45,
+     "delta": 0.026666666666666672,
+     "dLogit": 0.10843381257703641,
+     "bascules": 22,
+     "betaApres": -0.14028852854164067
+    },
+    {
+     "cle": "poison=4&poisonMult=4",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 3,
+       "valeur": 4
+      },
+      {
+       "champ": "poisonMult",
+       "avant": 3,
+       "valeur": 4
+      }
+     ],
+     "desc": "Radiation 3 → 4 et multiplicateur de Radiation 3 → 4",
+     "cout": false,
+     "tvPorteur": 0.46,
+     "delta": 0.03666666666666668,
+     "dLogit": 0.1487618579640083,
+     "bascules": 34,
+     "betaApres": -0.0999604831546688
+    },
+    {
+     "cle": "cost=0",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 0
+      }
+     ],
+     "desc": "coût 1 → 0",
+     "cout": true,
+     "tvPorteur": 0.4766666666666667,
+     "delta": 0.053333333333333344,
+     "dLogit": 0.2157033329507869,
+     "bascules": 60,
+     "betaApres": -0.03301900816789019
+    }
+   ],
+   "choix": {
+    "cle": "cost=0",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 0
+     }
+    ],
+    "desc": "coût 1 → 0",
+    "cout": true,
+    "tvPorteur": 0.4766666666666667,
+    "delta": 0.053333333333333344,
+    "dLogit": 0.2157033329507869,
+    "bascules": 60,
+    "betaApres": -0.03301900816789019
+   }
+  },
+  {
+   "id": "glaciaire",
+   "nom": "Ère glaciaire",
+   "rarete": "rouge",
+   "famille": "Cryogénie",
+   "sens": 1,
+   "beta": -0.24742427522126273,
+   "betaBrut": 0.03099184616987858,
+   "effet": 0.007747961542469645,
+   "z": 0.46400890891352087,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.44333333333333336,
+   "tvPorteurBase": 0.44333333333333336,
+   "rejeuIdentique": 1,
+   "cible": 0.24742427522126273,
+   "essais": [
+    {
+     "cle": "dmg=13",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 12,
+       "valeur": 13
+      }
+     ],
+     "desc": "dégâts 12 → 13",
+     "cout": false,
+     "tvPorteur": 0.45,
+     "delta": 0.006666666666666654,
+     "dLogit": 0.026973988732850035,
+     "bascules": 6,
+     "betaApres": -0.2204502864884127
+    },
+    {
+     "cle": "dmg=14",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 12,
+       "valeur": 14
+      }
+     ],
+     "desc": "dégâts 12 → 14",
+     "cout": false,
+     "tvPorteur": 0.4533333333333333,
+     "delta": 0.009999999999999953,
+     "dLogit": 0.04043314210685481,
+     "bascules": 12,
+     "betaApres": -0.20699113311440792
+    },
+    {
+     "cle": "dmg=16",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 12,
+       "valeur": 16
+      }
+     ],
+     "desc": "dégâts 12 → 16",
+     "cout": false,
+     "tvPorteur": 0.45,
+     "delta": 0.006666666666666654,
+     "dLogit": 0.026973988732850035,
+     "bascules": 22,
+     "betaApres": -0.2204502864884127
+    },
+    {
+     "cle": "dmg=18",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 12,
+       "valeur": 18
+      }
+     ],
+     "desc": "dégâts 12 → 18",
+     "cout": false,
+     "tvPorteur": 0.4666666666666667,
+     "delta": 0.023333333333333317,
+     "dLogit": 0.09411329157047865,
+     "bascules": 30,
+     "betaApres": -0.15331098365078408
+    },
+    {
+     "cle": "freeze=4",
+     "modifs": [
+      {
+       "champ": "freeze",
+       "avant": 3,
+       "valeur": 4
+      }
+     ],
+     "desc": "Gel 3 → 4",
+     "cout": false,
+     "tvPorteur": 0.44333333333333336,
+     "delta": 0,
+     "dLogit": 0,
+     "bascules": 4,
+     "betaApres": -0.24742427522126273
+    },
+    {
+     "cle": "dmg=16&freeze=4",
+     "modifs": [
+      {
+       "champ": "dmg",
+       "avant": 12,
+       "valeur": 16
+      },
+      {
+       "champ": "freeze",
+       "avant": 3,
+       "valeur": 4
+      }
+     ],
+     "desc": "dégâts 12 → 16 et Gel 3 → 4",
+     "cout": false,
+     "tvPorteur": 0.45666666666666667,
+     "delta": 0.013333333333333308,
+     "dLogit": 0.05387540921636391,
+     "bascules": 22,
+     "betaApres": -0.19354886600489882
+    },
+    {
+     "cle": "cost=1",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 2,
+       "valeur": 1
+      }
+     ],
+     "desc": "coût 2 → 1",
+     "cout": true,
+     "tvPorteur": 0.4866666666666667,
+     "delta": 0.043333333333333335,
+     "dLogit": 0.17429870348970866,
+     "bascules": 58,
+     "betaApres": -0.07312557173155407
+    }
+   ],
+   "choix": {
+    "cle": "cost=1",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 2,
+      "valeur": 1
+     }
+    ],
+    "desc": "coût 2 → 1",
+    "cout": true,
+    "tvPorteur": 0.4866666666666667,
+    "delta": 0.043333333333333335,
+    "dLogit": 0.17429870348970866,
+    "bascules": 58,
+    "betaApres": -0.07312557173155407
+   }
+  },
+  {
+   "id": "nuage",
+   "nom": "Pluie radioactive",
+   "rarete": "bleue",
+   "famille": "Mutation",
+   "sens": 1,
+   "beta": -0.2288482924056648,
+   "betaBrut": -0.16090392820029342,
+   "effet": -0.040225982050073356,
+   "z": -3.8678760851227043,
+   "echantillon": 600,
+   "ecartMoy": 1,
+   "tvPorteurOrig": 0.44,
+   "tvPorteurBase": 0.44,
+   "rejeuIdentique": 1,
+   "cible": 0.2288482924056648,
+   "essais": [
+    {
+     "cle": "poison=7",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 6,
+       "valeur": 7
+      }
+     ],
+     "desc": "Radiation 6 → 7",
+     "cout": false,
+     "tvPorteur": 0.455,
+     "delta": 0.015000000000000013,
+     "dLogit": 0.06067368110459456,
+     "bascules": 15,
+     "betaApres": -0.16817461130107023
+    },
+    {
+     "cle": "poison=8",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 6,
+       "valeur": 8
+      }
+     ],
+     "desc": "Radiation 6 → 8",
+     "cout": false,
+     "tvPorteur": 0.475,
+     "delta": 0.034999999999999976,
+     "dLogit": 0.14107859825990543,
+     "bascules": 29,
+     "betaApres": -0.08776969414575936
+    },
+    {
+     "cle": "poison=9",
+     "modifs": [
+      {
+       "champ": "poison",
+       "avant": 6,
+       "valeur": 9
+      }
+     ],
+     "desc": "Radiation 6 → 9",
+     "cout": false,
+     "tvPorteur": 0.47833333333333333,
+     "delta": 0.03833333333333333,
+     "dLogit": 0.1544410820363559,
+     "bascules": 31,
+     "betaApres": -0.07440721036930889
+    },
+    {
+     "cle": "cost=0",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 0
+      }
+     ],
+     "desc": "coût 1 → 0",
+     "cout": true,
+     "tvPorteur": 0.5066666666666667,
+     "delta": 0.06666666666666671,
+     "dLogit": 0.2678303038990496,
+     "bascules": 62,
+     "betaApres": 0.038982011493384816
+    }
+   ],
+   "choix": {
+    "cle": "cost=0",
+    "modifs": [
+     {
+      "champ": "cost",
+      "avant": 1,
+      "valeur": 0
+     }
+    ],
+    "desc": "coût 1 → 0",
+    "cout": true,
+    "tvPorteur": 0.5066666666666667,
+    "delta": 0.06666666666666671,
+    "dLogit": 0.2678303038990496,
+    "bascules": 62,
+    "betaApres": 0.038982011493384816
+   }
+  },
+  {
+   "id": "chefmeute",
+   "nom": "Chef de meute",
+   "rarete": "violette",
+   "famille": "Instinct",
+   "sens": 1,
+   "beta": -0.18666545611005664,
+   "betaBrut": -0.010828057138772393,
+   "effet": -0.0027070142846930983,
+   "z": -0.20357318994625367,
+   "echantillon": 600,
+   "ecartMoy": 1.02,
+   "tvPorteurOrig": 0.5466666666666666,
+   "tvPorteurBase": 0.5466666666666666,
+   "rejeuIdentique": 1,
+   "cible": 0.19039876523225777,
+   "essais": [
+    {
+     "cle": "forceMult=3",
+     "modifs": [
+      {
+       "champ": "forceMult",
+       "avant": 2,
+       "valeur": 3
+      }
+     ],
+     "desc": "multiplicateur de Force 2 → 3",
+     "cout": false,
+     "tvPorteur": 0.5983333333333334,
+     "delta": 0.05166666666666675,
+     "dLogit": 0.21131391290947768,
+     "bascules": 61,
+     "betaApres": 0.020505046742372468
+    },
+    {
+     "cle": "forceMult=4",
+     "modifs": [
+      {
+       "champ": "forceMult",
+       "avant": 2,
+       "valeur": 4
+      }
+     ],
+     "desc": "multiplicateur de Force 2 → 4",
+     "cout": false,
+     "tvPorteur": 0.625,
+     "delta": 0.07833333333333337,
+     "dLogit": 0.32361408167784433,
+     "bascules": 73,
+     "betaApres": 0.13060325141724172
+    },
+    {
+     "cle": "draw=2",
+     "modifs": [
+      {
+       "champ": "draw",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "pioche 1 → 2",
+     "cout": false,
+     "tvPorteur": 0.585,
+     "delta": 0.03833333333333333,
+     "dLogit": 0.15612178491301168,
+     "bascules": 59,
+     "betaApres": -0.03360488266592754
+    },
+    {
+     "cle": "forceMult=3&draw=2",
+     "modifs": [
+      {
+       "champ": "forceMult",
+       "avant": 2,
+       "valeur": 3
+      },
+      {
+       "champ": "draw",
+       "avant": 1,
+       "valeur": 2
+      }
+     ],
+     "desc": "multiplicateur de Force 2 → 3 et pioche 1 → 2",
+     "cout": false,
+     "tvPorteur": 0.6133333333333333,
+     "delta": 0.06666666666666665,
+     "dLogit": 0.2741340244144743,
+     "bascules": 90,
+     "betaApres": 0.08209339135511429
+    },
+    {
+     "cle": "cost=0",
+     "modifs": [
+      {
+       "champ": "cost",
+       "avant": 1,
+       "valeur": 0
+      }
+     ],
+     "desc": "coût 1 → 0",
+     "cout": true,
+     "tvPorteur": 0.6183333333333333,
+     "delta": 0.07166666666666666,
+     "dLogit": 0.29526851696504897,
+     "bascules": 69,
+     "betaApres": 0.10281348209097174
+    }
+   ],
+   "choix": {
+    "cle": "forceMult=3",
+    "modifs": [
+     {
+      "champ": "forceMult",
+      "avant": 2,
+      "valeur": 3
+     }
+    ],
+    "desc": "multiplicateur de Force 2 → 3",
+    "cout": false,
+    "tvPorteur": 0.5983333333333334,
+    "delta": 0.05166666666666675,
+    "dLogit": 0.21131391290947768,
+    "bascules": 61,
+    "betaApres": 0.020505046742372468
+   }
+  }
+ ]
+}

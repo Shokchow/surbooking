@@ -1,0 +1,569 @@
+{
+ "genere": "2026-11-04T00:39:26.425Z",
+ "echantillon": 600,
+ "classes": [
+  {
+   "id": "postulant",
+   "nom": "Postulant",
+   "taux": 0.4791121161628184,
+   "sens": 1,
+   "echantillon": 600,
+   "base": 0.4683333333333333,
+   "rejeuIdentique": 1,
+   "essais": [
+    {
+     "classe": "postulant",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 1.03,
+     "nomChamp": "PV de la classe",
+     "tv": 0.49333333333333335,
+     "delta": 0.025000000000000022,
+     "bascules": 21,
+     "apres": 0.5041121161628184
+    },
+    {
+     "classe": "postulant",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 1.06,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5183333333333333,
+     "delta": 0.04999999999999999,
+     "bascules": 34,
+     "apres": 0.5291121161628184
+    },
+    {
+     "classe": "postulant",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 1.09,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5383333333333333,
+     "delta": 0.07,
+     "bascules": 46,
+     "apres": 0.5491121161628184
+    },
+    {
+     "carte": "poingnu",
+     "nomCarte": "Poing nu",
+     "champ": "dmg",
+     "avant": 4,
+     "valeur": 5,
+     "nomChamp": "dégâts",
+     "tv": 0.48333333333333334,
+     "delta": 0.015000000000000013,
+     "bascules": 27,
+     "apres": 0.4941121161628184
+    },
+    {
+     "carte": "poingnu",
+     "nomCarte": "Poing nu",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.6516666666666666,
+     "delta": 0.1833333333333333,
+     "bascules": 124,
+     "apres": 0.6624454494961517
+    },
+    {
+     "carte": "esquive",
+     "nomCarte": "Esquive",
+     "champ": "block",
+     "avant": 4,
+     "valeur": 5,
+     "nomChamp": "armure",
+     "tv": 0.4816666666666667,
+     "delta": 0.013333333333333364,
+     "bascules": 30,
+     "apres": 0.49244544949615177
+    },
+    {
+     "carte": "esquive",
+     "nomCarte": "Esquive",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.615,
+     "delta": 0.14666666666666667,
+     "bascules": 108,
+     "apres": 0.6257787828294851
+    }
+   ],
+   "choixPv": {
+    "classe": "postulant",
+    "champ": "hpMult",
+    "avant": 1,
+    "valeur": 1.03,
+    "nomChamp": "PV de la classe",
+    "tv": 0.49333333333333335,
+    "delta": 0.025000000000000022,
+    "bascules": 21,
+    "apres": 0.5041121161628184
+   },
+   "choixCarte": {
+    "carte": "poingnu",
+    "nomCarte": "Poing nu",
+    "champ": "dmg",
+    "avant": 4,
+    "valeur": 5,
+    "nomChamp": "dégâts",
+    "tv": 0.48333333333333334,
+    "delta": 0.015000000000000013,
+    "bascules": 27,
+    "apres": 0.4941121161628184
+   }
+  },
+  {
+   "id": "veterinaire",
+   "nom": "Vétérinaire",
+   "taux": 0.4500508532037518,
+   "sens": 1,
+   "echantillon": 600,
+   "base": 0.44,
+   "rejeuIdentique": 1,
+   "essais": [
+    {
+     "classe": "veterinaire",
+     "champ": "hpMult",
+     "avant": 0.92,
+     "valeur": 0.95,
+     "nomChamp": "PV de la classe",
+     "tv": 0.455,
+     "delta": 0.015000000000000013,
+     "bascules": 17,
+     "apres": 0.46505085320375183
+    },
+    {
+     "classe": "veterinaire",
+     "champ": "hpMult",
+     "avant": 0.92,
+     "valeur": 0.98,
+     "nomChamp": "PV de la classe",
+     "tv": 0.4816666666666667,
+     "delta": 0.041666666666666685,
+     "bascules": 39,
+     "apres": 0.4917175198704185
+    },
+    {
+     "classe": "veterinaire",
+     "champ": "hpMult",
+     "avant": 0.92,
+     "valeur": 1.01,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5,
+     "delta": 0.06,
+     "bascules": 44,
+     "apres": 0.5100508532037518
+    },
+    {
+     "carte": "flechette",
+     "nomCarte": "Fléchette tranquillisante",
+     "champ": "dmg",
+     "avant": 4,
+     "valeur": 5,
+     "nomChamp": "dégâts",
+     "tv": 0.455,
+     "delta": 0.015000000000000013,
+     "bascules": 23,
+     "apres": 0.46505085320375183
+    },
+    {
+     "carte": "flechette",
+     "nomCarte": "Fléchette tranquillisante",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.595,
+     "delta": 0.15499999999999997,
+     "bascules": 103,
+     "apres": 0.6050508532037517
+    },
+    {
+     "carte": "soins",
+     "nomCarte": "Premiers soins",
+     "champ": "block",
+     "avant": 3,
+     "valeur": 4,
+     "nomChamp": "armure",
+     "tv": 0.44666666666666666,
+     "delta": 0.006666666666666654,
+     "bascules": 24,
+     "apres": 0.4567175198704185
+    },
+    {
+     "carte": "soins",
+     "nomCarte": "Premiers soins",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.57,
+     "delta": 0.12999999999999995,
+     "bascules": 106,
+     "apres": 0.5800508532037518
+    }
+   ],
+   "choixPv": {
+    "classe": "veterinaire",
+    "champ": "hpMult",
+    "avant": 0.92,
+    "valeur": 0.98,
+    "nomChamp": "PV de la classe",
+    "tv": 0.4816666666666667,
+    "delta": 0.041666666666666685,
+    "bascules": 39,
+    "apres": 0.4917175198704185
+   },
+   "choixCarte": {
+    "carte": "flechette",
+    "nomCarte": "Fléchette tranquillisante",
+    "champ": "dmg",
+    "avant": 4,
+    "valeur": 5,
+    "nomChamp": "dégâts",
+    "tv": 0.455,
+    "delta": 0.015000000000000013,
+    "bascules": 23,
+    "apres": 0.46505085320375183
+   }
+  },
+  {
+   "id": "mecano",
+   "nom": "Mécano de l’arche",
+   "taux": 0.5246385193753614,
+   "sens": -1,
+   "echantillon": 600,
+   "base": 0.56,
+   "rejeuIdentique": 1,
+   "essais": [
+    {
+     "classe": "mecano",
+     "champ": "hpMult",
+     "avant": 1.06,
+     "valeur": 1.03,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5366666666666666,
+     "delta": -0.023333333333333428,
+     "bascules": 16,
+     "apres": 0.501305186042028
+    },
+    {
+     "classe": "mecano",
+     "champ": "hpMult",
+     "avant": 1.06,
+     "valeur": 1,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5233333333333333,
+     "delta": -0.036666666666666736,
+     "bascules": 32,
+     "apres": 0.4879718527086947
+    },
+    {
+     "classe": "mecano",
+     "champ": "hpMult",
+     "avant": 1.06,
+     "valeur": 0.97,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5116666666666667,
+     "delta": -0.04833333333333334,
+     "bascules": 33,
+     "apres": 0.4763051860420281
+    },
+    {
+     "carte": "cle",
+     "nomCarte": "Clé à molette",
+     "champ": "dmg",
+     "avant": 3,
+     "valeur": 2,
+     "nomChamp": "dégâts",
+     "tv": 0.545,
+     "delta": -0.015000000000000013,
+     "bascules": 31,
+     "apres": 0.5096385193753614
+    },
+    {
+     "carte": "cle",
+     "nomCarte": "Clé à molette",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 2,
+     "nomChamp": "coût",
+     "tv": 0.5183333333333333,
+     "delta": -0.04166666666666674,
+     "bascules": 63,
+     "apres": 0.4829718527086947
+    },
+    {
+     "carte": "tole",
+     "nomCarte": "Tôle rivetée",
+     "champ": "block",
+     "avant": 4,
+     "valeur": 3,
+     "nomChamp": "armure",
+     "tv": 0.5483333333333333,
+     "delta": -0.011666666666666714,
+     "bascules": 31,
+     "apres": 0.5129718527086947
+    },
+    {
+     "carte": "tole",
+     "nomCarte": "Tôle rivetée",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 2,
+     "nomChamp": "coût",
+     "tv": 0.5183333333333333,
+     "delta": -0.04166666666666674,
+     "bascules": 47,
+     "apres": 0.4829718527086947
+    }
+   ],
+   "choixPv": {
+    "classe": "mecano",
+    "champ": "hpMult",
+    "avant": 1.06,
+    "valeur": 1.03,
+    "nomChamp": "PV de la classe",
+    "tv": 0.5366666666666666,
+    "delta": -0.023333333333333428,
+    "bascules": 16,
+    "apres": 0.501305186042028
+   },
+   "choixCarte": {
+    "carte": "cle",
+    "nomCarte": "Clé à molette",
+    "champ": "dmg",
+    "avant": 3,
+    "valeur": 2,
+    "nomChamp": "dégâts",
+    "tv": 0.545,
+    "delta": -0.015000000000000013,
+    "bascules": 31,
+    "apres": 0.5096385193753614
+   }
+  },
+  {
+   "id": "clandestin",
+   "nom": "Clandestin de soute",
+   "taux": 0.5866299736268776,
+   "sens": -1,
+   "echantillon": 600,
+   "base": 0.5883333333333334,
+   "rejeuIdentique": 1,
+   "essais": [
+    {
+     "classe": "clandestin",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 0.97,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5716666666666667,
+     "delta": -0.01666666666666672,
+     "bascules": 16,
+     "apres": 0.5699633069602109
+    },
+    {
+     "classe": "clandestin",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 0.94,
+     "nomChamp": "PV de la classe",
+     "tv": 0.555,
+     "delta": -0.033333333333333326,
+     "bascules": 24,
+     "apres": 0.5532966402935443
+    },
+    {
+     "classe": "clandestin",
+     "champ": "hpMult",
+     "avant": 1,
+     "valeur": 0.91,
+     "nomChamp": "PV de la classe",
+     "tv": 0.53,
+     "delta": -0.05833333333333335,
+     "bascules": 39,
+     "apres": 0.5282966402935443
+    },
+    {
+     "carte": "endouce",
+     "nomCarte": "Coup en douce",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 2,
+     "nomChamp": "coût",
+     "tv": 0.5033333333333333,
+     "delta": -0.08500000000000008,
+     "bascules": 99,
+     "apres": 0.5016299736268776
+    },
+    {
+     "carte": "planque",
+     "nomCarte": "Se planquer",
+     "champ": "block",
+     "avant": 2,
+     "valeur": 1,
+     "nomChamp": "armure",
+     "tv": 0.525,
+     "delta": -0.06333333333333335,
+     "bascules": 50,
+     "apres": 0.5232966402935443
+    },
+    {
+     "carte": "planque",
+     "nomCarte": "Se planquer",
+     "champ": "cost",
+     "avant": 0,
+     "valeur": 1,
+     "nomChamp": "coût",
+     "tv": 0.44666666666666666,
+     "delta": -0.14166666666666672,
+     "bascules": 111,
+     "apres": 0.4449633069602109
+    }
+   ],
+   "choixPv": {
+    "classe": "clandestin",
+    "champ": "hpMult",
+    "avant": 1,
+    "valeur": 0.91,
+    "nomChamp": "PV de la classe",
+    "tv": 0.53,
+    "delta": -0.05833333333333335,
+    "bascules": 39,
+    "apres": 0.5282966402935443
+   },
+   "choixCarte": {
+    "carte": "endouce",
+    "nomCarte": "Coup en douce",
+    "champ": "cost",
+    "avant": 1,
+    "valeur": 2,
+    "nomChamp": "coût",
+    "tv": 0.5033333333333333,
+    "delta": -0.08500000000000008,
+    "bascules": 99,
+    "apres": 0.5016299736268776
+   }
+  },
+  {
+   "id": "bouchetrou",
+   "nom": "Stand-by",
+   "taux": 0.4478128298346429,
+   "sens": 1,
+   "echantillon": 600,
+   "base": 0.4666666666666667,
+   "rejeuIdentique": 1,
+   "essais": [
+    {
+     "classe": "bouchetrou",
+     "champ": "hpMult",
+     "avant": 0.87,
+     "valeur": 0.9,
+     "nomChamp": "PV de la classe",
+     "tv": 0.49833333333333335,
+     "delta": 0.031666666666666676,
+     "bascules": 27,
+     "apres": 0.47947949650130955
+    },
+    {
+     "classe": "bouchetrou",
+     "champ": "hpMult",
+     "avant": 0.87,
+     "valeur": 0.93,
+     "nomChamp": "PV de la classe",
+     "tv": 0.5133333333333333,
+     "delta": 0.046666666666666634,
+     "bascules": 38,
+     "apres": 0.4944794965013095
+    },
+    {
+     "classe": "bouchetrou",
+     "champ": "hpMult",
+     "avant": 0.87,
+     "valeur": 0.96,
+     "nomChamp": "PV de la classe",
+     "tv": 0.54,
+     "delta": 0.07333333333333336,
+     "bascules": 48,
+     "apres": 0.5211461631679762
+    },
+    {
+     "carte": "valise",
+     "nomCarte": "Coup de valise",
+     "champ": "dmg",
+     "avant": 4,
+     "valeur": 5,
+     "nomChamp": "dégâts",
+     "tv": 0.4766666666666667,
+     "delta": 0.010000000000000009,
+     "bascules": 36,
+     "apres": 0.4578128298346429
+    },
+    {
+     "carte": "valise",
+     "nomCarte": "Coup de valise",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.5966666666666667,
+     "delta": 0.13,
+     "bascules": 110,
+     "apres": 0.5778128298346429
+    },
+    {
+     "carte": "gilet",
+     "nomCarte": "Gilet de sauvetage",
+     "champ": "block",
+     "avant": 4,
+     "valeur": 5,
+     "nomChamp": "armure",
+     "tv": 0.47833333333333333,
+     "delta": 0.011666666666666659,
+     "bascules": 33,
+     "apres": 0.45947949650130954
+    },
+    {
+     "carte": "gilet",
+     "nomCarte": "Gilet de sauvetage",
+     "champ": "cost",
+     "avant": 1,
+     "valeur": 0,
+     "nomChamp": "coût",
+     "tv": 0.58,
+     "delta": 0.11333333333333329,
+     "bascules": 94,
+     "apres": 0.5611461631679762
+    }
+   ],
+   "choixPv": {
+    "classe": "bouchetrou",
+    "champ": "hpMult",
+    "avant": 0.87,
+    "valeur": 0.93,
+    "nomChamp": "PV de la classe",
+    "tv": 0.5133333333333333,
+    "delta": 0.046666666666666634,
+    "bascules": 38,
+    "apres": 0.4944794965013095
+   },
+   "choixCarte": {
+    "carte": "gilet",
+    "nomCarte": "Gilet de sauvetage",
+    "champ": "block",
+    "avant": 4,
+    "valeur": 5,
+    "nomChamp": "armure",
+    "tv": 0.47833333333333333,
+    "delta": 0.011666666666666659,
+    "bascules": 33,
+    "apres": 0.45947949650130954
+   }
+  }
+ ]
+}
