@@ -1,0 +1,30 @@
+{
+  "id": "./en.html",
+  "name": "Surbooking",
+  "short_name": "Surbooking",
+  "lang": "en",
+  "start_url": "./en.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e9ece7",
+  "theme_color": "#e9ece7",
+  "description": "A draft and deckbuilding game aboard an ark, with EDEN.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
